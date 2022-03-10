@@ -7,7 +7,7 @@ import PostCollection from "../components/api/posts/PostCollection";
 import PostListWidget from "../components/post/PostListWidget";
 
 export default function Home() {
-  let post = new PostCollection("http://localhost:5000", "", {});
+  let post = new PostCollection(process.env.BACKEND_URL || "", "", {});
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {

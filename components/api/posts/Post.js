@@ -11,6 +11,7 @@ Dealing with individual posts
 export default class Post extends Connect {
   constructor(base_url, access_token, { data, coordinates }) {
     super(base_url, access_token);
+
     this.data = data || null;
     this.coordinates = coordinates || { latitude: null, longitude: null };
     this.config = {
