@@ -40,8 +40,11 @@ export default class Connection {
 
   // Methods
 
-  async fetchGetGeneral(url) {
-    const result = await axios.get(`${this.base_url}${url}`);
+  static async fetchGetGeneral(url, body, config) {
+    const result = await axios.get(`${this.base_url}${url}`, body, {
+      headers: { Authorization: `Bearer ${this.access_token}` },
+      ...config,
+    });
     return result;
   }
 }

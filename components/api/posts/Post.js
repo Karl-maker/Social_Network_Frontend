@@ -9,11 +9,12 @@ Dealing with individual posts
 */
 
 export default class Post extends Connect {
-  constructor(base_url, access_token, { data }) {
+  constructor(base_url, access_token, { data, coordinates }) {
     super(base_url, access_token);
-    this.data = data;
+    this.data = data || null;
+    this.coordinates = coordinates || { latitude: null, longitude: null };
     this.config = {
-      headers: { Authorization: `Bearer ${access_token}` },
+      headers: { Authorization: `Bearer ${this.access_token}` },
     };
   }
 
@@ -23,8 +24,15 @@ export default class Post extends Connect {
     return this._data;
   }
 
+  get coordinates() {
+    return this._coordinates;
+  }
   set data(data) {
     this._data = data;
+  }
+
+  set coordinates(coordinates) {
+    this._coordinates = coordinates;
   }
 
   // Methods
@@ -73,5 +81,37 @@ export default class Post extends Connect {
     );
 
     return results;
+  }
+
+  async createAReply(content) {
+    const body = {
+      content,
+      replied_to: this._data._id,
+      longitude: this.coordinates.longitude,
+      latitude: this.coordinates.latitude,
+    };
+
+    const result = await axios.post(
+      `${this.base_url}/api/post`,
+      body,
+      this.config
+    );
+    return result;
+  }
+
+  async createAShare(content) {
+    const body = {
+      content,
+      shared_from: this._data._id,
+      longitude: this.coordinates.longitude,
+      latitude: this.coordinates.latitude,
+    };
+
+    const result = await axios.post(
+      `${this.base_url}/api/post`,
+      body,
+      this.config
+    );
+    return result;
   }
 }
