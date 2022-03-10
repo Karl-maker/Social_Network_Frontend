@@ -5,10 +5,12 @@ import util from "util";
 import styles from "../styles/modules/Home.module.css";
 import PostCollection from "../components/api/posts/PostCollection";
 import PostListWidget from "../components/post/PostListWidget";
+import { noDuplicateObjects } from "../components/utils/array";
 
 export default function Home() {
   let post = new PostCollection(process.env.BACKEND_URL || "", "", {});
   const [posts, setPosts] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
 
   useEffect(() => {
     // Initially set Coordinates as such...
@@ -21,19 +23,30 @@ export default function Home() {
 
       // Get many posts
       post
-        .fetchManyPosts({ page_number: 0, page_size: 10, max_distance: 10 })
+        .fetchManyPosts({
+          page_number: pageNumber,
+          page_size: 3,
+          max_distance: 10,
+        })
         .then(({ meta_data, data }) => {
-          setPosts(data);
+          setPosts(noDuplicateObjects(posts.concat(data), "_id"));
         })
         .catch((error) => {
           // Capture Error
         });
     });
-  }, []);
+  }, [pageNumber]);
 
   return (
     <>
       <PostListWidget posts={posts} />
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          setPageNumber(pageNumber++);
+          console.log(pageNumber);
+        }}
+      />
     </>
   );
 }

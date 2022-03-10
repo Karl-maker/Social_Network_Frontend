@@ -14,3 +14,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+li {
+  list-style: none;
+}
+
+body {
+  background-color: #eef2f5;
+}
