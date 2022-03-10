@@ -12,6 +12,9 @@ export default class Post extends Connect {
   constructor(base_url, access_token, { data }) {
     super(base_url, access_token);
     this.data = data;
+    this.config = {
+      headers: { Authorization: `Bearer ${access_token}` },
+    };
   }
 
   // Getters and Setters
@@ -46,7 +49,29 @@ export default class Post extends Connect {
     return results;
   }
 
-  async likeButtonInteraction() {}
+  async likeButtonInteraction() {
+    const results = await axios.post(
+      `${this.base_url}/api/activity`,
+      {
+        post_id: this.data._id,
+        type: "like",
+      },
+      this.config
+    );
 
-  async dislikeButtonInteraction() {}
+    return results;
+  }
+
+  async dislikeButtonInteraction() {
+    const results = await axios.post(
+      `${this.base_url}/api/activity`,
+      {
+        post_id: this.data._id,
+        type: "dislike",
+      },
+      this.config
+    );
+
+    return results;
+  }
 }
