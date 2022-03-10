@@ -1,3 +1,5 @@
+import axios from "axios";
+
 /*
 
 09/03/2022 9:25AM
@@ -34,5 +36,12 @@ export default class Connection {
 
   set baseUrl(base_url) {
     this.base_url = base_url;
+  }
+
+  // Methods
+
+  async fetchGetGeneral(url) {
+    const result = await axios.get(`${this.base_url}${url}`);
+    return result;
   }
 }
