@@ -13,5 +13,10 @@ export default function PostListWidget({ posts }) {
     </li>
   ));
 
-  return <>{listPosts}</>;
+  return (
+    <>
+      {/* set distance and have other options and info here such as current location*/}
+      {listPosts}
+    </>
+  );
 }

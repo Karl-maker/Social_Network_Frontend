@@ -1,4 +1,4 @@
-import widget from "../../styles/modules/Widget.module.css";
+import widget from "../../styles/modules/PostWidget.module.css";
 import User from "../api/users/User";
 import Connection from "../api/Connection";
 import { checkHowManyDaysAgo } from "../utils/date";
@@ -40,9 +40,9 @@ export default function ChildWidget({ post_id }) {
 
   if (errorInfo) {
     return (
-      <div className={widget.widget_child}>
+      <div className={widget.secondary}>
         <div className="container-flush p-4 text-center">
-          <p style={{ color: "#2f3640" }}>
+          <p>
             <small>{errorInfo.message}</small>
           </p>
         </div>
@@ -55,11 +55,11 @@ export default function ChildWidget({ post_id }) {
   }
 
   return (
-    <div className={widget.widget_child}>
+    <div className={widget.secondary}>
       <div className="container-flush p-4">
         <div className="row">
           <div className="col-6">
-            <p style={{ color: "#2f3640" }}>
+            <p>
               <small>
                 <strong>{userInfo.display_name}</strong>
               </small>
@@ -79,7 +79,6 @@ export default function ChildWidget({ post_id }) {
               <small
                 style={{
                   marginLeft: "2px",
-                  color: "#636e72",
                   fontSize: "12px",
                   marginBottom: "2px",
                 }}
@@ -89,7 +88,6 @@ export default function ChildWidget({ post_id }) {
               <small
                 style={{
                   marginLeft: "5px",
-                  color: "#636e72",
                   fontSize: "12px",
                   marginBottom: "2px",
                 }}
@@ -100,7 +98,7 @@ export default function ChildWidget({ post_id }) {
           </div>
         </div>
         <div className="row">
-          <p style={{ color: "#2d3436" }}>{postInfo.content}</p>
+          <p>{postInfo.content}</p>
         </div>
       </div>
     </div>

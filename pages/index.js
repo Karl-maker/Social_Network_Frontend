@@ -9,8 +9,11 @@ import { noDuplicateObjects } from "../components/utils/array";
 
 export default function Home() {
   let post = new PostCollection(process.env.BACKEND_URL || "", "", {});
+  const PAGE_SIZE = 2;
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
+  const [maxDistance, setMaxDistance] = useState(10000);
+  const [errorData, setErrorData] = useState();
 
   useEffect(() => {
     // Initially set Coordinates as such...
@@ -25,14 +28,15 @@ export default function Home() {
       post
         .fetchManyPosts({
           page_number: pageNumber,
-          page_size: 3,
-          max_distance: 10,
+          page_size: PAGE_SIZE,
+          max_distance: maxDistance,
         })
         .then(({ meta_data, data }) => {
           setPosts(noDuplicateObjects(posts.concat(data), "_id"));
         })
         .catch((error) => {
           // Capture Error
+          setErrorData(error);
         });
     });
   }, [pageNumber]);
@@ -40,11 +44,15 @@ export default function Home() {
   return (
     <>
       <PostListWidget posts={posts} />
+      {/*
+
+        When Scrolled To the end load more content
+
+        */}
       <button
         onClick={(e) => {
           e.preventDefault();
-          setPageNumber(pageNumber++);
-          console.log(pageNumber);
+          setPageNumber((pageNumber += 1));
         }}
       />
     </>
