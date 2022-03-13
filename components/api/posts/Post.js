@@ -84,6 +84,15 @@ export default class Post extends Connect {
     return results;
   }
 
+  async checkActivityStatus(post_id) {
+    const results = await axios.get(
+      `${this.base_url}/api/activity/${post_id}`,
+      this.config
+    );
+
+    return results;
+  }
+
   async createAReply(content) {
     const body = {
       content,

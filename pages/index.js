@@ -8,11 +8,15 @@ import PostListWidget from "../components/post/PostListWidget";
 import { noDuplicateObjects } from "../components/utils/array";
 
 export default function Home() {
-  let post = new PostCollection(process.env.BACKEND_URL || "", "", {});
+  let post = new PostCollection(
+    process.env.BACKEND_URL || "",
+    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYyMjM4MzM3MWU3ZWJkZTE4MTk3YTVmZCIsImVtYWlsIjoia2FybGpvaGFuYmFpbGV5OThAZ21haWwuY29tIn0sImlhdCI6MTY0NzEzNzQyNCwiZXhwIjoxNjQ5NzI5NDI0fQ.Y851OesrNOYJRH40tNaLYE67Rm2Qg8pOURl6IpDm7D4Fz69aEyRjDI1xqrwDjnnvgVe9_FNMpkARqA56RJGfAA",
+    {}
+  );
   const PAGE_SIZE = 2;
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(10000);
+  const [maxDistance, setMaxDistance] = useState(1000000);
   const [errorData, setErrorData] = useState();
 
   useEffect(() => {

@@ -18,3 +18,11 @@ a {
 li {
   list-style: none;
 }
+
+.primary-theme path {
+  color: #2980b9;
+}
+
+.secondary-theme path {
+  color: #74b9ff;
+}

@@ -29,86 +29,100 @@ export default function PostWidget({ post }) {
   }
 
   return (
-    <Link href={`/post/${post.data._id}`}>
-      <div className={widget.primary}>
-        <div className="container-flush p-4">
-          <div className="row">
-            <div className="col-6">
-              <Link href={`/user/${userInfo._id}`}>
-                <p>
-                  <small>
-                    <strong>{userInfo.display_name}</strong>
-                  </small>
-                  <small style={{ marginLeft: "5px" }}>{`@${
-                    userInfo.user[0].username || ""
-                  }`}</small>
-                </p>
-              </Link>
-            </div>
-            <div className="col-6">
-              <p className="text-end">
-                <ImLocation2
-                  style={{
-                    color: "#74b9ff",
-                    fontSize: "12px",
-                  }}
-                />
-                <small
-                  style={{
-                    marginLeft: "2px",
-                    color: "#636e72",
-                    fontSize: "12px",
-                    marginBottom: "2px",
-                  }}
-                >
-                  {post.data.area.city}
+    <div className={widget.primary}>
+      <div className="container-flush p-4">
+        <div className="row">
+          <div className="col-6">
+            <Link href={`/user/${userInfo._id}`}>
+              <p>
+                <small>
+                  <strong>{userInfo.display_name}</strong>
                 </small>
-                <small
-                  style={{
-                    marginLeft: "5px",
-                    color: "#636e72",
-                    fontSize: "12px",
-                    marginBottom: "2px",
-                  }}
-                >
-                  {how_long_ago}
-                </small>
+                <small style={{ marginLeft: "5px" }}>{`@${
+                  userInfo.user[0].username || ""
+                }`}</small>
               </p>
-            </div>
+            </Link>
           </div>
-          {post.data.replied_to && (
-            <div
-              style={{
-                marginBottom: "0px",
-                marginTop: "0px",
-              }}
-              className="mb-4"
-            >
-              <ChildWidget post_id={post.data.replied_to} />
-            </div>
-          )}
-          <div className="row mt-2">
-            <p style={{ color: "#2d3436" }}>
-              {post.data.replied_to && (
-                <BsArrowReturnRight
-                  style={{
-                    marginRight: "10px",
-                    marginLeft: "10px",
-                    fontSize: "15px",
-                  }}
-                />
-              )}
-              {post.data.content}
+          <div className="col-6">
+            <p className="text-end">
+              <ImLocation2
+                style={{
+                  color: "#74b9ff",
+                  fontSize: "12px",
+                }}
+              />
+              <small
+                style={{
+                  marginLeft: "2px",
+                  color: "#636e72",
+                  fontSize: "12px",
+                  marginBottom: "2px",
+                }}
+              >
+                {post.data.area.city
+                  ? post.data.area.city
+                  : post.data.area.state}
+              </small>
+              <small
+                style={{
+                  marginLeft: "5px",
+                  color: "#636e72",
+                  fontSize: "12px",
+                  marginBottom: "2px",
+                }}
+              >
+                {how_long_ago}
+              </small>
             </p>
           </div>
-          {post.data.shared_from && (
-            <>
-              <ChildWidget post_id={post.data.shared_from} />
-            </>
-          )}
-          <ActivityWidget />
         </div>
+        {post.data.replied_to && (
+          <div
+            style={{
+              marginBottom: "0px",
+              marginTop: "0px",
+            }}
+            className="mb-4"
+          >
+            <ChildWidget post_id={post.data.replied_to} />
+          </div>
+        )}
+        <div className="row mt-2">
+          <p style={{ color: "#2d3436" }}>
+            {post.data.replied_to && (
+              <BsArrowReturnRight
+                style={{
+                  marginRight: "10px",
+                  marginLeft: "10px",
+                  fontSize: "15px",
+                }}
+              />
+            )}
+            {post.data.content}
+          </p>
+        </div>
+        {post.data.shared_from && (
+          <>
+            <ChildWidget post_id={post.data.shared_from} />
+          </>
+        )}
+        <ActivityWidget
+          post={post}
+          likes={
+            post.data.activities.find(
+              (activity) => activity._id === "like"
+            ) || { amount: 0 }
+          }
+          dislikes={
+            post.data.activities.find(
+              (activity) => activity._id === "dislike"
+            ) || { amount: 0 }
+          }
+          replies={post.data.replies[0] || null}
+          shares={post.data.shares[0] || null}
+        />
       </div>
-    </Link>
+    </div>
   );
 }
