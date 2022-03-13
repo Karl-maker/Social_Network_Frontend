@@ -1,13 +1,22 @@
+import Header from "./Header";
+
 export default function PageLayout({ children }) {
   return (
     <>
-      <div className="container-fluid" style={{ backgroundColor: "#eef2f5" }}>
-        <div className="row">
+      <div className="container-fluid" style={{ backgroundColor: "#ffff" }}>
+        <div
+          className="row align-items-center pt-2 sticky-top"
+          style={{
+            opacity: 0.99,
+            backdropFilter: "blur(5px)",
+          }}
+        >
           {/*
 
           Header
 
           */}
+          <Header />
         </div>
         <div className="row">
           {/*

@@ -31,7 +31,7 @@ export default class Connection {
   // Setters
 
   set accessToken(access_token) {
-    this.access_token = token;
+    this.access_token = access_token;
   }
 
   set baseUrl(base_url) {

@@ -5,6 +5,8 @@
   margin-right: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
+  border: 1px solid;
+  border-color: #dfe6e9;
 }
 
 .secondary {

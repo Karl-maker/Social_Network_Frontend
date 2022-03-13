@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 import PageLayout from "../components/templates/PageLayout";
-import ContextProvider from "../components/templates/ContextProvider";
+import { ContextProvider } from "../components/templates/ContextProvider";
 
 import Head from "next/head";
 import Script from "next/script";

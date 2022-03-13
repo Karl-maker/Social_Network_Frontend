@@ -7,7 +7,8 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import IconButton from "@mui/material/IconButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AccountContext } from "../templates/ContextProvider";
 import activityMachine from "../state-machine/activity";
 import { useInterpret, useMachine, useActor } from "@xstate/react";
 
@@ -18,6 +19,7 @@ export default function ActivityWidget({
   shares,
   post,
 }) {
+  const accountServices = useContext(AccountContext);
   const icons_style = { color: "#2d3436", fontSize: "20px" };
   const [like, setLike] = useState(likes || { amount: 0 });
   const [dislike, setDislike] = useState(dislikes || { amount: 0 });
@@ -29,6 +31,7 @@ export default function ActivityWidget({
   const [activityState] = useActor(activityService);
 
   useEffect(() => {
+    post.accessToken = accountServices.accessToken;
     post.checkActivityStatus(post.data._id).then((result) => {
       if (!result.data) {
         return;
@@ -80,6 +83,7 @@ export default function ActivityWidget({
             color="success"
             className="p-2"
             onClick={(e) => {
+              post.accessToken = accountServices.accessToken;
               post.likeButtonInteraction().then((result) => {
                 if (result.status === 200) {
                   setPrev(activityState.value);
@@ -102,6 +106,7 @@ export default function ActivityWidget({
             color="secondary"
             className="p-2"
             onClick={(e) => {
+              post.accessToken = accountServices.accessToken;
               post.dislikeButtonInteraction().then((result) => {
                 if (result.status === 200) {
                   setPrev(activityState.value);
