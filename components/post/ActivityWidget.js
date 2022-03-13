@@ -88,11 +88,15 @@ export default function ActivityWidget({
               });
             }}
           >
-            <AiOutlineLike style={icons_style} />
+            {activityState.matches("like") ? (
+              <AiFillLike style={icons_style} />
+            ) : (
+              <AiOutlineLike style={icons_style} />
+            )}
           </IconButton>
           <small>{like.amount > 0 && like.amount}</small>
         </div>
-        <div className={activityState.matches("dislike") && "primary-theme"}>
+        <div className={activityState.matches("dislike") && "secondary-theme"}>
           <IconButton
             aria-label="dislike"
             color="secondary"
@@ -106,7 +110,11 @@ export default function ActivityWidget({
               });
             }}
           >
-            <AiOutlineDislike style={icons_style} />
+            {activityState.matches("dislike") ? (
+              <AiFillDislike style={icons_style} />
+            ) : (
+              <AiOutlineDislike style={icons_style} />
+            )}
           </IconButton>
           <small>{dislike.amount > 0 && dislike.amount}</small>
         </div>
