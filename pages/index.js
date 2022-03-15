@@ -1,6 +1,8 @@
 // Pre definded
 import { useEffect, useState, useContext, useRef } from "react";
 import util from "util";
+import { Fab } from "@mui/material";
+import { HiPencil } from "react-icons/hi";
 
 import styles from "../styles/modules/Home.module.css";
 import PostCollection from "../components/api/posts/PostCollection";
@@ -77,6 +79,21 @@ export default function Home() {
         When Scrolled To the end load more content
 
         */}
+
+      {accountServices.isLoggedIn && (
+        <Fab
+          color="primary"
+          aria-label="create post"
+          href="/create-post"
+          sx={{
+            position: "absolute",
+            bottom: 16,
+            right: 16,
+          }}
+        >
+          <HiPencil style={{ fontSize: "20px" }} />
+        </Fab>
+      )}
     </div>
   );
 }
