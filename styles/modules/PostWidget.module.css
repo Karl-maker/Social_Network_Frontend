@@ -24,3 +24,14 @@
 .secondary small {
   color: "#636e72";
 }
+
+.list {
+  overflow: auto;
+  -ms-overflow-style: "none";
+  scrollbar-width: "none";
+  height: 90vh;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}

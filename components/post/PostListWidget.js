@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PostWidget from "./PostWidget";
+import Link from "next/link";
 
 export default function PostListWidget({ posts }) {
   const [list, setList] = useState([]);

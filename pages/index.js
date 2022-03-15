@@ -1,5 +1,5 @@
 // Pre definded
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import util from "util";
 
 import styles from "../styles/modules/Home.module.css";
@@ -31,6 +31,17 @@ export default function Home() {
   const [pageNumber, setPageNumber] = useState(0);
   const [maxDistance, setMaxDistance] = useState(50000);
   const [errorData, setErrorData] = useState();
+  const listInnerRef = useRef();
+
+  const handleScroll = (e) => {
+    if (listInnerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+
+      if ((scrollHeight - scrollTop) * 0.9 <= clientHeight) {
+        setPageNumber(pageNumber + 1);
+      }
+    }
+  };
 
   useEffect(() => {
     // Initially set Coordinates as such...
@@ -59,19 +70,13 @@ export default function Home() {
   }, [pageNumber]);
 
   return (
-    <div className="mt-3">
+    <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
       <PostListWidget posts={posts} />
       {/*
 
         When Scrolled To the end load more content
 
         */}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          setPageNumber((pageNumber += 1));
-        }}
-      />
     </div>
   );
 }

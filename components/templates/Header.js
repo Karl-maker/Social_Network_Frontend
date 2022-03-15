@@ -27,11 +27,17 @@ export default function Header({}) {
             <FaUserCircle style={{ marginLeft: "20px", fontSize: "30px" }} />
           </>
         ) : (
-          <Link href="/login" passHref>
-            <Button variant="contained" disableElevation>
-              Login
-            </Button>
-          </Link>
+          <Button
+            variant="contained"
+            href="/login"
+            sx={{
+              borderRadius: "20px",
+              borderColor: "transparent",
+            }}
+            disableElevation
+          >
+            Login
+          </Button>
         )}
       </div>
     </>

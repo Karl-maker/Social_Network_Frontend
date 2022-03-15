@@ -33,8 +33,8 @@ export default function PostWidget({ post }) {
       <div className="container-flush p-4">
         <div className="row">
           <div className="col-6">
-            <Link href={`/user/${userInfo._id}`}>
-              <p>
+            <Link href={`/user/${userInfo._id}`} passHref>
+              <p style={{ cursor: "pointer" }}>
                 <small>
                   <strong>{userInfo.display_name}</strong>
                 </small>

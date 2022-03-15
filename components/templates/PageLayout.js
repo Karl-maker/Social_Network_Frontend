@@ -8,7 +8,7 @@ export default function PageLayout({ children }) {
           className="row align-items-center pt-2 sticky-top"
           style={{
             opacity: 0.99,
-            backdropFilter: "blur(5px)",
+            backdropFilter: "blur(20px)",
           }}
         >
           {/*

@@ -62,22 +62,25 @@ export default class User extends Connection {
   }
 
   async login(email, password) {
-    const result = await axios.post(`${this.base_url}/api/login`, {
-      password,
-      email,
-    });
+    try {
+      const result = await axios.post(`${this.base_url}/api/login`, {
+        password,
+        email,
+      });
 
-    if (result.status === 200) {
-      this.access_token = result.data.access_token;
+      if (result.status === 200) {
+        this.access_token = result.data.access_token;
 
-      await this.fetchCurrentUser();
-      await this.fetchUserInformation(this._id);
+        await this.fetchCurrentUser();
+        await this.fetchUserInformation(this._id);
 
-      this._isLoggedIn = true;
+        this._isLoggedIn = true;
 
-      return true;
+        return result;
+      }
+    } catch (err) {
+      throw err;
     }
-    return false;
   }
 
   async authenticate() {

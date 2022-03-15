@@ -34,22 +34,6 @@ export default class PostCollection extends Connect {
     return { meta_data: result.data[0].meta_data, data: data_list };
   }
 
-  async *fetchManyPostsGenerator({ page_size, max_distance }) {
-    let page_number = 0;
-
-    while (true) {
-      const { data, meta_data } = await fetchManyPosts({
-        page_number,
-        page_size,
-        max_distance,
-      });
-
-      page_number++;
-
-      yield { data: data, meta_data };
-    }
-  }
-
   async fetchShares(id) {
     const result = await axios.get(`${this.base_url}/api/post/shares${id}`);
     let data_list = [];
