@@ -11,7 +11,7 @@ import { ImLocation2 } from "react-icons/im";
 import Link from "next/link";
 
 export default function PostWidget({ post }) {
-  const user = new User(process.env.BACKEND_URL, null);
+  const user = new User(process.env.BACKEND_URL, null, {});
   const post_date = new Date(post.data.createdAt);
   const current_date = new Date();
   const how_long_ago = checkHowManyDaysAgo(post_date, current_date);

@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 import PageLayout from "../components/templates/PageLayout";
 import { ContextProvider } from "../components/templates/ContextProvider";
+import RouteGuard from "../components/templates/RouteGuard";
 
 import Head from "next/head";
 import Script from "next/script";
@@ -24,7 +25,9 @@ function App({ Component, pageProps }) {
     */}
       <ContextProvider>
         <PageLayout>
-          <Component {...pageProps} />
+          <RouteGuard pageProps={pageProps}>
+            <Component {...pageProps} />
+          </RouteGuard>
         </PageLayout>
       </ContextProvider>
     </>

@@ -14,9 +14,6 @@ export default class Post extends Connect {
 
     this.data = data || null;
     this.coordinates = coordinates || { latitude: null, longitude: null };
-    this.config = {
-      headers: { Authorization: `Bearer ${this.access_token}` },
-    };
   }
 
   // Getters and Setters
@@ -65,7 +62,7 @@ export default class Post extends Connect {
         post_id: this.data._id,
         type: "like",
       },
-      this.config
+      { headers: { Authorization: `Bearer ${this.access_token}` } }
     );
 
     return results;
@@ -78,19 +75,27 @@ export default class Post extends Connect {
         post_id: this.data._id,
         type: "dislike",
       },
-      this.config
+      { headers: { Authorization: `Bearer ${this.access_token}` } }
     );
 
     return results;
   }
 
   async checkActivityStatus(post_id) {
-    const results = await axios.get(
-      `${this.base_url}/api/activity/${post_id}`,
-      this.config
-    );
+    try {
+      const results = await axios.get(
+        `${this.base_url}/api/activity/${post_id}`,
+        { headers: { Authorization: `Bearer ${this.access_token}` } }
+      );
 
-    return results;
+      if (results.status !== 200) {
+        throw results;
+      }
+
+      return results;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async createAReply(content) {
@@ -101,11 +106,9 @@ export default class Post extends Connect {
       latitude: this.coordinates.latitude,
     };
 
-    const result = await axios.post(
-      `${this.base_url}/api/post`,
-      body,
-      this.config
-    );
+    const result = await axios.post(`${this.base_url}/api/post`, body, {
+      headers: { Authorization: `Bearer ${this.access_token}` },
+    });
     return result;
   }
 
@@ -117,11 +120,9 @@ export default class Post extends Connect {
       latitude: this.coordinates.latitude,
     };
 
-    const result = await axios.post(
-      `${this.base_url}/api/post`,
-      body,
-      this.config
-    );
+    const result = await axios.post(`${this.base_url}/api/post`, body, {
+      headers: { Authorization: `Bearer ${this.access_token}` },
+    });
     return result;
   }
 }

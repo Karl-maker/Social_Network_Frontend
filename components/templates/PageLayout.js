@@ -24,9 +24,9 @@ export default function PageLayout({ children }) {
           Main Body
 
           */}
-          <div className="col-lg-3 col-md-1 col-sm-0"></div>
-          <div className="col-lg-6 col-md-10 col-sm-12">{children}</div>
-          <div className="col-lg-3 col-md-1 col-sm-0"></div>
+          <div className="col-lg-4 col-md-1 col-sm-0"></div>
+          <div className="col-lg-4 col-md-10 col-sm-12">{children}</div>
+          <div className="col-lg-4 col-md-1 col-sm-0"></div>
         </div>
       </div>
     </>

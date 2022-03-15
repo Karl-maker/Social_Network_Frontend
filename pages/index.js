@@ -7,19 +7,29 @@ import PostCollection from "../components/api/posts/PostCollection";
 import PostListWidget from "../components/post/PostListWidget";
 import { noDuplicateObjects } from "../components/utils/array";
 import { AccountContext } from "../components/templates/ContextProvider";
+import DistanceSlider from "../components/post/DistanceSlider";
+import widget from "../styles/modules/PostWidget.module.css";
+
+export async function getStaticProps(context) {
+  return {
+    props: {
+      protected: false,
+    },
+  };
+}
 
 export default function Home() {
   const accountServices = useContext(AccountContext);
 
   let post = new PostCollection(
     process.env.BACKEND_URL || "",
-    accountServices.accessToken || "",
+    accountServices.access_token || "",
     {}
   );
-  const PAGE_SIZE = 2;
+  const PAGE_SIZE = 10;
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(1000000);
+  const [maxDistance, setMaxDistance] = useState(50000);
   const [errorData, setErrorData] = useState();
 
   useEffect(() => {
@@ -49,7 +59,7 @@ export default function Home() {
   }, [pageNumber]);
 
   return (
-    <>
+    <div className="mt-3">
       <PostListWidget posts={posts} />
       {/*
 
@@ -62,6 +72,6 @@ export default function Home() {
           setPageNumber((pageNumber += 1));
         }}
       />
-    </>
+    </div>
   );
 }

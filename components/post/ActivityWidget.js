@@ -31,18 +31,25 @@ export default function ActivityWidget({
   const [activityState] = useActor(activityService);
 
   useEffect(() => {
-    post.accessToken = accountServices.accessToken;
-    post.checkActivityStatus(post.data._id).then((result) => {
-      if (!result.data) {
-        return;
-      }
+    if (accountServices.access_token) {
+      post.access_token = accountServices.access_token;
+      post
+        .checkActivityStatus(post.data._id)
+        .then((result) => {
+          if (!result.data) {
+            return;
+          }
 
-      if (result.data.type === "like") {
-        activityService.send("LIKE");
-      } else if (result.data.type === "dislike") {
-        activityService.send("DISLIKE");
-      }
-    });
+          if (result.data.type === "like") {
+            activityService.send("LIKE");
+          } else if (result.data.type === "dislike") {
+            activityService.send("DISLIKE");
+          }
+        })
+        .catch((err) => {
+          // Not Logged In
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -75,21 +82,27 @@ export default function ActivityWidget({
           <IconButton aria-label="reply" color="primary" className="p-2">
             <HiReply style={icons_style} />
           </IconButton>
-          <small>{reply && reply.amount}</small>
+          <small>{reply.amount > 0 && reply.amount}</small>
         </div>
-        <div className={activityState.matches("like") && "primary-theme"}>
+        <div
+          className={
+            activityState.matches("like") ? "primary-theme" : undefined
+          }
+        >
           <IconButton
             aria-label="like"
             color="success"
             className="p-2"
             onClick={(e) => {
-              post.accessToken = accountServices.accessToken;
-              post.likeButtonInteraction().then((result) => {
-                if (result.status === 200) {
-                  setPrev(activityState.value);
-                  activityService.send("LIKE");
-                }
-              });
+              if (accountServices.access_token) {
+                post.access_token = accountServices.access_token;
+                post.likeButtonInteraction().then((result) => {
+                  if (result.status === 200) {
+                    setPrev(activityState.value);
+                    activityService.send("LIKE");
+                  }
+                });
+              }
             }}
           >
             {activityState.matches("like") ? (
@@ -100,19 +113,25 @@ export default function ActivityWidget({
           </IconButton>
           <small>{like.amount > 0 && like.amount}</small>
         </div>
-        <div className={activityState.matches("dislike") && "secondary-theme"}>
+        <div
+          className={
+            activityState.matches("dislike") ? "secondary-theme" : undefined
+          }
+        >
           <IconButton
             aria-label="dislike"
             color="secondary"
             className="p-2"
             onClick={(e) => {
-              post.accessToken = accountServices.accessToken;
-              post.dislikeButtonInteraction().then((result) => {
-                if (result.status === 200) {
-                  setPrev(activityState.value);
-                  activityService.send("DISLIKE");
-                }
-              });
+              if (accountServices.access_token) {
+                post.access_token = accountServices.access_token;
+                post.dislikeButtonInteraction().then((result) => {
+                  if (result.status === 200) {
+                    setPrev(activityState.value);
+                    activityService.send("DISLIKE");
+                  }
+                });
+              }
             }}
           >
             {activityState.matches("dislike") ? (
@@ -127,7 +146,7 @@ export default function ActivityWidget({
           <IconButton aria-label="share" color="primary" className="p-2">
             <FiShare style={icons_style} />
           </IconButton>
-          <small>{share && share.amount}</small>
+          <small>{share.amount > 0 && share.amount}</small>
         </div>
       </div>
     </div>

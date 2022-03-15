@@ -20,22 +20,22 @@ export default class Connection {
   // Getters
 
   get baseUrl() {
-    return this.base_url;
+    return this._base_url;
   }
 
   // Get AccessToken
-  get accessToken() {
-    return this.access_token;
+  get access_token() {
+    return this._access_token;
   }
 
   // Setters
 
-  set accessToken(access_token) {
-    this.access_token = access_token;
+  set access_token(access_token) {
+    this._access_token = access_token;
   }
 
   set baseUrl(base_url) {
-    this.base_url = base_url;
+    this._base_url = base_url;
   }
 
   // Methods
