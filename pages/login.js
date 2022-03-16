@@ -1,6 +1,6 @@
 import { AccountContext } from "../components/templates/ContextProvider";
 import { useState, useEffect, useContext } from "react";
-import { TextField } from "@mui/material";
+import { TextField, CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import widget from "../styles/modules/Widget.module.css";
@@ -19,6 +19,7 @@ export default function Login() {
   const router = useRouter();
   const accountServices = useContext(AccountContext);
   const [isLoggedIn, setIsLoggedIn] = useState();
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,6 +33,8 @@ export default function Login() {
     accountServices.login(email, password).then(() => {
       if (accountServices.isLoggedIn) setIsLoggedIn(accountServices.isLoggedIn);
       else setError("Email or password is incorrect");
+
+      setLoading(false);
     });
   };
 
@@ -79,10 +82,13 @@ export default function Login() {
               borderColor: "transparent",
               width: "222.8px",
             }}
-            onClick={(e) => handleLogin(e)}
+            onClick={(e) => {
+              setLoading(true);
+              handleLogin(e);
+            }}
             disableElevation
           >
-            Log in
+            {loading ? <CircularProgress color="inherit" /> : <>Log in</>}
           </Button>
         </div>
         {error && (

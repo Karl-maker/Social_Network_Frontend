@@ -5,8 +5,10 @@ import ChildWidget from "../../components/post/ChildWidget";
 
 import { useContext, useEffect, useState } from "react";
 import { ImLocation2 } from "react-icons/im";
+import { MdKeyboardBackspace } from "react-icons/md";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export async function getStaticProps(context) {
   return {
@@ -16,7 +18,7 @@ export async function getStaticProps(context) {
   };
 }
 
-export default function CreatePost() {
+export default function CreatePostPage() {
   const accountServices = useContext(AccountContext);
   const [content, setContent] = useState("");
   const [rows, setRows] = useState(5);
@@ -68,62 +70,67 @@ export default function CreatePost() {
   };
 
   return (
-    <div className={widget.primary}>
-      <div className="container-flush p-4">
-        <div className="row">
-          <div className="col-12">
-            <p style={{ cursor: "pointer" }}>
-              <small>
-                <strong>{accountServices.display_name}</strong>
-              </small>
-              <small style={{ marginLeft: "5px" }}>{`@${
-                accountServices.username || ""
-              }`}</small>
-            </p>
+    <div>
+      <Link href="/" passHref>
+        <MdKeyboardBackspace className="mx-2" style={{ fontSize: "20px" }} />
+      </Link>
+      <div className={widget.primary}>
+        <div className="container-flush p-4">
+          <div className="row">
+            <div className="col-12">
+              <p style={{ cursor: "pointer" }}>
+                <small>
+                  <strong>{accountServices.display_name}</strong>
+                </small>
+                <small style={{ marginLeft: "5px" }}>{`@${
+                  accountServices.username || ""
+                }`}</small>
+              </p>
+            </div>
           </div>
-        </div>
-        {router.query.reply && !router.query.share && (
-          <div className="mb-3">
-            <ChildWidget post_id={router.query.reply} />
-          </div>
-        )}
-        <div className="row"></div>
-        <textarea
-          rows={`${rows}`}
-          cols="20"
-          wrap="hard"
-          className={widget.text_input}
-          style={{ height: "100%", width: "100%" }}
-          placeholder="What are you thinking about?"
-          type="textarea"
-          name="content"
-          onChange={(e) => {
-            setContent(e.target.value);
-          }}
-          value={content}
-        />
-        {router.query.share && !router.query.reply && (
-          <div>
-            <ChildWidget post_id={router.query.share} />
-          </div>
-        )}
-        <div className="row mt-3">
-          <div className="col-12 text-end">
-            <Button
-              variant="contained"
-              sx={{
-                borderRadius: "20px",
-                borderColor: "transparent",
-              }}
-              onClick={handleSubmit}
-              disableElevation
-            >
-              {router.query.share ? (
-                "Share"
-              ) : (
-                <>{router.query.reply ? "Reply" : "Post"}</>
-              )}
-            </Button>
+          {router.query.reply && !router.query.share && (
+            <div className="mb-3">
+              <ChildWidget post_id={router.query.reply} />
+            </div>
+          )}
+          <div className="row"></div>
+          <textarea
+            rows={`${rows}`}
+            cols="20"
+            wrap="hard"
+            className={widget.text_input}
+            style={{ height: "100%", width: "100%" }}
+            placeholder="What are you thinking about?"
+            type="textarea"
+            name="content"
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+            value={content}
+          />
+          {router.query.share && !router.query.reply && (
+            <div>
+              <ChildWidget post_id={router.query.share} />
+            </div>
+          )}
+          <div className="row mt-3">
+            <div className="col-12 text-end">
+              <Button
+                variant="contained"
+                sx={{
+                  borderRadius: "20px",
+                  borderColor: "transparent",
+                }}
+                onClick={handleSubmit}
+                disableElevation
+              >
+                {router.query.share ? (
+                  "Share"
+                ) : (
+                  <>{router.query.reply ? "Reply" : "Post"}</>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

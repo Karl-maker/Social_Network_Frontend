@@ -127,6 +127,10 @@ export default class Post extends Connect {
   }
 
   async create(content) {
+    if (!content) {
+      return false;
+    }
+
     const body = {
       content,
       longitude: this.coordinates.longitude,

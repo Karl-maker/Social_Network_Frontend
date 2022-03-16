@@ -127,7 +127,6 @@ export default function PostWidget({ post }) {
                     fontSize: "15px",
                   }}
                 />
-
                 <PostMenu />
               </p>
             </div>

@@ -5,6 +5,7 @@ import { checkHowManyDaysAgo } from "../utils/date";
 
 import { useEffect, useState } from "react";
 import { ImLocation2 } from "react-icons/im";
+import PostSkeleton from "./PostSkeleton";
 
 export default function ChildWidget({ post_id }) {
   const connect = new Connection(process.env.BACKEND_URL, null);
@@ -15,6 +16,7 @@ export default function ChildWidget({ post_id }) {
   const [userInfo, setUserInfo] = useState();
   const [postInfo, setPostInfo] = useState();
   const [errorInfo, setErrorInfo] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     connect
@@ -32,6 +34,8 @@ export default function ChildWidget({ post_id }) {
             setUserInfo(result);
           });
         }
+
+        setLoading(false);
       })
       .catch((err) => {
         setErrorInfo(err);
@@ -52,6 +56,14 @@ export default function ChildWidget({ post_id }) {
 
   if (!userInfo) {
     return <></>;
+  }
+
+  if (loading) {
+    return (
+      <div className="container-flush p-0">
+        <PostSkeleton />
+      </div>
+    );
   }
 
   return (
