@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
-import widget from "../styles/modules/PostWidget.module.css";
+import widget from "../styles/modules/Widget.module.css";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -29,7 +29,6 @@ export default function Login() {
   }
 
   const handleLogin = (e) => {
-    console.log("click");
     accountServices.login(email, password).then(() => {
       if (accountServices.isLoggedIn) setIsLoggedIn(accountServices.isLoggedIn);
       else setError("Email or password is incorrect");

@@ -35,3 +35,11 @@
 .list::-webkit-scrollbar {
   display: none;
 }
+
+.text_input {
+  border: none;
+}
+
+.text_input:focus {
+  outline: none;
+}

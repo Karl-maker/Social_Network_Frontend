@@ -8,8 +8,20 @@ export function checkHowManyDaysAgo(first, second) {
   } else if ((second - first) / (1000 * 60 * 60 * 24 * 31) < 1) {
     return `${Math.round((second - first) / (1000 * 60 * 60 * 24))}d`;
   } else if ((second - first) / (1000 * 60 * 60 * 24 * 31 * 12) < 1) {
-    return `${Math.round((second - first) / (1000 * 60 * 60 * 24 * 31))}m`;
+    return formatDate(first);
   } else if ((second - first) / (1000 * 60 * 60 * 24 * 31 * 12) > 1) {
-    return `${Math.round((second - first) / (1000 * 60 * 60 * 24 * 31 * 12))}y`;
+    return formatDate(first);
   }
+}
+
+function padTo2Digits(num) {
+  return num.toString().padStart(2, "0");
+}
+
+function formatDate(date) {
+  return [
+    padTo2Digits(date.getDate()),
+    padTo2Digits(date.getMonth() + 1),
+    date.getFullYear(),
+  ].join("/");
 }

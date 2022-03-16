@@ -3,14 +3,16 @@ import { useEffect, useState, useContext, useRef } from "react";
 import util from "util";
 import { Fab } from "@mui/material";
 import { HiPencil } from "react-icons/hi";
+import Link from "next/link";
 
+import PostSkeleton from "../components/post/PostSkeleton";
 import styles from "../styles/modules/Home.module.css";
 import PostCollection from "../components/api/posts/PostCollection";
 import PostListWidget from "../components/post/PostListWidget";
 import { noDuplicateObjects } from "../components/utils/array";
 import { AccountContext } from "../components/templates/ContextProvider";
 import DistanceSlider from "../components/post/DistanceSlider";
-import widget from "../styles/modules/PostWidget.module.css";
+import widget from "../styles/modules/Widget.module.css";
 
 export async function getStaticProps(context) {
   return {
@@ -33,6 +35,7 @@ export default function Home() {
   const [pageNumber, setPageNumber] = useState(0);
   const [maxDistance, setMaxDistance] = useState(50000);
   const [errorData, setErrorData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const listInnerRef = useRef();
 
   const handleScroll = (e) => {
@@ -67,12 +70,40 @@ export default function Home() {
         .catch((error) => {
           // Capture Error
           setErrorData(error);
+          setIsLoading(false);
         });
+
+      setIsLoading(false);
     });
   }, [pageNumber]);
 
+  if (isLoading) {
+    return (
+      <div className="container-flush p-4 text-center">
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
+        <PostSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
+      {posts.length === 0 && !isLoading && (
+        <div className={widget.secondary}>
+          <Link href="/post" passHref>
+            <div className="container-flush p-4 text-center">
+              <p style={{ cursor: "pointer", fontSize: "15px" }}>
+                <strong>No Posts Found In Your Location</strong>
+              </p>
+              <p style={{ cursor: "pointer", fontSize: "11px" }}>
+                <small>Be the first to create a post here!</small>
+              </p>
+            </div>
+          </Link>
+        </div>
+      )}
       <PostListWidget posts={posts} />
       {/*
 
@@ -81,18 +112,19 @@ export default function Home() {
         */}
 
       {accountServices.isLoggedIn && (
-        <Fab
-          color="primary"
-          aria-label="create post"
-          href="/create-post"
-          sx={{
-            position: "absolute",
-            bottom: 16,
-            right: 16,
-          }}
-        >
-          <HiPencil style={{ fontSize: "20px" }} />
-        </Fab>
+        <Link href="/post" passHref>
+          <Fab
+            color="primary"
+            aria-label="create post"
+            sx={{
+              position: "absolute",
+              bottom: 16,
+              right: 16,
+            }}
+          >
+            <HiPencil style={{ fontSize: "20px" }} />
+          </Fab>
+        </Link>
       )}
     </div>
   );

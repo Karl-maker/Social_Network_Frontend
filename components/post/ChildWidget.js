@@ -1,4 +1,4 @@
-import widget from "../../styles/modules/PostWidget.module.css";
+import widget from "../../styles/modules/Widget.module.css";
 import User from "../api/users/User";
 import Connection from "../api/Connection";
 import { checkHowManyDaysAgo } from "../utils/date";
@@ -58,7 +58,7 @@ export default function ChildWidget({ post_id }) {
     <div className={widget.secondary}>
       <div className="container-flush p-4">
         <div className="row">
-          <div className="col-6">
+          <div className="col-10">
             <p>
               <small>
                 <strong>{userInfo.display_name}</strong>
@@ -66,34 +66,6 @@ export default function ChildWidget({ post_id }) {
               <small style={{ marginLeft: "5px" }}>{`@${
                 userInfo.user[0].username || ""
               }`}</small>
-            </p>
-          </div>
-          <div className="col-6">
-            <p className="text-end">
-              <ImLocation2
-                style={{
-                  color: "#74b9ff",
-                  fontSize: "12px",
-                }}
-              />
-              <small
-                style={{
-                  marginLeft: "2px",
-                  fontSize: "12px",
-                  marginBottom: "2px",
-                }}
-              >
-                {postInfo.area.city}
-              </small>
-              <small
-                style={{
-                  marginLeft: "5px",
-                  fontSize: "12px",
-                  marginBottom: "2px",
-                }}
-              >
-                {how_long_ago}
-              </small>
             </p>
           </div>
         </div>

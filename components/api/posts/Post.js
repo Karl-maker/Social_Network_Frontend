@@ -98,10 +98,10 @@ export default class Post extends Connect {
     }
   }
 
-  async createAReply(content) {
+  async createAReply(content, reply) {
     const body = {
       content,
-      replied_to: this._data._id,
+      replied_to: reply,
       longitude: this.coordinates.longitude,
       latitude: this.coordinates.latitude,
     };
@@ -112,10 +112,10 @@ export default class Post extends Connect {
     return result;
   }
 
-  async createAShare(content) {
+  async createAShare(content, share) {
     const body = {
       content,
-      shared_from: this._data._id,
+      shared_from: share,
       longitude: this.coordinates.longitude,
       latitude: this.coordinates.latitude,
     };
@@ -123,6 +123,30 @@ export default class Post extends Connect {
     const result = await axios.post(`${this.base_url}/api/post`, body, {
       headers: { Authorization: `Bearer ${this.access_token}` },
     });
+    return result;
+  }
+
+  async create(content) {
+    const body = {
+      content,
+      longitude: this.coordinates.longitude,
+      latitude: this.coordinates.latitude,
+    };
+
+    const result = await axios.post(`${this.base_url}/api/post`, body, {
+      headers: { Authorization: `Bearer ${this.access_token}` },
+    });
+    return result;
+  }
+
+  async delete() {
+    const result = await axios.delete(
+      `${this.base_url}/api/post/${this.data._id}`,
+      {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      }
+    );
+
     return result;
   }
 }

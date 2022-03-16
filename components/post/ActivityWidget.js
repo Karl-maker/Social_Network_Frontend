@@ -11,6 +11,7 @@ import { useState, useEffect, useContext } from "react";
 import { AccountContext } from "../templates/ContextProvider";
 import activityMachine from "../state-machine/activity";
 import { useInterpret, useMachine, useActor } from "@xstate/react";
+import Link from "next/link";
 
 export default function ActivityWidget({
   likes,
@@ -79,9 +80,20 @@ export default function ActivityWidget({
 
        */}
         <div>
-          <IconButton aria-label="reply" color="primary" className="p-2">
-            <HiReply style={icons_style} />
-          </IconButton>
+          <Link
+            href={
+              (accountServices.isLoggedIn && {
+                pathname: `/post`,
+                query: { reply: post.data._id },
+              }) ||
+              "/login"
+            }
+            passHref
+          >
+            <IconButton aria-label="reply" color="primary" className="p-2">
+              <HiReply style={icons_style} />
+            </IconButton>
+          </Link>
           <small>{reply.amount > 0 && reply.amount}</small>
         </div>
         <div
@@ -143,9 +155,20 @@ export default function ActivityWidget({
           <small>{dislike.amount > 0 && dislike.amount}</small>
         </div>
         <div>
-          <IconButton aria-label="share" color="primary" className="p-2">
-            <FiShare style={icons_style} />
-          </IconButton>
+          <Link
+            href={
+              (accountServices.isLoggedIn && {
+                pathname: `/post`,
+                query: { share: post.data._id },
+              }) ||
+              "/login"
+            }
+            passHref
+          >
+            <IconButton aria-label="share" color="primary" className="p-2">
+              <FiShare style={icons_style} />
+            </IconButton>
+          </Link>
           <small>{share.amount > 0 && share.amount}</small>
         </div>
       </div>

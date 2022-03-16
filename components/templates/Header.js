@@ -21,7 +21,7 @@ export default function Header({}) {
         </Link>
       </div>
       <div className="col-6 text-end px-4">
-        {username ? (
+        {accountServices.isLoggedIn ? (
           <>
             {`${username}`}
             <FaUserCircle style={{ marginLeft: "20px", fontSize: "30px" }} />
