@@ -6,6 +6,7 @@ export const AccountContext = createContext({});
 export function ContextProvider({ children }) {
   const account = new User(process.env.BACKEND_URL || "", "", {});
   const [user, setUser] = useState(account);
+  user.authenticate();
 
   return (
     <AccountContext.Provider value={user}>

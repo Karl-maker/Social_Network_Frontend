@@ -37,7 +37,6 @@ export default function RepliesList({ post_id }) {
         })
         .then(({ data }) => {
           setReplies(noDuplicateObjects(replies.concat(data), "_id"));
-          console.log(noDuplicateObjects(replies.concat(data), "_id"));
         })
         .catch((error) => {
           // Capture Error

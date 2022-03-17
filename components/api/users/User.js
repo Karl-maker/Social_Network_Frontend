@@ -42,8 +42,19 @@ export default class User extends Connection {
     const results = await axios.get(
       `${this.base_url}/api/profile/${id || this.id}`
     );
-    this._username = results.data[0].user[0].username;
-    this._display_name = results.data[0].display_name;
+
+    try {
+      this._username = results.data[0].user[0].username || "";
+    } catch (error) {
+      console.log(results);
+    }
+
+    try {
+      this._display_name = results.data[0].display_name;
+    } catch (error) {
+      console.log(results);
+    }
+
     return results.data[0];
   }
 
@@ -63,10 +74,14 @@ export default class User extends Connection {
 
   async login(email, password) {
     try {
-      const result = await axios.post(`${this.base_url}/api/login`, {
-        password,
-        email,
-      });
+      const result = await axios.post(
+        `${this.base_url}/api/login`,
+        {
+          password,
+          email,
+        },
+        { withCredentials: true }
+      );
 
       if (result.status === 200) {
         this.access_token = result.data.access_token;
@@ -84,7 +99,13 @@ export default class User extends Connection {
   }
 
   async authenticate() {
-    const result = await axios.post(`${this.base_url}/api/authenticate`);
+    const result = await axios.post(
+      `${this.base_url}/api/authenticate`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
 
     if (result.status === 200) {
       this.access_token = result.data.access_token;
@@ -92,8 +113,12 @@ export default class User extends Connection {
       await this.fetchCurrentUser();
       await this.fetchUserInformation(this._id);
 
+      this._isLoggedIn = true;
+      console.log("Success", this.access_token);
       return true;
     }
+    console.log("Fail", this.access_token);
+    this._isLoggedIn = false;
 
     return false;
   }
