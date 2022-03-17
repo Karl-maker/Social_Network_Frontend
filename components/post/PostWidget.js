@@ -171,7 +171,7 @@ export default function PostWidget({ post }) {
                 <>
                   <ImLocation2
                     style={{
-                      color: "#2980b9",
+                      color: "#74b9ff",
                       fontSize: "12px",
                       marginRight: "2px",
                     }}
@@ -182,7 +182,7 @@ export default function PostWidget({ post }) {
                 <>
                   <ImLocation2
                     style={{
-                      color: "#2980b9",
+                      color: "#74b9ff",
                       fontSize: "12px",
                       marginRight: "2px",
                     }}
@@ -192,10 +192,11 @@ export default function PostWidget({ post }) {
               )
             }
             variant="outlined"
-            color="primary"
             sx={{
               fontSize: 10,
               padding: 0.1,
+              borderColor: "#74b9ff",
+              color: "#74b9ff",
             }}
           />
         </p>

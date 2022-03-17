@@ -33,6 +33,7 @@ export default function Header({}) {
             sx={{
               borderRadius: "20px",
               borderColor: "transparent",
+              backgroundColor: "#2980b9",
             }}
             disableElevation
           >

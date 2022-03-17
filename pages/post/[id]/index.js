@@ -7,6 +7,25 @@ import PostSkeleton from "../../../components/post/PostSkeleton";
 import PostWidget from "../../../components/post/PostWidget";
 import { AccountContext } from "../../../components/templates/ContextProvider";
 
+export async function getStaticProps(context) {
+  return {
+    props: {
+      protected: false,
+      title: "Post",
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [
+      // String variant:
+      "/post/id",
+    ],
+    fallback: true,
+  };
+}
+
 export default function PostPage() {
   const router = useRouter();
   const accountServices = useContext(AccountContext);

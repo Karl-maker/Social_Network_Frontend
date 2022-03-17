@@ -18,6 +18,7 @@ export async function getStaticProps(context) {
   return {
     props: {
       protected: false,
+      title: "Feed",
     },
   };
 }
@@ -114,12 +115,13 @@ export default function Home() {
       {accountServices.isLoggedIn && (
         <Link href="/post" passHref>
           <Fab
-            color="primary"
             aria-label="create post"
             sx={{
               position: "absolute",
               bottom: 16,
               right: 16,
+              backgroundColor: "#2980b9",
+              color: "#ffff",
             }}
           >
             <HiPencil style={{ fontSize: "20px" }} />

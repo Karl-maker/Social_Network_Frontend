@@ -11,6 +11,7 @@ export async function getStaticProps(context) {
   return {
     props: {
       protected: false,
+      title: "Login",
     },
   };
 }

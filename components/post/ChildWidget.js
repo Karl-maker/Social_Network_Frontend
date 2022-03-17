@@ -6,6 +6,7 @@ import { checkHowManyDaysAgo } from "../utils/date";
 import { useEffect, useState } from "react";
 import { ImLocation2 } from "react-icons/im";
 import PostSkeleton from "./PostSkeleton";
+import Link from "next/link";
 
 export default function ChildWidget({ post_id }) {
   const connect = new Connection(process.env.BACKEND_URL, null);
@@ -67,24 +68,28 @@ export default function ChildWidget({ post_id }) {
   }
 
   return (
-    <div className={widget.secondary}>
-      <div className="container-flush p-4">
-        <div className="row">
-          <div className="col-10">
-            <p>
-              <small>
-                <strong>{userInfo.display_name}</strong>
-              </small>
-              <small style={{ marginLeft: "5px" }}>{`@${
-                userInfo.user[0].username || ""
-              }`}</small>
-            </p>
+    <Link href={`/post/${postInfo._id}`}>
+      <div className={widget.secondary}>
+        <div className="container-flush p-4">
+          <div className="row">
+            <div className="col-10">
+              <Link href={`/profile/${postInfo.user_id}`}>
+                <p>
+                  <small>
+                    <strong>{userInfo.display_name}</strong>
+                  </small>
+                  <small style={{ marginLeft: "5px" }}>{`@${
+                    userInfo.user[0].username || ""
+                  }`}</small>
+                </p>
+              </Link>
+            </div>
+          </div>
+          <div className="row">
+            <p>{postInfo.content}</p>
           </div>
         </div>
-        <div className="row">
-          <p>{postInfo.content}</p>
-        </div>
       </div>
-    </div>
+    </Link>
   );
 }
