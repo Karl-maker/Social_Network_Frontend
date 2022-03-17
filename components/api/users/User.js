@@ -183,4 +183,14 @@ export default class User extends Connection {
 
     return false;
   }
+
+  async logout() {
+    await axios.delete(`${this.base_url}/api/authenticate`, {
+      headers: { Authorization: `Bearer ${this.access_token}` },
+    });
+
+    this._isLoggedIn = false;
+
+    return;
+  }
 }

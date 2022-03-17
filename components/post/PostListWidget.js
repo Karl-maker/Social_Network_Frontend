@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import PostWidget from "./PostWidget";
+import ReplyWidget from "./ReplyWidget";
 import Link from "next/link";
 
-export default function PostListWidget({ posts }) {
+export default function PostListWidget({ posts, type }) {
   const [list, setList] = useState([]);
   useEffect(() => {
     setList(posts);
@@ -10,7 +11,8 @@ export default function PostListWidget({ posts }) {
 
   const listPosts = list.map((post) => (
     <li key={post.data._id}>
-      <PostWidget post={post} />
+      {type === "replies" && <ReplyWidget post={post} />}
+      {!type && <PostWidget post={post} />}
     </li>
   ));
 

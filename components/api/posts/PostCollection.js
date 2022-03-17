@@ -47,14 +47,18 @@ export default class PostCollection extends Connect {
     return { data: data_list };
   }
 
-  async fetchReplies(id) {
-    const result = await axios.get(`${this.base_url}/api/post/replies${id}`);
+  async fetchReplies(id, { page_size, page_number }) {
+    const result = await axios.get(
+      `${this.base_url}/api/post/replies/${id}?page_number=${page_number}&page_size=${page_size}`
+    );
     let data_list = [];
 
     for (let i = 0; i < result.data.length; i++) {
-      data_list.push(
-        new Post(this.base_url, this.access_token, { data: result.data[i] })
-      );
+      let item = new Post(this.base_url, this.access_token, {
+        data: result.data[i],
+      });
+
+      data_list.push(item);
     }
 
     return { data: data_list };

@@ -13,7 +13,7 @@ import Link from "next/link";
 import { Button, Menu, MenuItem, Chip } from "@mui/material";
 import { useRouter } from "next/router";
 
-export default function PostWidget({ post, children }) {
+export default function ReplyWidget({ post }) {
   const user = new User(process.env.BACKEND_URL, null, {});
   const accountServices = useContext(AccountContext);
   const post_date = new Date(post.data.createdAt);
@@ -72,7 +72,7 @@ export default function PostWidget({ post, children }) {
   };
 
   return (
-    <div className={widget.primary}>
+    <div className={widget.secondary}>
       <div className="container-flush p-4">
         <div className="row">
           <div
@@ -133,96 +133,9 @@ export default function PostWidget({ post, children }) {
           </div>
         </div>
 
-        {post.data.replied_to && (
-          <div
-            style={{
-              marginBottom: "0px",
-              marginTop: "0px",
-            }}
-            className="mb-4"
-          >
-            <ChildWidget post_id={post.data.replied_to} />
-          </div>
-        )}
         <div className="row mt-2">
-          <p style={{ color: "#2d3436" }}>
-            {post.data.replied_to && (
-              <BsArrowReturnRight
-                style={{
-                  marginRight: "10px",
-                  marginLeft: "10px",
-                  fontSize: "15px",
-                }}
-              />
-            )}
-            {post.data.content}
-          </p>
+          <p style={{ color: "#2d3436" }}>{post.data.content}</p>
         </div>
-        {post.data.shared_from && (
-          <>
-            <ChildWidget post_id={post.data.shared_from} />
-          </>
-        )}
-
-        <p className="text-end mt-2">
-          <Chip
-            label={
-              post.data.area.city ? (
-                <>
-                  <ImLocation2
-                    style={{
-                      color: "#74b9ff",
-                      fontSize: "12px",
-                      marginRight: "2px",
-                    }}
-                  />
-                  {post.data.area.city}
-                </>
-              ) : (
-                <>
-                  <ImLocation2
-                    style={{
-                      color: "#74b9ff",
-                      fontSize: "12px",
-                      marginRight: "2px",
-                    }}
-                  />
-                  {post.data.area.state}
-                </>
-              )
-            }
-            variant="outlined"
-            sx={{
-              fontSize: 10,
-              padding: 0.1,
-              borderColor: "#74b9ff",
-              color: "#74b9ff",
-            }}
-          />
-        </p>
-        <ActivityWidget
-          post={post}
-          likes={
-            post.data.activities.find(
-              (activity) => activity._id === "like"
-            ) || { amount: 0 }
-          }
-          dislikes={
-            post.data.activities.find(
-              (activity) => activity._id === "dislike"
-            ) || { amount: 0 }
-          }
-          replies={post.data.replies[0] || null}
-          shares={post.data.shares[0] || null}
-        />
-        {children && (
-          <div className="mt-3">
-            <p className="mx-2" style={{ fontSize: "13px" }}>
-              <small>Replies</small>
-            </p>
-            {children}
-          </div>
-        )}
       </div>
     </div>
   );

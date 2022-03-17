@@ -5,6 +5,7 @@ import Connection from "../../../components/api/Connection";
 import Post from "../../../components/api/posts/Post";
 import PostSkeleton from "../../../components/post/PostSkeleton";
 import PostWidget from "../../../components/post/PostWidget";
+import RepliesList from "../../../components/post/RepliesList";
 import { AccountContext } from "../../../components/templates/ContextProvider";
 
 export async function getStaticProps(context) {
@@ -57,7 +58,11 @@ export default function PostPage() {
   return (
     <>
       {postInfo ? (
-        <PostWidget post={postInfo} />
+        <>
+          <PostWidget post={postInfo}>
+            {router.query.id && <RepliesList post_id={router.query.id} />}
+          </PostWidget>
+        </>
       ) : (
         <div className="container-flush p-4 text-center">
           <PostSkeleton />
