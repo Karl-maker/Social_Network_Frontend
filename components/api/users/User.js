@@ -45,15 +45,11 @@ export default class User extends Connection {
 
     try {
       this._username = results.data[0].user[0].username || "";
-    } catch (error) {
-      console.log(results);
-    }
+    } catch (error) {}
 
     try {
       this._display_name = results.data[0].display_name;
-    } catch (error) {
-      console.log(results);
-    }
+    } catch (error) {}
 
     return results.data[0];
   }
@@ -99,28 +95,31 @@ export default class User extends Connection {
   }
 
   async authenticate() {
-    const result = await axios.post(
-      `${this.base_url}/api/authenticate`,
-      {},
-      {
-        withCredentials: true,
+    try {
+      const result = await axios.post(
+        `${this.base_url}/api/authenticate`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (result.status === 200) {
+        this.access_token = result.data.access_token;
+
+        await this.fetchCurrentUser();
+        await this.fetchUserInformation(this._id);
+
+        this._isLoggedIn = true;
+        return true;
       }
-    );
 
-    if (result.status === 200) {
-      this.access_token = result.data.access_token;
+      this._isLoggedIn = false;
 
-      await this.fetchCurrentUser();
-      await this.fetchUserInformation(this._id);
-
-      this._isLoggedIn = true;
-      console.log("Success", this.access_token);
-      return true;
+      return false;
+    } catch (err) {
+      return false;
     }
-    console.log("Fail", this.access_token);
-    this._isLoggedIn = false;
-
-    return false;
   }
 
   async register(email, password) {

@@ -19,7 +19,7 @@ export async function getStaticProps(context) {
 export default function Login() {
   const router = useRouter();
   const accountServices = useContext(AccountContext);
-  const [isLoggedIn, setIsLoggedIn] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(accountServices.isLoggedIn);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -10,17 +10,17 @@ export default function Header({}) {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    setUsername(accountServices.username);
-  }, [accountServices.username]);
+    if (accountServices.isLoggedIn) setUsername(accountServices.username);
+  }, []);
 
   return (
     <>
-      <div className="col-6 px-4">
+      <div className="col-4 px-4">
         <Link href="/" passHref>
           <Image src="/logo192.png" alt="Syncviz Logo" width={70} height={70} />
         </Link>
       </div>
-      <div className="col-6 text-end px-4">
+      <div className="col-8 text-end px-4">
         {accountServices.isLoggedIn ? (
           <>
             {`${username}`}

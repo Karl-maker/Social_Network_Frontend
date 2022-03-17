@@ -60,7 +60,9 @@ export default function PostPage() {
       {postInfo ? (
         <>
           <PostWidget post={postInfo}>
-            {router.query.id && <RepliesList post_id={router.query.id} />}
+            {router.query.id && (
+              <RepliesList className="mx-2" post_id={router.query.id} />
+            )}
           </PostWidget>
         </>
       ) : (

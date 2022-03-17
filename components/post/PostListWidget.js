@@ -11,7 +11,11 @@ export default function PostListWidget({ posts, type }) {
 
   const listPosts = list.map((post) => (
     <li key={post.data._id}>
-      {type === "replies" && <ReplyWidget post={post} />}
+      {type === "replies" && (
+        <div className="mt-2">
+          <ReplyWidget post={post} />
+        </div>
+      )}
       {!type && <PostWidget post={post} />}
     </li>
   ));

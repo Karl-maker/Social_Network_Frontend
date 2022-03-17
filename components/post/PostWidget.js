@@ -215,14 +215,7 @@ export default function PostWidget({ post, children }) {
           replies={post.data.replies[0] || null}
           shares={post.data.shares[0] || null}
         />
-        {children && (
-          <div className="mt-3">
-            <p className="mx-2" style={{ fontSize: "13px" }}>
-              <small>Replies</small>
-            </p>
-            {children}
-          </div>
-        )}
+        {children && children}
       </div>
     </div>
   );
