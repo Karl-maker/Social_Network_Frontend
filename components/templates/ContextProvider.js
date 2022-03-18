@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { Backdrop, CircularProgress } from "@mui/material";
 import User from "../api/users/User";
-import Image from "next/image";
 
 export const AccountContext = createContext({});
 
@@ -20,9 +19,13 @@ export function ContextProvider({ children }) {
 
   if (initialize) {
     return (
-      <div className="mx-auto d-block">
-        <Image src="/logo192.png" alt="Syncviz Logo" width={70} height={70} />
-      </div>
+      <>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >
+          <CircularProgress color="secondary" />
+        </Backdrop>
+      </>
     );
   }
 
