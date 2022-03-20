@@ -1,8 +1,7 @@
 import { AccountContext } from "../components/templates/ContextProvider";
 import { useState, useEffect, useContext } from "react";
-import { TextField, CircularProgress } from "@mui/material";
+import { TextField, CircularProgress, Button } from "@mui/material";
 import { useRouter } from "next/router";
-import Button from "@mui/material/Button";
 import widget from "../styles/modules/Widget.module.css";
 import Link from "next/link";
 import Image from "next/image";

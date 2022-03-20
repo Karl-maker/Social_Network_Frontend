@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { Backdrop, CircularProgress } from "@mui/material";
 import User from "../api/users/User";
 
 export const AccountContext = createContext({});
@@ -18,15 +17,7 @@ export function ContextProvider({ children }) {
   }, []);
 
   if (initialize) {
-    return (
-      <>
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        >
-          <CircularProgress color="secondary" />
-        </Backdrop>
-      </>
-    );
+    return <></>;
   }
 
   return (

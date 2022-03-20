@@ -39,33 +39,41 @@ export default class User extends Connection {
   }
 
   async fetchUserInformation(id) {
-    const results = await axios.get(
-      `${this.base_url}/api/profile/${id || this.id}`
-    );
-
     try {
-      this._username = results.data[0].user[0].username || "";
-    } catch (error) {}
+      const results = await axios.get(
+        `${this.base_url}/api/profile/${id || this.id}`
+      );
 
-    try {
-      this._display_name = results.data[0].display_name;
-    } catch (error) {}
+      try {
+        this._username = results.data[0].user[0].username || "";
+      } catch (error) {}
 
-    return results.data[0];
+      try {
+        this._display_name = results.data[0].display_name;
+      } catch (error) {}
+
+      return results.data[0];
+    } catch (err) {
+      return;
+    }
   }
 
   async fetchCurrentUser() {
-    const result = await axios.get(`${this.base_url}/api/user`, {
-      headers: { Authorization: `Bearer ${this.access_token}` },
-    });
+    try {
+      const result = await axios.get(`${this.base_url}/api/user`, {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      });
 
-    if (result.status === 200) {
-      this._id = result.data._id;
-      this._email = result.data.email;
-      return true;
+      if (result.status === 200) {
+        this._id = result.data._id;
+        this._email = result.data.email;
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      return false;
     }
-
-    return false;
   }
 
   async login(email, password) {
@@ -90,7 +98,7 @@ export default class User extends Connection {
         return result;
       }
     } catch (err) {
-      return err;
+      return false;
     }
   }
 
@@ -123,98 +131,126 @@ export default class User extends Connection {
   }
 
   async register(email, password) {
-    const result = await axios.post(`${this.base_url}/api/register`, {
-      email,
-      password,
-    });
+    try {
+      const result = await axios.post(`${this.base_url}/api/register`, {
+        email,
+        password,
+      });
 
-    if (result.status === 200) {
-      return true;
+      if (result.status === 200) {
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      return false;
     }
-
-    return false;
   }
 
   async sendConfirmationEmail(email) {
-    const result = await axios.post(
-      `${this.base_url}/api/send-confirmation-email/${email}`
-    );
+    try {
+      const result = await axios.post(
+        `${this.base_url}/api/send-confirmation-email/${email}`
+      );
 
-    if (result.status === 200) {
-      return true;
+      if (result.status === 200) {
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      return false;
     }
-
-    return false;
   }
 
   async createUsername(username) {
-    const result = await axios.post(
-      `${this.base_url}/api/username`,
-      {
-        username,
-      },
-      {
-        headers: { Authorization: `Bearer ${this.access_token}` },
+    try {
+      const result = await axios.post(
+        `${this.base_url}/api/username`,
+        {
+          username,
+        },
+        {
+          headers: { Authorization: `Bearer ${this.access_token}` },
+        }
+      );
+
+      if (result.status === 200) {
+        return true;
       }
-    );
 
-    if (result.status === 200) {
-      return true;
+      return false;
+    } catch (err) {
+      return false;
     }
-
-    return false;
   }
 
   async updatePassword(password) {
-    const result = await axios.put(
-      `${this.base_url}/api/password`,
-      {
-        password,
-      },
-      {
-        headers: { Authorization: `Bearer ${this.access_token}` },
+    try {
+      const result = await axios.put(
+        `${this.base_url}/api/password`,
+        {
+          password,
+        },
+        {
+          headers: { Authorization: `Bearer ${this.access_token}` },
+        }
+      );
+
+      if (result.status === 200) {
+        return true;
       }
-    );
 
-    if (result.status === 200) {
-      return true;
+      return false;
+    } catch (err) {
+      return false;
     }
-
-    return false;
   }
 
   async requestPasswordReset(email) {
-    const result = await axios.post(
-      `${this.base_url}/api/request-reset-password/${email}`
-    );
+    try {
+      const result = await axios.post(
+        `${this.base_url}/api/request-reset-password/${email}`
+      );
 
-    if (result.status === 200) {
-      return true;
+      if (result.status === 200) {
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      return false;
     }
-
-    return false;
   }
 
   async resetPassword(email, password, token) {
-    const result = await axios.post(
-      `${this.base_url}/api/reset-password/${email}`,
-      { password, token }
-    );
+    try {
+      const result = await axios.post(
+        `${this.base_url}/api/reset-password/${email}`,
+        { password, token }
+      );
 
-    if (result.status === 200) {
-      return true;
+      if (result.status === 200) {
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      return;
     }
-
-    return false;
   }
 
   async logout() {
-    await axios.delete(`${this.base_url}/api/authenticate`, {
-      headers: { Authorization: `Bearer ${this.access_token}` },
-    });
+    try {
+      await axios.delete(`${this.base_url}/api/authenticate`, {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      });
 
-    this._isLoggedIn = false;
+      this._isLoggedIn = false;
 
-    return;
+      return;
+    } catch (err) {
+      return;
+    }
   }
 }

@@ -52,6 +52,11 @@ export default function Home() {
   useEffect(() => {
     // Initially set Coordinates as such...
 
+    if (posts.length < (pageNumber + 1) * PAGE_SIZE && posts.length !== 0) {
+      setIsLoading(false);
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition((result) => {
       post.coordinates = {
         latitude: result.coords.latitude,
@@ -76,7 +81,7 @@ export default function Home() {
 
       setIsLoading(false);
     });
-  }, [pageNumber]);
+  }, [pageNumber, maxDistance]);
 
   if (isLoading) {
     return (

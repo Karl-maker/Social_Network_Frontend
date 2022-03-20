@@ -40,9 +40,14 @@ export default class Post extends Connect {
       this.base_url,
       this.access_token
     );
-    const results = await post_collections.fetchShares(this.data._id);
 
-    return results;
+    try {
+      const results = await post_collections.fetchShares(this.data._id);
+
+      return results;
+    } catch (err) {
+      return;
+    }
   }
 
   async fetchReplies() {
@@ -50,35 +55,48 @@ export default class Post extends Connect {
       this.base_url,
       this.access_token
     );
-    const results = await post_collections.fetchReplies(this.data._id);
 
-    return results;
+    try {
+      const results = await post_collections.fetchReplies(this.data._id);
+
+      return results;
+    } catch (err) {
+      return;
+    }
   }
 
   async likeButtonInteraction() {
-    const results = await axios.post(
-      `${this.base_url}/api/activity`,
-      {
-        post_id: this.data._id,
-        type: "like",
-      },
-      { headers: { Authorization: `Bearer ${this.access_token}` } }
-    );
+    try {
+      const results = await axios.post(
+        `${this.base_url}/api/activity`,
+        {
+          post_id: this.data._id,
+          type: "like",
+        },
+        { headers: { Authorization: `Bearer ${this.access_token}` } }
+      );
 
-    return results;
+      return results;
+    } catch (err) {
+      return;
+    }
   }
 
   async dislikeButtonInteraction() {
-    const results = await axios.post(
-      `${this.base_url}/api/activity`,
-      {
-        post_id: this.data._id,
-        type: "dislike",
-      },
-      { headers: { Authorization: `Bearer ${this.access_token}` } }
-    );
+    try {
+      const results = await axios.post(
+        `${this.base_url}/api/activity`,
+        {
+          post_id: this.data._id,
+          type: "dislike",
+        },
+        { headers: { Authorization: `Bearer ${this.access_token}` } }
+      );
 
-    return results;
+      return results;
+    } catch (err) {
+      return;
+    }
   }
 
   async checkActivityStatus(post_id) {
@@ -94,7 +112,7 @@ export default class Post extends Connect {
 
       return results;
     } catch (error) {
-      throw error;
+      return;
     }
   }
 
@@ -106,10 +124,14 @@ export default class Post extends Connect {
       latitude: this.coordinates.latitude,
     };
 
-    const result = await axios.post(`${this.base_url}/api/post`, body, {
-      headers: { Authorization: `Bearer ${this.access_token}` },
-    });
-    return result;
+    try {
+      const result = await axios.post(`${this.base_url}/api/post`, body, {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      });
+      return result;
+    } catch (err) {
+      return;
+    }
   }
 
   async createAShare(content, share) {
@@ -120,10 +142,14 @@ export default class Post extends Connect {
       latitude: this.coordinates.latitude,
     };
 
-    const result = await axios.post(`${this.base_url}/api/post`, body, {
-      headers: { Authorization: `Bearer ${this.access_token}` },
-    });
-    return result;
+    try {
+      const result = await axios.post(`${this.base_url}/api/post`, body, {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      });
+      return result;
+    } catch (err) {
+      return;
+    }
   }
 
   async create(content) {
@@ -137,20 +163,28 @@ export default class Post extends Connect {
       latitude: this.coordinates.latitude,
     };
 
-    const result = await axios.post(`${this.base_url}/api/post`, body, {
-      headers: { Authorization: `Bearer ${this.access_token}` },
-    });
-    return result;
+    try {
+      const result = await axios.post(`${this.base_url}/api/post`, body, {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      });
+      return result;
+    } catch (err) {
+      return;
+    }
   }
 
   async delete() {
-    const result = await axios.delete(
-      `${this.base_url}/api/post/${this.data._id}`,
-      {
-        headers: { Authorization: `Bearer ${this.access_token}` },
-      }
-    );
+    try {
+      const result = await axios.delete(
+        `${this.base_url}/api/post/${this.data._id}`,
+        {
+          headers: { Authorization: `Bearer ${this.access_token}` },
+        }
+      );
 
-    return result;
+      return result;
+    } catch (err) {
+      return;
+    }
   }
 }
