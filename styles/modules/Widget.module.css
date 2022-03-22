@@ -43,3 +43,43 @@
 .text_input:focus {
   outline: none;
 }
+
+.list_with_link {
+  border-radius: 0px;
+  border-bottom: 0px solid;
+  border-right: 0px solid;
+  border-left: 0px solid;
+  border-top: 1px solid;
+  border-color: #dfe6e9;
+  margin: 0px;
+}
+
+.list_with_link:hover {
+  background-color: #dfe6e9;
+}
+
+.chip {
+  background-color: white;
+  border-radius: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0px solid;
+  border-color: #dfe6e9;
+}
+
+.chip:hover {
+  background-color: #dfe6e9;
+}
+
+.chip_fill {
+  background-color: white;
+  border-radius: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 1px solid;
+  border-color: #dfe6e9;
+}

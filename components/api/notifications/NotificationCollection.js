@@ -2,8 +2,8 @@ import Connection from "../Connection";
 import Notification from "./Notification";
 import axios from "axios";
 
-class NotificationCollection extends Connection {
-  constructor(base_url, access_token, {}) {
+export default class NotificationCollection extends Connection {
+  constructor(base_url, access_token) {
     super(base_url, access_token);
   }
 
@@ -25,6 +25,7 @@ class NotificationCollection extends Connection {
 
         data_list.push(item);
       }
+
       return { data: data_list };
     } catch (err) {
       return;

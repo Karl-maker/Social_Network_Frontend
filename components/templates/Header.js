@@ -15,7 +15,7 @@ export default function Header({}) {
 
   return (
     <>
-      <div className="col-4 px-4">
+      <div className="col-4 px-4 m-0">
         <Link href="/" passHref>
           <Image src="/logo192.png" alt="Syncviz Logo" width={70} height={70} />
         </Link>

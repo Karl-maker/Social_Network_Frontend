@@ -32,11 +32,15 @@ export default class Notification extends Connection {
 
   async seen() {
     try {
-      await axios.post(`${this.base_url}/api/notification/${this.data._id}`, {
-        headers: { Authorization: `Bearer ${this.access_token}` },
-      });
+      const result = await axios.put(
+        `${this.base_url}/api/notification/${this.data._id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${this.access_token}` },
+        }
+      );
 
-      return;
+      return result;
     } catch (err) {
       return;
     }

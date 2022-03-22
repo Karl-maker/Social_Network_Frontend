@@ -243,7 +243,7 @@ export default class User extends Connection {
   async logout() {
     try {
       await axios.delete(`${this.base_url}/api/authenticate`, {
-        headers: { Authorization: `Bearer ${this.access_token}` },
+        withCredentials: true,
       });
 
       this._isLoggedIn = false;
