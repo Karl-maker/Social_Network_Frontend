@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import User from "../api/users/User";
+import Loading from "./Loading";
 
 export const AccountContext = createContext({});
 
@@ -16,13 +17,11 @@ export function ContextProvider({ children }) {
     });
   }, []);
 
-  if (initialize) {
-    return <></>;
-  }
-
   return (
     <AccountContext.Provider value={user}>
-      <div className="lightmode">{children}</div>
+      <Loading loading={initialize}>
+        <div className="lightmode">{children}</div>
+      </Loading>
     </AccountContext.Provider>
   );
 }
