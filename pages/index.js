@@ -192,6 +192,13 @@ export default function Home() {
 
   return (
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
+      <AlertWidget
+        severity={alertMessage.severity}
+        content={alertMessage.content}
+        title={alertMessage.severity}
+        open={alert}
+        setOpen={setAlert}
+      />
       {posts.length === 0 && !isLoading && (
         <div className={widget.secondary}>
           <Link href="/post" passHref>

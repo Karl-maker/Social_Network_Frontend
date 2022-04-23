@@ -34,35 +34,43 @@ export default function CreatePostPage() {
     } else if (router.query.reply) {
       setRows(2);
     }
+    try {
+      if ("geolocation" in navigator) {
+        navigator.permissions
+          .query({ name: "geolocation" })
+          .then(function (result) {
+            if (result.state === "granted") {
+              setAlertMessage({
+                severity: "success",
+                content: "Geolocation Found",
+                title: "Location",
+              });
+              setAlert(true);
+            } else if (result.state === "prompt") {
+            } else if (result.state === "denied") {
+              setAlertMessage({
+                severity: "warning",
+                content: "Geolocation Not Shared",
+                title: "Location",
+              });
+              setAlert(true);
+            }
+          });
+      } else {
+        // No GeoLocation
 
-    if ("geolocation" in navigator) {
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then(function (result) {
-          if (result.state === "granted") {
-            setAlertMessage({
-              severity: "success",
-              content: "Geolocation Found",
-              title: "Location",
-            });
-            setAlert(true);
-          } else if (result.state === "prompt") {
-          } else if (result.state === "denied") {
-            setAlertMessage({
-              severity: "warning",
-              content: "Geolocation Not Shared",
-              title: "Location",
-            });
-            setAlert(true);
-          }
+        setAlertMessage({
+          severity: "error",
+          content: "Geolocation Not Avaliable",
+          title: "Location",
         });
-    } else {
-      // No GeoLocation
-
+        setAlert(true);
+      }
+    } catch (err) {
       setAlertMessage({
         severity: "error",
-        content: "Geolocation Not Avaliable",
-        title: "Location",
+        content: "Issue Getting Geolocation",
+        title: "Geolocation",
       });
       setAlert(true);
     }
