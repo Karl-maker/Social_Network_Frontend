@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import AlertWidget from "../../components/templates/Alert";
+import Loading from "../../components/templates/Loading";
 
 export async function getStaticProps(context) {
   return {
@@ -23,6 +24,7 @@ export async function getStaticProps(context) {
 export default function CreatePostPage() {
   const accountServices = useContext(AccountContext);
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(5);
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState({});
@@ -101,6 +103,7 @@ export default function CreatePostPage() {
                 content: "Share Created Successfully",
                 title: "Post",
               });
+              setLoading(false);
               setAlert(true);
               setTimeout(() => {
                 router.push("/");
@@ -111,6 +114,7 @@ export default function CreatePostPage() {
                 content: "Issue Creating Share",
                 title: "Post",
               });
+              setLoading(false);
               setAlert(true);
             }
           });
@@ -122,6 +126,7 @@ export default function CreatePostPage() {
                 content: "Response Created Successfully",
                 title: "Post",
               });
+              setLoading(false);
               setAlert(true);
               setTimeout(() => {
                 router.push("/");
@@ -132,6 +137,7 @@ export default function CreatePostPage() {
                 content: "Issue Creating Response",
                 title: "Post",
               });
+              setLoading(false);
               setAlert(true);
             }
           });
@@ -143,6 +149,7 @@ export default function CreatePostPage() {
                 content: "Post Created Successfully",
                 title: "Post",
               });
+              setLoading(false);
               setAlert(true);
               setTimeout(() => {
                 router.push("/");
@@ -153,6 +160,7 @@ export default function CreatePostPage() {
                 content: "Issue Creating Post",
                 title: "Post",
               });
+              setLoading(false);
               setAlert(true);
             }
           });
@@ -164,77 +172,83 @@ export default function CreatePostPage() {
         content: err.message,
         title: "Issue Creating Post",
       });
+      setLoading(false);
       setAlert(true);
     }
   };
 
   return (
-    <div>
-      <AlertWidget
-        severity={alertMessage.severity}
-        content={alertMessage.content}
-        title={alertMessage.severity}
-        open={alert}
-        setOpen={setAlert}
-      />
-      <Link href="/" passHref>
-        <MdKeyboardBackspace className="mx-2" style={{ fontSize: "20px" }} />
-      </Link>
-      <div className="m-2">
-        <div className={widget.secondary}>
-          <div className="container-flush p-4">
-            <div className="row">
-              <div className="col-12 mb-3">
-                {accountServices.displayProfileChip({ borderWidth: "0px" })}
+    <Loading loading={loading}>
+      <div>
+        <AlertWidget
+          severity={alertMessage.severity}
+          content={alertMessage.content}
+          title={alertMessage.severity}
+          open={alert}
+          setOpen={setAlert}
+        />
+        <Link href="/" passHref>
+          <MdKeyboardBackspace className="mx-2" style={{ fontSize: "20px" }} />
+        </Link>
+        <div className="m-2">
+          <div className={widget.secondary}>
+            <div className="container-flush p-4">
+              <div className="row">
+                <div className="col-12 mb-3">
+                  {accountServices.displayProfileChip({ borderWidth: "0px" })}
+                </div>
               </div>
-            </div>
-            {router.query.reply && !router.query.share && (
-              <div className="mb-3">
-                <ChildWidget post_id={router.query.reply} />
-              </div>
-            )}
-            <div className="row"></div>
-            <textarea
-              rows={`${rows}`}
-              cols="20"
-              wrap="hard"
-              className={widget.text_input}
-              style={{ height: "100%", width: "100%" }}
-              placeholder="What are you thinking about?"
-              type="textarea"
-              name="content"
-              onChange={(e) => {
-                setContent(e.target.value);
-              }}
-              value={content}
-            />
-            {router.query.share && !router.query.reply && (
-              <div>
-                <ChildWidget post_id={router.query.share} />
-              </div>
-            )}
-            <div className="row mt-3">
-              <div className="col-12 text-end">
-                <Button
-                  variant="contained"
-                  sx={{
-                    borderRadius: "20px",
-                    borderColor: "transparent",
-                  }}
-                  onClick={handleSubmit}
-                  disableElevation
-                >
-                  {router.query.share ? (
-                    "Share"
-                  ) : (
-                    <>{router.query.reply ? "Reply" : "Post"}</>
-                  )}
-                </Button>
+              {router.query.reply && !router.query.share && (
+                <div className="mb-3">
+                  <ChildWidget post_id={router.query.reply} />
+                </div>
+              )}
+              <div className="row"></div>
+              <textarea
+                rows={`${rows}`}
+                cols="20"
+                wrap="hard"
+                className={widget.text_input}
+                style={{ height: "100%", width: "100%" }}
+                placeholder="What are you thinking about?"
+                type="textarea"
+                name="content"
+                onChange={(e) => {
+                  setContent(e.target.value);
+                }}
+                value={content}
+              />
+              {router.query.share && !router.query.reply && (
+                <div>
+                  <ChildWidget post_id={router.query.share} />
+                </div>
+              )}
+              <div className="row mt-3">
+                <div className="col-12 text-end">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: "20px",
+                      borderColor: "transparent",
+                    }}
+                    onClick={() => {
+                      setLoading(true);
+                      handleSubmit();
+                    }}
+                    disableElevation
+                  >
+                    {router.query.share ? (
+                      "Share"
+                    ) : (
+                      <>{router.query.reply ? "Reply" : "Post"}</>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Loading>
   );
 }
