@@ -36,7 +36,7 @@ export default function Home() {
   const PAGE_SIZE = 10;
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(50000);
+  const [maxDistance, setMaxDistance] = useState(500);
   const [errorData, setErrorData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [permissionButton, setPermissionButton] = useState(false);
