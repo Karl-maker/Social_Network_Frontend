@@ -38,6 +38,7 @@ export default function Home() {
   const [maxDistance, setMaxDistance] = useState(50000);
   const [errorData, setErrorData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [permission, setPermission] = useState(false);
   const listInnerRef = useRef();
 
   const handleScroll = (e) => {
@@ -110,8 +111,10 @@ export default function Home() {
       return;
     }
 
-    setPostCoordinatesWithPermission();
-  }, [pageNumber, maxDistance]);
+    if (permission) {
+      setPostCoordinatesWithPermission();
+    }
+  }, [pageNumber, maxDistance, permission]);
 
   if (isLoading) {
     return (
@@ -121,18 +124,16 @@ export default function Home() {
             startIcon={<ImLocation2 />}
             variant="outlined"
             onClick={() => {
-              if (navigator.geolocation) {
-                navigator.permissions
-                  .query({ name: "geolocation" })
-                  .then(function (result) {
-                    if (result.state == "granted") {
-                      setPostCoordinatesWithPermission();
-                    } else if (result.state == "prompt") {
-                    } else {
-                      setPostCoordinatesWithOutPermission();
-                    }
-                  });
-              }
+              navigator.permissions
+                .query({ name: "geolocation" })
+                .then(function (result) {
+                  if (result.state == "granted") {
+                    setPermission(true);
+                  } else if (result.state == "prompt") {
+                    setPermission(true);
+                  } else if (result.state == "denied") {
+                  }
+                });
             }}
           >
             Get Post In Your Location
