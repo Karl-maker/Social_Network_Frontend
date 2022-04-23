@@ -121,7 +121,18 @@ export default function Home() {
             startIcon={<ImLocation2 />}
             variant="outlined"
             onClick={() => {
-              setPostCoordinatesWithPermission();
+              if (navigator.geolocation) {
+                navigator.permissions
+                  .query({ name: "geolocation" })
+                  .then(function (result) {
+                    if (result.state == "granted") {
+                      setPostCoordinatesWithPermission();
+                    } else if (result.state == "prompt") {
+                    } else {
+                      setPostCoordinatesWithOutPermission();
+                    }
+                  });
+              }
             }}
           >
             Get Post In Your Location
