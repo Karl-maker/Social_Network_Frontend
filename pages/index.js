@@ -128,24 +128,35 @@ export default function Home() {
       return;
     }
 
-    navigator.permissions
-      .query({ name: "geolocation" })
-      .then(function (result) {
-        if (result.state == "granted") {
-          setPostCoordinatesWithPermission();
-        } else if (result.state == "prompt") {
-          setPermissionButton(true);
-        } else if (result.state == "denied") {
-          setAlertMessage({
-            severity: "warning",
-            content: "Denied Use Of Geolocation",
-            title: "Geolocation",
-          });
-          setAlert(true);
+    try {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (result) {
+          if (result.state == "granted") {
+            setPostCoordinatesWithPermission();
+          } else if (result.state == "prompt") {
+            setPermissionButton(true);
+          } else if (result.state == "denied") {
+            setAlertMessage({
+              severity: "warning",
+              content: "Denied Use Of Geolocation",
+              title: "Geolocation",
+            });
+            setAlert(true);
 
-          setPostCoordinatesWithOutPermission();
-        }
+            setPostCoordinatesWithOutPermission();
+          }
+        });
+    } catch (err) {
+      setAlertMessage({
+        severity: "error",
+        content: "Issue Getting Geolocation",
+        title: "Geolocation",
       });
+      setAlert(true);
+
+      setPostCoordinatesWithOutPermission();
+    }
   }, [pageNumber, maxDistance]);
 
   if (isLoading) {
