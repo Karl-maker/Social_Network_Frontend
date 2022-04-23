@@ -73,7 +73,12 @@ export default function Home() {
       })
       .catch((error) => {
         // Capture Error
-        setErrorData(error);
+        setAlertMessage({
+          severity: "error",
+          content: error.message,
+          title: "Issue Occured",
+        });
+        setAlert(true);
         setIsLoading(false);
       });
   };
@@ -148,8 +153,8 @@ export default function Home() {
     } catch (err) {
       setAlertMessage({
         severity: "error",
-        content: "Issue Getting Geolocation",
-        title: "Geolocation",
+        content: err.message,
+        title: "Issue",
       });
       setAlert(true);
 
