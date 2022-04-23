@@ -10,10 +10,12 @@ export function ContextProvider({ children }) {
   const [initialize, setInitialize] = useState(true);
 
   useEffect(() => {
-    account.authenticate().then((result) => {
-      if (result) setUser(account);
-      setInitialize(false);
-    });
+    // account.authenticate().then((result) => {
+    //   if (result) setUser(account);
+    //   setInitialize(false);
+    // });
+
+    setInitialize(false);
   }, []);
 
   return (
