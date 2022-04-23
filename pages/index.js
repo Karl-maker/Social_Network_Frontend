@@ -38,7 +38,7 @@ export default function Home() {
   const [maxDistance, setMaxDistance] = useState(50000);
   const [errorData, setErrorData] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [permission, setPermission] = useState(false);
+  const [permissionButton, setPermissionButton] = useState(false);
   const listInnerRef = useRef();
 
   const handleScroll = (e) => {
@@ -111,34 +111,35 @@ export default function Home() {
       return;
     }
 
-    if (permission) {
-      setPostCoordinatesWithPermission();
-    }
-  }, [pageNumber, maxDistance, permission]);
+    navigator.permissions
+      .query({ name: "geolocation" })
+      .then(function (result) {
+        if (result.state == "granted") {
+          setPostCoordinatesWithPermission();
+        } else if (result.state == "prompt") {
+          setPermissionButton(true);
+        } else if (result.state == "denied") {
+          setPostCoordinatesWithOutPermission();
+        }
+      });
+  }, [pageNumber, maxDistance]);
 
   if (isLoading) {
     return (
       <div className="container-flush p-4 text-center">
-        <div className="col-12 text-center my-3">
-          <Button
-            startIcon={<ImLocation2 />}
-            variant="outlined"
-            onClick={() => {
-              navigator.permissions
-                .query({ name: "geolocation" })
-                .then(function (result) {
-                  if (result.state == "granted") {
-                    setPermission(true);
-                  } else if (result.state == "prompt") {
-                    setPermission(true);
-                  } else if (result.state == "denied") {
-                  }
-                });
-            }}
-          >
-            Get Post In Your Location
-          </Button>
-        </div>
+        {permissionButton && (
+          <div className="col-12 text-center my-3">
+            <Button
+              startIcon={<ImLocation2 />}
+              variant="outlined"
+              onClick={() => {
+                setPostCoordinatesWithPermission();
+              }}
+            >
+              Get Post In Your Location
+            </Button>
+          </div>
+        )}
         <PostSkeleton />
         <PostSkeleton />
         <PostSkeleton />
