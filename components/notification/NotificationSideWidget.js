@@ -28,8 +28,8 @@ export default function NotificationSideWidget() {
   }, [pageNumber]);
 
   return (
-    <div className={widget.primary}>
-      <div className="container-flush p-0">
+    <div className={widget.secondary}>
+      <div className="container-flush p-0 ">
         <div className="row text-center">
           <p
             style={{

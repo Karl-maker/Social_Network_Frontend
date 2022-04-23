@@ -1,15 +1,16 @@
 import Connection from "../Connection";
 import axios from "axios";
+import { Chip, Avatar } from "@mui/material";
 
 export default class User extends Connection {
-  constructor(base_url, access_token, {}) {
+  constructor(base_url, access_token, { display_name, username }) {
     super(base_url, access_token);
 
-    this.id;
-    this.email;
-    this.username;
-    this.display_name;
-    this.isLoggedIn = false;
+    this._id;
+    this._email;
+    this._username = username || null;
+    this._display_name = display_name || null;
+    this._isLoggedIn = false;
   }
 
   // Getters And Setters
@@ -32,6 +33,14 @@ export default class User extends Connection {
 
   get isLoggedIn() {
     return this._isLoggedIn;
+  }
+
+  set username(username) {
+    this._username = username;
+  }
+
+  set display_name(display_name) {
+    this._display_name = display_name;
   }
 
   set isLoggedIn(isLoggedIn) {
@@ -252,5 +261,45 @@ export default class User extends Connection {
     } catch (err) {
       return;
     }
+  }
+
+  // JSX
+
+  displayProfileChip({ borderWidth, color, variant }) {
+    return (
+      <Chip
+        variant={variant || "outlined"}
+        avatar={this.displayProfilePicture(23)}
+        sx={{
+          borderWidth: borderWidth || "0px solid",
+          color: color || "#2d3436",
+        }}
+        label={
+          this._username ? (
+            <>
+              <strong>{this._display_name}</strong>{" "}
+              <small>@{this._username}</small>
+            </>
+          ) : (
+            <strong>{this._display_name}</strong>
+          )
+        }
+      />
+    );
+  }
+
+  displayProfilePicture(size) {
+    return (
+      <Avatar sx={{ bgcolor: "#dfe6e9" }}>
+        {this._username ? (
+          <>
+            {this._username.toUpperCase().charAt(0) ||
+              this._display_name.toUpperCase().charAt(0)}
+          </>
+        ) : (
+          <>{this._display_name.toUpperCase().charAt(0)}</>
+        )}
+      </Avatar>
+    );
   }
 }

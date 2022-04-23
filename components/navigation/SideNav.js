@@ -1,14 +1,20 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 import widget from "../../styles/modules/Widget.module.css";
 import { RiHome2Line } from "react-icons/ri";
 import { MdNotificationsNone } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { HiPencil } from "react-icons/hi";
 
-function Item({ title, icon }) {
+function Item({ title, icon, link }) {
+  const router = useRouter();
   return (
-    <div className={widget.chip}>
-      <div className="container-flush p-2">
+    <div
+      className={widget.chip}
+      onClick={() => {
+        router.push(link || "/");
+      }}
+    >
+      <div className="container p-2">
         <div
           className="row d-flex align-items-center"
           style={{ cursor: "pointer" }}
@@ -18,6 +24,8 @@ function Item({ title, icon }) {
               style={{
                 fontSize: "25px",
                 marginRight: "15px",
+                marginTop: "0px",
+                marginBottom: "10px",
               }}
             >
               {icon}
@@ -32,26 +40,26 @@ function Item({ title, icon }) {
 
 export default function SideNav() {
   return (
-    <ul>
+    <ul
+      style={{
+        paddingLeft: "0px",
+      }}
+    >
       <li>
-        <Link href="/">
-          <Item title="Home" icon={<RiHome2Line />} />
-        </Link>
+        <Item title="Home" icon={<RiHome2Line />} link={"/"} />
       </li>
       <li>
-        <Link href="/post">
-          <Item title="Post" icon={<HiPencil />} />
-        </Link>
+        <Item title="Post" icon={<HiPencil />} link="/post" />
       </li>
       <li>
-        <Link href="/profile">
-          <Item title="Profile" icon={<FaUserCircle />} />
-        </Link>
+        <Item title="Profile" icon={<FaUserCircle />} link="/profile" />
       </li>
       <li>
-        <Link href="/notifications">
-          <Item title="Notifications" icon={<MdNotificationsNone />} />
-        </Link>
+        <Item
+          title="Notifications"
+          icon={<MdNotificationsNone />}
+          link="/notification"
+        />
       </li>
     </ul>
   );

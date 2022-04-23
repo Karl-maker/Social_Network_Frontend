@@ -1,9 +1,10 @@
 // Pre definded
 import { useEffect, useState, useContext, useRef } from "react";
 import util from "util";
-import { Fab } from "@mui/material";
+import { Fab, Button } from "@mui/material";
 import { HiPencil } from "react-icons/hi";
 import Link from "next/link";
+import { ImLocation2 } from "react-icons/im";
 
 import PostSkeleton from "../components/post/PostSkeleton";
 import styles from "../styles/modules/Home.module.css";
@@ -49,14 +50,32 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    // Initially set Coordinates as such...
+  const setPostCoordinatesWithOutPermission = () => {
+    post.coordinates = {
+      latitude: 10.650488900252434,
+      longitude: -61.51599120383046,
+    };
 
-    if (posts.length < (pageNumber + 1) * PAGE_SIZE && posts.length !== 0) {
-      setIsLoading(false);
-      return;
-    }
+    // Get many posts
+    post
+      .fetchManyPosts({
+        page_number: pageNumber,
+        page_size: PAGE_SIZE,
+        max_distance: maxDistance,
+      })
+      .then(({ meta_data, data }) => {
+        setPosts(noDuplicateObjects(posts.concat(data), "_id"));
+      })
+      .catch((error) => {
+        // Capture Error
+        setErrorData(error);
+        setIsLoading(false);
+      });
 
+    setIsLoading(false);
+  };
+
+  const setPostCoordinatesWithPermission = () => {
     navigator.geolocation.getCurrentPosition((result) => {
       post.coordinates = {
         latitude: result.coords.latitude,
@@ -81,11 +100,33 @@ export default function Home() {
 
       setIsLoading(false);
     });
+  };
+
+  useEffect(() => {
+    // Initially set Coordinates as such...
+
+    if (posts.length < (pageNumber + 1) * PAGE_SIZE && posts.length !== 0) {
+      setIsLoading(false);
+      return;
+    }
+
+    setPostCoordinatesWithPermission();
   }, [pageNumber, maxDistance]);
 
   if (isLoading) {
     return (
       <div className="container-flush p-4 text-center">
+        <div className="col-12 text-center my-3">
+          <Button
+            startIcon={<ImLocation2 />}
+            variant="outlined"
+            onClick={() => {
+              setPostCoordinatesWithPermission();
+            }}
+          >
+            Get Post In Your Location
+          </Button>
+        </div>
         <PostSkeleton />
         <PostSkeleton />
         <PostSkeleton />
@@ -110,7 +151,7 @@ export default function Home() {
           </Link>
         </div>
       )}
-      <PostListWidget posts={posts} />
+      <PostListWidget posts={posts} hr={true} />
       {/*
 
         When Scrolled To the end load more content

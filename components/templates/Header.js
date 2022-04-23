@@ -1,17 +1,50 @@
 import { useEffect, useState, useContext } from "react";
 import { AccountContext } from "./ContextProvider";
 import { FaUserCircle } from "react-icons/fa";
-import Button from "@mui/material/Button";
+import { HiLogout } from "react-icons/hi";
+import DrawerButton from "./DrawerButton";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Button,
+} from "@mui/material";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Header({}) {
+  const router = useRouter();
   const accountServices = useContext(AccountContext);
   const [username, setUsername] = useState("");
 
   useEffect(() => {
     if (accountServices.isLoggedIn) setUsername(accountServices.username);
   }, []);
+
+  const menu = (
+    <List>
+      <Divider />
+      <ListItem
+        button
+        onClick={() => {
+          // Log user out
+          accountServices.logout();
+          router.push("/");
+        }}
+      >
+        <ListItemIcon>
+          {
+            // Icons come here
+          }
+          <HiLogout />
+        </ListItemIcon>
+        <ListItemText primary={"Log Out"} />
+      </ListItem>
+    </List>
+  );
 
   return (
     <>
@@ -22,10 +55,12 @@ export default function Header({}) {
       </div>
       <div className="col-8 text-end px-4">
         {accountServices.isLoggedIn ? (
-          <>
-            {`${username}`}
-            <FaUserCircle style={{ marginLeft: "20px", fontSize: "30px" }} />
-          </>
+          <DrawerButton anchor={"right"} element={menu}>
+            {accountServices.displayProfileChip({
+              borderWidth: "0px",
+              link: false,
+            })}
+          </DrawerButton>
         ) : (
           <Button
             variant="contained"

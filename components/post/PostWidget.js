@@ -42,7 +42,12 @@ export default function PostWidget({ post, children }) {
 
   useEffect(() => {
     user.fetchUserInformation(post.data.user_id).then((result) => {
-      setUserInfo(result);
+      setUserInfo(
+        new User(process.env.BACKEND_URL, null, {
+          ...result,
+          username: result.user[0].username,
+        })
+      );
     });
   }, []);
 
@@ -73,7 +78,7 @@ export default function PostWidget({ post, children }) {
 
   return (
     <div className={widget.primary}>
-      <div className="container-flush p-4">
+      <div className="container-flush p-0">
         <div className="row">
           <div
             className="col-8"
@@ -84,14 +89,7 @@ export default function PostWidget({ post, children }) {
             }}
           >
             <Link href={`/user/${userInfo._id}`} passHref>
-              <p style={{ cursor: "pointer", fontSize: "18px" }}>
-                <small>
-                  <strong>{userInfo.display_name}</strong>
-                </small>
-                <small style={{ marginLeft: "5px", fontSize: "14px" }}>{`@${
-                  userInfo.user[0].username || ""
-                }`}</small>
-              </p>
+              {userInfo.displayProfileChip({ borderWidth: "0px" })}
             </Link>
           </div>
           <div className="col-4 mx-0">
@@ -166,6 +164,7 @@ export default function PostWidget({ post, children }) {
 
         <p className="text-end mt-2">
           <Chip
+            size="small"
             label={
               post.data.area.city ? (
                 <>

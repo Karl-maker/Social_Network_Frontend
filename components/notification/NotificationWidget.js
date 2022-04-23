@@ -56,7 +56,7 @@ export default function NotificationWidget({ notification }) {
   };
 
   return (
-    <div className={widget.list_with_link} onClick={onClick}>
+    <div className={widget.list_with_link}>
       <div className="p-2 m-0 row">
         <div className="col-8 d-flex align-items-center">
           <p

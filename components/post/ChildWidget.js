@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function ChildWidget({ post_id }) {
   const connect = new Connection(process.env.BACKEND_URL, null);
-  const user = new User(process.env.BACKEND_URL, null);
+  const user = new User(process.env.BACKEND_URL, null, {});
   const current_date = new Date();
   let how_long_ago;
 
@@ -24,7 +24,7 @@ export default function ChildWidget({ post_id }) {
       .fetchGetGeneral(`/api/post/${post_id}`)
       .then((result) => {
         if (result.data.length < 1) {
-          setErrorInfo({ status: 404, message: "Not Found" });
+          setErrorInfo({ status: 404, message: "Post Not Found" });
         } else {
           setPostInfo(result.data[0]);
           how_long_ago = checkHowManyDaysAgo(
@@ -32,7 +32,12 @@ export default function ChildWidget({ post_id }) {
             current_date
           );
           user.fetchUserInformation(result.data[0].user_id).then((result) => {
-            setUserInfo(result);
+            setUserInfo(
+              new User(process.env.BACKEND_URL, null, {
+                ...result,
+                username: result.user[0].username,
+              })
+            );
           });
         }
 
@@ -70,18 +75,11 @@ export default function ChildWidget({ post_id }) {
   return (
     <Link href={`/post/${postInfo._id}`}>
       <div className={widget.secondary}>
-        <div className="container-flush p-4">
+        <div className="container-flush p-3">
           <div className="row">
-            <div className="col-10">
+            <div className="col-10 mb-3">
               <Link href={`/profile/${postInfo.user_id}`}>
-                <p>
-                  <small>
-                    <strong>{userInfo.display_name}</strong>
-                  </small>
-                  <small style={{ marginLeft: "5px" }}>{`@${
-                    userInfo.user[0].username || ""
-                  }`}</small>
-                </p>
+                {userInfo.displayProfileChip({ borderWidth: "0px" })}
               </Link>
             </div>
           </div>

@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import Connection from "../../../components/api/Connection";
 
+import widget from "../../../styles/modules/Widget.module.css";
+import Connection from "../../../components/api/Connection";
 import Post from "../../../components/api/posts/Post";
 import PostSkeleton from "../../../components/post/PostSkeleton";
 import PostWidget from "../../../components/post/PostWidget";
@@ -56,7 +57,7 @@ export default function PostPage() {
   }, [router.query.id]);
 
   return (
-    <>
+    <div className={widget.list}>
       {postInfo ? (
         <>
           <PostWidget post={postInfo}>
@@ -70,6 +71,6 @@ export default function PostPage() {
           <PostSkeleton />
         </div>
       )}
-    </>
+    </div>
   );
 }
