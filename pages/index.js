@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
 
 import PostSkeleton from "../components/post/PostSkeleton";
+import AlertWidget from "../components/templates/Alert";
 import styles from "../styles/modules/Home.module.css";
 import PostCollection from "../components/api/posts/PostCollection";
 import PostListWidget from "../components/post/PostListWidget";
@@ -39,6 +40,8 @@ export default function Home() {
   const [errorData, setErrorData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [permissionButton, setPermissionButton] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState({});
   const listInnerRef = useRef();
 
   const handleScroll = (e) => {
@@ -77,30 +80,44 @@ export default function Home() {
   };
 
   const setPostCoordinatesWithPermission = () => {
-    navigator.geolocation.getCurrentPosition((result) => {
-      post.coordinates = {
-        latitude: result.coords.latitude,
-        longitude: result.coords.longitude,
-      };
+    navigator.geolocation.getCurrentPosition(
+      (result) => {
+        post.coordinates = {
+          latitude: result.coords.latitude,
+          longitude: result.coords.longitude,
+        };
 
-      // Get many posts
-      post
-        .fetchManyPosts({
-          page_number: pageNumber,
-          page_size: PAGE_SIZE,
-          max_distance: maxDistance,
-        })
-        .then(({ meta_data, data }) => {
-          setPosts(noDuplicateObjects(posts.concat(data), "_id"));
-        })
-        .catch((error) => {
-          // Capture Error
-          setErrorData(error);
-          setIsLoading(false);
+        // Get many posts
+        post
+          .fetchManyPosts({
+            page_number: pageNumber,
+            page_size: PAGE_SIZE,
+            max_distance: maxDistance,
+          })
+          .then(({ meta_data, data }) => {
+            setPosts(noDuplicateObjects(posts.concat(data), "_id"));
+          })
+          .catch((error) => {
+            // Capture Error
+            setErrorData(error);
+            setIsLoading(false);
+          });
+
+        setIsLoading(false);
+      },
+      (error) => {
+        // Failed To Get Location
+
+        setAlertMessage({
+          severity: "error",
+          content: "Issue Getting Geolocation",
+          title: "Geolocation",
         });
+        setAlert(true);
 
-      setIsLoading(false);
-    });
+        setPostCoordinatesWithOutPermission();
+      }
+    );
   };
 
   useEffect(() => {
@@ -119,6 +136,13 @@ export default function Home() {
         } else if (result.state == "prompt") {
           setPermissionButton(true);
         } else if (result.state == "denied") {
+          setAlertMessage({
+            severity: "warning",
+            content: "Denied Use Of Geolocation",
+            title: "Geolocation",
+          });
+          setAlert(true);
+
           setPostCoordinatesWithOutPermission();
         }
       });
@@ -127,6 +151,13 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="container-flush p-4 text-center">
+        <AlertWidget
+          severity={alertMessage.severity}
+          content={alertMessage.content}
+          title={alertMessage.severity}
+          open={alert}
+          setOpen={setAlert}
+        />
         {permissionButton && (
           <div className="col-12 text-center my-3">
             <Button

@@ -12,7 +12,6 @@ export function ContextProvider({ children }) {
   useEffect(() => {
     account.authenticate().then((result) => {
       if (result) setUser(account);
-
       setInitialize(false);
     });
   }, []);
