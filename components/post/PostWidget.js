@@ -13,7 +13,7 @@ import Link from "next/link";
 import { Button, Menu, MenuItem, Chip } from "@mui/material";
 import { useRouter } from "next/router";
 
-export default function PostWidget({ post, children }) {
+export default function PostWidget({ post, children, hr }) {
   const user = new User(process.env.BACKEND_URL, null, {});
   const accountServices = useContext(AccountContext);
   const post_date = new Date(post.data.createdAt);
@@ -216,6 +216,7 @@ export default function PostWidget({ post, children }) {
         />
         {children && children}
       </div>
+      {hr && <hr style={{ height: "0.5px" }} />}
     </div>
   );
 }

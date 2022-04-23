@@ -17,9 +17,8 @@ export default function PostListWidget({ posts, type, hr }) {
             <ReplyWidget post={post} />
           </div>
         )}
-        {!type && <PostWidget post={post} />}
+        {!type && <PostWidget post={post} hr={hr} />}
       </li>
-      {hr && <hr style={{ height: "0.5px" }} />}
     </>
   ));
 
