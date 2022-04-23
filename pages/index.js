@@ -69,14 +69,13 @@ export default function Home() {
       })
       .then(({ meta_data, data }) => {
         setPosts(noDuplicateObjects(posts.concat(data), "_id"));
+        setIsLoading(false);
       })
       .catch((error) => {
         // Capture Error
         setErrorData(error);
         setIsLoading(false);
       });
-
-    setIsLoading(false);
   };
 
   const setPostCoordinatesWithPermission = () => {
@@ -96,14 +95,13 @@ export default function Home() {
           })
           .then(({ meta_data, data }) => {
             setPosts(noDuplicateObjects(posts.concat(data), "_id"));
+            setIsLoading(false);
           })
           .catch((error) => {
             // Capture Error
             setErrorData(error);
             setIsLoading(false);
           });
-
-        setIsLoading(false);
       },
       (error) => {
         // Failed To Get Location
