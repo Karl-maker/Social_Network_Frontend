@@ -151,14 +151,7 @@ export default function Home() {
           }
         });
     } catch (err) {
-      setAlertMessage({
-        severity: "error",
-        content: err.message,
-        title: "Issue",
-      });
-      setAlert(true);
-
-      setPostCoordinatesWithOutPermission();
+      setPostCoordinatesWithPermission();
     }
   }, [pageNumber, maxDistance]);
 
