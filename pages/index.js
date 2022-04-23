@@ -110,8 +110,8 @@ export default function Home() {
 
         setAlertMessage({
           severity: "error",
-          content: "Issue Getting Geolocation",
-          title: "Geolocation",
+          content: error.message,
+          title: "Issue Occured",
         });
         setAlert(true);
 
