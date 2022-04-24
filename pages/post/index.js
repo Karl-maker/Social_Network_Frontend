@@ -38,25 +38,29 @@ export default function CreatePostPage() {
       setRows(2);
     }
 
-    navigator.permissions
-      .query({ name: "geolocation" })
-      .then(function (result) {
-        if (result.state == "granted") {
+    try {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (result) {
+          if (result.state == "granted") {
+            setShowPostButton(true);
+          } else if (result.state == "prompt") {
+            setShowPostButton(true);
+          } else if (result.state == "denied") {
+            setAlertMessage({
+              severity: "warning",
+              content: "Denied Use Of Geolocation",
+              title: "Geolocation",
+            });
+            setAlert(true);
+          }
+        })
+        .catch((err) => {
           setShowPostButton(true);
-        } else if (result.state == "prompt") {
-          setShowPostButton(true);
-        } else if (result.state == "denied") {
-          setAlertMessage({
-            severity: "warning",
-            content: "Denied Use Of Geolocation",
-            title: "Geolocation",
-          });
-          setAlert(true);
-        }
-      })
-      .catch((err) => {
-        setShowPostButton(true);
-      });
+        });
+    } catch (err) {
+      setShowPostButton(true);
+    }
   }, []);
 
   const handleSubmit = (e) => {
