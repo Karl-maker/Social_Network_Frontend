@@ -33,7 +33,7 @@ export default function Registration() {
   const [error, setError] = useState("");
 
   // Temporary
-  router.push("/");
+  return <></>;
 
   if (isLoggedIn) {
     const returnUrl = router.query.return_url || "/";
