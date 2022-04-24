@@ -62,7 +62,7 @@ export default function RepliesList({ post_id }) {
   return (
     <>
       {replies.length > 0 ? (
-        <PostListWidget posts={replies} type="replies" hr={false} />
+        <PostListWidget posts={replies} type="replies" />
       ) : (
         <></>
       )}

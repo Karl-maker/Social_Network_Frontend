@@ -90,13 +90,14 @@ export default class User extends Connection {
       method: "POST",
       credentials: "include",
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: "*/*",
+        "Content-type": "application/json",
       },
       body: JSON.stringify({ email: email, password: password }),
     })
       .then((response) => {
         // Check status code
+
         if (response.status === 200) {
           return response.json();
         }
@@ -127,31 +128,38 @@ export default class User extends Connection {
   }
 
   async authenticate() {
-    try {
-      const result = await axios.post(
-        `${this.base_url}/api/authenticate`,
-        {},
-        {
-          withCredentials: true,
+    return fetch(`${this.base_url}/api/authenticate`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "*/*",
+        "Content-type": "API-Key",
+      },
+    })
+      .then((response) => {
+        // Check status code
+
+        if (response.status === 200) {
+          return response.json();
         }
-      );
 
-      if (result.status === 200) {
-        this.access_token = result.data.access_token;
+        throw new Error({
+          message: response.json().message || "Issue with authentication",
+        });
+      })
+      .then(async (response) => {
+        // get access_token and place in code
 
+        this.access_token = response.access_token;
         await this.fetchCurrentUser();
         await this.fetchUserInformation(this._id);
 
         this._isLoggedIn = true;
         return true;
-      }
-
-      this._isLoggedIn = false;
-
-      return false;
-    } catch (err) {
-      return false;
-    }
+      })
+      .catch((err) => {
+        return false;
+      });
   }
 
   async register(email, password) {
