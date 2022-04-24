@@ -1,6 +1,7 @@
 import { AccountContext } from "../components/templates/ContextProvider";
 import { useState, useEffect, useContext } from "react";
-import { TextField, CircularProgress, Button } from "@mui/material";
+import { TextField } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import widget from "../styles/modules/Widget.module.css";
 import Link from "next/link";
@@ -79,7 +80,7 @@ export default function Login() {
           </small>
         </div>
         <div className="mt-3">
-          <Button
+          <LoadingButton
             variant="contained"
             sx={{
               borderRadius: "5px",
@@ -91,9 +92,10 @@ export default function Login() {
               handleLogin(e);
             }}
             disableElevation
+            loading={loading}
           >
-            {loading ? <CircularProgress color="inherit" /> : <>Log in</>}
-          </Button>
+            Login
+          </LoadingButton>
         </div>
         {error && (
           <div className="mt-3 ">
