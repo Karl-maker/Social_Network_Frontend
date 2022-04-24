@@ -86,29 +86,44 @@ export default class User extends Connection {
   }
 
   async login(email, password) {
-    try {
-      const result = await axios.post(
-        `${this.base_url}/api/login`,
-        {
-          password,
-          email,
-        },
-        { withCredentials: true }
-      );
+    return fetch(`${this.base_url}/api/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((response) => {
+        // Check status code
+        if (response.status === 200) {
+          return response.json();
+        }
 
-      if (result.status === 200) {
-        this.access_token = result.data.access_token;
+        throw new Error({
+          message: response.json().message || "Issue with login",
+        });
+      })
+      .then(async (response) => {
+        if (response.access_token) {
+          this.access_token = response.access_token;
 
-        await this.fetchCurrentUser();
-        await this.fetchUserInformation(this._id);
+          await this.fetchCurrentUser();
+          await this.fetchUserInformation(this._id);
 
-        this._isLoggedIn = true;
+          this._isLoggedIn = true;
 
-        return result;
-      }
-    } catch (err) {
-      return false;
-    }
+          return response;
+        }
+
+        // If login didn't work
+
+        throw response;
+      })
+      .catch((err) => {
+        console.log(JSON.stringify(err));
+      });
   }
 
   async authenticate() {
