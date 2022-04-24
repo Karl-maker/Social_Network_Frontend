@@ -32,6 +32,9 @@ export default function Registration() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
+  // Temporary
+  router.push("/");
+
   if (isLoggedIn) {
     const returnUrl = router.query.return_url || "/";
     router.push(returnUrl);
