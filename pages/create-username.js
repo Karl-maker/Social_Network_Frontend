@@ -5,7 +5,7 @@ import widget from "../styles/modules/Widget.module.css";
 import { useRouter } from "next/router";
 import AlertWidget from "../components/templates/Alert";
 
-export default function createUsername() {
+export default function CreateUsername() {
   const [username, setUsername] = useState("");
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState({});
