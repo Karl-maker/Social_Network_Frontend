@@ -62,8 +62,8 @@ export default function CreatePostPage() {
   const handleSubmit = (e) => {
     let coordinates = { latitude: null, longitude: null };
 
-    try {
-      navigator.geolocation.getCurrentPosition((result) => {
+    navigator.geolocation.getCurrentPosition(
+      (result) => {
         const { latitude, longitude } = result.coords;
 
         coordinates.latitude = latitude;
@@ -98,26 +98,29 @@ export default function CreatePostPage() {
             }
           });
         } else if (router.query.reply) {
-          post.createAReply(content, router.query.reply).then((result) => {
-            if (result.status === 200) {
-              setAlertMessage({
-                severity: "success",
-                content: "Response Created Successfully",
-                title: "Post",
-              });
-              setAlert(true);
-              setTimeout(() => {
-                router.push("/");
-              }, 2000);
-            } else {
-              setAlertMessage({
-                severity: "error",
-                content: "Issue Creating Response",
-                title: "Post",
-              });
-              setAlert(true);
-            }
-          });
+          post.createAReply(content, router.query.reply).then(
+            (result) => {
+              if (result.status === 200) {
+                setAlertMessage({
+                  severity: "success",
+                  content: "Response Created Successfully",
+                  title: "Post",
+                });
+                setAlert(true);
+                setTimeout(() => {
+                  router.push("/");
+                }, 2000);
+              } else {
+                setAlertMessage({
+                  severity: "error",
+                  content: "Issue Creating Response",
+                  title: "Post",
+                });
+                setAlert(true);
+              }
+            },
+            (error) => {}
+          );
         } else {
           post.create(content).then((result) => {
             if (result.status === 200) {
@@ -140,15 +143,16 @@ export default function CreatePostPage() {
             }
           });
         }
-      });
-    } catch (err) {
-      setAlertMessage({
-        severity: "error",
-        content: err.message,
-        title: "Issue Creating Post",
-      });
-      setAlert(true);
-    }
+      },
+      (error) => {
+        setAlertMessage({
+          severity: "error",
+          content: err.message,
+          title: "Issue Creating Post",
+        });
+        setAlert(true);
+      }
+    );
   };
 
   return (
