@@ -55,12 +55,7 @@ export default function CreatePostPage() {
           }
         });
     } catch (err) {
-      setAlertMessage({
-        severity: "warning",
-        content: "Issue With Use Of Geolocation",
-        title: "Geolocation",
-      });
-      setAlert(true);
+      setShowPostButton(true);
     }
   }, []);
 
