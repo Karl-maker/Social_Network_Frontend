@@ -69,6 +69,13 @@ export default function Home() {
       })
       .then(({ meta_data, data }) => {
         setPosts(noDuplicateObjects(posts.concat(data), "_id"));
+        setAlertMessage({
+          severity: "warning",
+          content:
+            "Couldn't get geolocation, so we've loaded posts from Port of Spain, Trinidad and Tobago",
+          title: "Change Of Plans",
+        });
+        setAlert(true);
         setIsLoading(false);
       })
       .catch((error) => {

@@ -3,7 +3,7 @@
   border-radius: 20px;
   margin-left: 10px;
   margin-right: 10px;
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 20px;
   border: 1px solid;
   border-color: #dfe6e9;
@@ -93,6 +93,7 @@
   .primary {
     border: 0px;
     padding: -30px;
+    margin-top: 20px;
   }
 }
 
