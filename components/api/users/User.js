@@ -304,7 +304,7 @@ export default class User extends Connection {
               <small>@{this._username}</small>
             </>
           ) : (
-            <strong>{this._display_name}</strong>
+            <strong></strong>
           )
         }
       />
@@ -317,10 +317,11 @@ export default class User extends Connection {
         {this._username ? (
           <>
             {this._username.toUpperCase().charAt(0) ||
-              this._display_name.toUpperCase().charAt(0)}
+              this._display_name.toUpperCase().charAt(0) ||
+              this._email.toUpperCase().charAt(0)}
           </>
         ) : (
-          <>{this._display_name.toUpperCase().charAt(0)}</>
+          <>{this._email.toUpperCase().charAt(0)}</>
         )}
       </Avatar>
     );

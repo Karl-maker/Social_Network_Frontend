@@ -66,21 +66,39 @@ export default class Profile extends Connection {
   }
 
   async getById(id) {
-    const result = await axios.get(`${this.base_url}/api/profile/${id}`, {
-      headers: { Authorization: `Bearer ${this.access_token}` },
-    });
+    return fetch(`${this.base_url}/api/profile/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${this.access_token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        // Check status code
+        if (response.status === 200) {
+          return response.json();
+        }
 
-    let data;
+        throw new Error({
+          message: response.json().message || "Issue getting information",
+        });
+      })
+      .then((result) => {
+        let data;
 
-    if (result.status === 200) {
-      data = result.data[0];
+        if (result.status === 200) {
+          data = result.data[0];
 
-      this._display_name = data.display_name;
-      this._bio = data.bio;
-      this._is_verified = data.is_verified;
-      this._username = data.user[0].username;
-    }
+          this._display_name = data.display_name;
+          this._bio = data.bio;
+          this._is_verified = data.is_verified;
+          this._username = data.user[0].username;
+        }
 
-    return result;
+        return result;
+      })
+      .catch((error) => {
+        //
+      });
   }
 }

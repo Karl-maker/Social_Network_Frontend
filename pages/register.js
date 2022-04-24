@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import widget from "../styles/modules/Widget.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import Profile from "../components/api/profile/Profile";
 
 export async function getStaticProps(context) {
   return {
@@ -48,10 +49,26 @@ export default function Registration() {
     }
 
     if (password === confirmPassword) {
-      accountServices.register(email, password).then(() => {
+      accountServices.register(email, password).then((result) => {
         // Set that registration was successful
-        setSuccessfulRegistration(true);
-        setLoading(false);
+
+        if (result) {
+          // create profile
+
+          const profile = new Profile(
+            process.env.BACKEND_URL,
+            accountServices.access_token,
+            {}
+          );
+
+          profile.create({}).then((result) => {
+            console.log(result);
+            setSuccessfulRegistration(true);
+            setLoading(false);
+          });
+        } else {
+          setError("Issue Registering");
+        }
       });
     } else {
       setError("Passwords Must Match");

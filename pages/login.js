@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import widget from "../styles/modules/Widget.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import Profile from "../components/api/profile/Profile";
 
 export async function getStaticProps(context) {
   return {
@@ -31,8 +32,11 @@ export default function Login() {
 
   const handleLogin = (e) => {
     accountServices.login(email, password).then(() => {
-      if (accountServices.isLoggedIn) setIsLoggedIn(accountServices.isLoggedIn);
-      else setError("Email or password is incorrect");
+      if (accountServices.isLoggedIn) {
+        if (!accountServices.username) {
+          router.push("/create-username");
+        } else setIsLoggedIn(accountServices.isLoggedIn);
+      } else setError("Email or password is incorrect");
 
       setLoading(false);
     });

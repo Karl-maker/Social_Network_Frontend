@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import User from "../api/users/User";
 import Loading from "./Loading";
+import { useRouter } from "next/router";
 
 export const AccountContext = createContext({});
 
 export function ContextProvider({ children }) {
+  const router = useRouter();
   const account = new User(process.env.BACKEND_URL || "", "", {});
   const [user, setUser] = useState(account);
   const [initialize, setInitialize] = useState(true);
