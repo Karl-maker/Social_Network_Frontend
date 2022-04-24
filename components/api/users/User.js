@@ -265,7 +265,7 @@ export default class User extends Connection {
 
   // JSX
 
-  displayProfileChip({ borderWidth, color, variant }) {
+  displayProfileChip({ borderWidth, color, variant, onlyUsername }) {
     return (
       <Chip
         variant={variant || "outlined"}

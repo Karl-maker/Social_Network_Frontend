@@ -58,7 +58,6 @@ export default function Header({}) {
           <DrawerButton anchor={"right"} element={menu}>
             {accountServices.displayProfileChip({
               borderWidth: "0px",
-              link: false,
             })}
           </DrawerButton>
         ) : (

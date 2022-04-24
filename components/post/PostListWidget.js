@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PostWidget from "./PostWidget";
 import ReplyWidget from "./ReplyWidget";
 import Link from "next/link";
+import widget from "../../styles/modules/Widget.module.css";
 
 export default function PostListWidget({ posts, type, hr }) {
   const [list, setList] = useState([]);

@@ -108,12 +108,17 @@ export default function ActivityWidget({
             onClick={(e) => {
               if (accountServices.access_token) {
                 post.access_token = accountServices.access_token;
-                post.likeButtonInteraction().then((result) => {
-                  if (result.status === 200) {
-                    setPrev(activityState.value);
-                    activityService.send("LIKE");
-                  }
-                });
+                post
+                  .likeButtonInteraction()
+                  .then((result) => {
+                    if (result.status === 200) {
+                      setPrev(activityState.value);
+                      activityService.send("LIKE");
+                    }
+                  })
+                  .catch((err) => {
+                    // Issue liking
+                  });
               }
             }}
           >
@@ -137,12 +142,17 @@ export default function ActivityWidget({
             onClick={(e) => {
               if (accountServices.access_token) {
                 post.access_token = accountServices.access_token;
-                post.dislikeButtonInteraction().then((result) => {
-                  if (result.status === 200) {
-                    setPrev(activityState.value);
-                    activityService.send("DISLIKE");
-                  }
-                });
+                post
+                  .dislikeButtonInteraction()
+                  .then((result) => {
+                    if (result.status === 200) {
+                      setPrev(activityState.value);
+                      activityService.send("DISLIKE");
+                    }
+                  })
+                  .catch((err) => {
+                    // Issue disliking
+                  });
               }
             }}
           >

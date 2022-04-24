@@ -13,7 +13,7 @@ import Link from "next/link";
 import { Button, Menu, MenuItem, Chip } from "@mui/material";
 import { useRouter } from "next/router";
 
-export default function PostWidget({ post, children, hr }) {
+export default function PostWidget({ post, children }) {
   const user = new User(process.env.BACKEND_URL, null, {});
   const accountServices = useContext(AccountContext);
   const post_date = new Date(post.data.createdAt);
@@ -77,146 +77,149 @@ export default function PostWidget({ post, children, hr }) {
   };
 
   return (
-    <div className={widget.primary}>
-      <div className="container-flush p-0">
-        <div className="row">
-          <div
-            className="col-8"
-            style={{
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-            <Link href={`/user/${userInfo._id}`} passHref>
-              {userInfo.displayProfileChip({ borderWidth: "0px" })}
-            </Link>
-          </div>
-          <div className="col-4 mx-0">
-            <div className="row">
-              <p
-                className="text-end col-8 px-0"
-                style={{
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                <small
+    <>
+      <div className={widget.primary}>
+        <div className="container-flush p-3 ">
+          <div className="row">
+            <div
+              className="col-8"
+              style={{
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              <Link href={`/user/${userInfo._id}`} passHref>
+                {userInfo.displayProfileChip({ borderWidth: "0px" })}
+              </Link>
+            </div>
+            <div className="col-4 mx-0">
+              <div className="row">
+                <p
+                  className="text-end col-8 px-0"
                   style={{
-                    marginLeft: "2px",
-                    color: "#636e72",
-                    fontSize: "12px",
-                    marginBottom: "2px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
                   }}
                 >
-                  {how_long_ago}
-                </small>
-              </p>
-              <p className="col-3 text-end mx-0 px-0">
-                <BsThreeDotsVertical
-                  id="basic-button"
-                  aria-controls={open ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
+                  <small
+                    style={{
+                      marginLeft: "2px",
+                      color: "#636e72",
+                      fontSize: "12px",
+                      marginBottom: "2px",
+                    }}
+                  >
+                    {how_long_ago}
+                  </small>
+                </p>
+                <p className="col-3 text-end mx-0 px-0">
+                  <BsThreeDotsVertical
+                    id="basic-button"
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                    style={{
+                      color: "#2d3436",
+                      fontSize: "15px",
+                    }}
+                  />
+                  <PostMenu />
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {post.data.replied_to && (
+            <div
+              style={{
+                marginBottom: "0px",
+                marginTop: "0px",
+              }}
+              className="mb-4"
+            >
+              <ChildWidget post_id={post.data.replied_to} />
+            </div>
+          )}
+          <div className="row mt-2">
+            <p style={{ color: "#2d3436" }}>
+              {post.data.replied_to && (
+                <BsArrowReturnRight
                   style={{
-                    color: "#2d3436",
+                    marginRight: "10px",
+                    marginLeft: "10px",
                     fontSize: "15px",
                   }}
                 />
-                <PostMenu />
-              </p>
+              )}
+              {post.data.content}
+            </p>
+          </div>
+          {post.data.shared_from && (
+            <div className="mb-2">
+              <ChildWidget post_id={post.data.shared_from} />
             </div>
-          </div>
-        </div>
+          )}
 
-        {post.data.replied_to && (
-          <div
-            style={{
-              marginBottom: "0px",
-              marginTop: "0px",
-            }}
-            className="mb-4"
-          >
-            <ChildWidget post_id={post.data.replied_to} />
-          </div>
-        )}
-        <div className="row mt-2">
-          <p style={{ color: "#2d3436" }}>
-            {post.data.replied_to && (
-              <BsArrowReturnRight
-                style={{
-                  marginRight: "10px",
-                  marginLeft: "10px",
-                  fontSize: "15px",
-                }}
-              />
-            )}
-            {post.data.content}
+          <p className="text-end mt-2">
+            <Chip
+              size="small"
+              label={
+                post.data.area.city ? (
+                  <>
+                    <ImLocation2
+                      style={{
+                        color: "#74b9ff",
+                        fontSize: "12px",
+                        marginRight: "2px",
+                      }}
+                    />
+                    {post.data.area.city}
+                  </>
+                ) : (
+                  <>
+                    <ImLocation2
+                      style={{
+                        color: "#74b9ff",
+                        fontSize: "12px",
+                        marginRight: "2px",
+                      }}
+                    />
+                    {post.data.area.state}
+                  </>
+                )
+              }
+              variant="outlined"
+              sx={{
+                fontSize: 10,
+                padding: 0.1,
+                borderColor: "#74b9ff",
+                color: "#74b9ff",
+              }}
+            />
           </p>
-        </div>
-        {post.data.shared_from && (
-          <>
-            <ChildWidget post_id={post.data.shared_from} />
-          </>
-        )}
 
-        <p className="text-end mt-2">
-          <Chip
-            size="small"
-            label={
-              post.data.area.city ? (
-                <>
-                  <ImLocation2
-                    style={{
-                      color: "#74b9ff",
-                      fontSize: "12px",
-                      marginRight: "2px",
-                    }}
-                  />
-                  {post.data.area.city}
-                </>
-              ) : (
-                <>
-                  <ImLocation2
-                    style={{
-                      color: "#74b9ff",
-                      fontSize: "12px",
-                      marginRight: "2px",
-                    }}
-                  />
-                  {post.data.area.state}
-                </>
-              )
+          <ActivityWidget
+            post={post}
+            likes={
+              post.data.activities.find(
+                (activity) => activity._id === "like"
+              ) || { amount: 0 }
             }
-            variant="outlined"
-            sx={{
-              fontSize: 10,
-              padding: 0.1,
-              borderColor: "#74b9ff",
-              color: "#74b9ff",
-            }}
+            dislikes={
+              post.data.activities.find(
+                (activity) => activity._id === "dislike"
+              ) || { amount: 0 }
+            }
+            replies={post.data.replies[0] || null}
+            shares={post.data.shares[0] || null}
           />
-        </p>
-        <ActivityWidget
-          post={post}
-          likes={
-            post.data.activities.find(
-              (activity) => activity._id === "like"
-            ) || { amount: 0 }
-          }
-          dislikes={
-            post.data.activities.find(
-              (activity) => activity._id === "dislike"
-            ) || { amount: 0 }
-          }
-          replies={post.data.replies[0] || null}
-          shares={post.data.shares[0] || null}
-        />
-        {children && children}
+          {children && children}
+        </div>
       </div>
-      {hr && <hr style={{ height: "0.5px" }} />}
-    </div>
+      <hr className={widget.divider} />
+    </>
   );
 }
