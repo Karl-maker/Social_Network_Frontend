@@ -216,7 +216,7 @@ export default function Home() {
           </Link>
         </div>
       )}
-      <div style={{ paddingBottom: "100px" }}>
+      <div style={{ paddingBottom: "130px" }}>
         <PostListWidget posts={posts} hr={true} />
       </div>
 
