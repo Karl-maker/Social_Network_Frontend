@@ -216,7 +216,10 @@ export default function Home() {
           </Link>
         </div>
       )}
-      <PostListWidget posts={posts} hr={true} />
+      <div style={{ paddingBottom: "80px" }}>
+        <PostListWidget posts={posts} hr={true} />
+      </div>
+
       {/*
 
         When Scrolled To the end load more content

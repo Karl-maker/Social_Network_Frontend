@@ -24,7 +24,7 @@ export default function PostListWidget({ posts, type, hr }) {
   ));
 
   return (
-    <ul className="p-0 mb-5">
+    <ul className="p-0">
       {/* set distance and have other options and info here such as current location*/}
       {listPosts}
     </ul>
