@@ -169,7 +169,7 @@ export default class Post extends Connect {
       });
       return result;
     } catch (err) {
-      return;
+      throw err;
     }
   }
 

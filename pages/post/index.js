@@ -5,12 +5,12 @@ import ChildWidget from "../../components/post/ChildWidget";
 
 import { useContext, useEffect, useState } from "react";
 import { ImLocation2 } from "react-icons/im";
+import { GrSend } from "react-icons/gr";
 import { MdKeyboardBackspace } from "react-icons/md";
-import Button from "@mui/material/Button";
+import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import AlertWidget from "../../components/templates/Alert";
-import Loading from "../../components/templates/Loading";
 
 export async function getStaticProps(context) {
   return {
@@ -28,6 +28,7 @@ export default function CreatePostPage() {
   const [alert, setAlert] = useState(false);
   const [showPostButton, setShowPostButton] = useState(false);
   const [alertMessage, setAlertMessage] = useState({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -37,26 +38,25 @@ export default function CreatePostPage() {
       setRows(2);
     }
 
-    try {
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then(function (result) {
-          if (result.state == "granted") {
-            setShowPostButton(true);
-          } else if (result.state == "prompt") {
-            setShowPostButton(true);
-          } else if (result.state == "denied") {
-            setAlertMessage({
-              severity: "warning",
-              content: "Denied Use Of Geolocation",
-              title: "Geolocation",
-            });
-            setAlert(true);
-          }
-        });
-    } catch (err) {
-      setShowPostButton(true);
-    }
+    navigator.permissions
+      .query({ name: "geolocation" })
+      .then(function (result) {
+        if (result.state == "granted") {
+          setShowPostButton(true);
+        } else if (result.state == "prompt") {
+          setShowPostButton(true);
+        } else if (result.state == "denied") {
+          setAlertMessage({
+            severity: "warning",
+            content: "Denied Use Of Geolocation",
+            title: "Geolocation",
+          });
+          setAlert(true);
+        }
+      })
+      .catch((err) => {
+        setShowPostButton(true);
+      });
   }, []);
 
   const handleSubmit = (e) => {
@@ -76,30 +76,44 @@ export default function CreatePostPage() {
         );
 
         if (router.query.share) {
-          post.createAShare(content, router.query.share).then((result) => {
-            console.log(result);
-            if (result.status === 200) {
-              setAlertMessage({
-                severity: "success",
-                content: "Share Created Successfully",
-                title: "Post",
-              });
-              setAlert(true);
-              setTimeout(() => {
-                router.push("/");
-              }, 2000);
-            } else {
+          post
+            .createAShare(content, router.query.share)
+            .then((result) => {
+              setLoading(false);
+              if (result.status === 200) {
+                setAlertMessage({
+                  severity: "success",
+                  content: "Share Created Successfully",
+                  title: "Post",
+                });
+                setAlert(true);
+                setTimeout(() => {
+                  router.push("/");
+                }, 2000);
+              } else {
+                setAlertMessage({
+                  severity: "error",
+                  content: "Issue Creating Share",
+                  title: "Post",
+                });
+                setAlert(true);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              setLoading(false);
               setAlertMessage({
                 severity: "error",
-                content: "Issue Creating Share",
-                title: "Post",
+                content: err.message,
+                title: "Issue Sharing Post",
               });
               setAlert(true);
-            }
-          });
+            });
         } else if (router.query.reply) {
-          post.createAReply(content, router.query.reply).then(
-            (result) => {
+          post
+            .createAReply(content, router.query.reply)
+            .then((result) => {
+              setLoading(false);
               if (result.status === 200) {
                 setAlertMessage({
                   severity: "success",
@@ -118,33 +132,55 @@ export default function CreatePostPage() {
                 });
                 setAlert(true);
               }
-            },
-            (error) => {}
-          );
-        } else {
-          post.create(content).then((result) => {
-            if (result.status === 200) {
-              setAlertMessage({
-                severity: "success",
-                content: "Post Created Successfully",
-                title: "Post",
-              });
-              setAlert(true);
-              setTimeout(() => {
-                router.push("/");
-              }, 2000);
-            } else {
+            })
+            .catch((err) => {
+              console.log(err);
+              setLoading(false);
               setAlertMessage({
                 severity: "error",
-                content: "Issue Creating Post",
-                title: "Post",
+                content: err.message,
+                title: "Issue Responding To Post",
               });
               setAlert(true);
-            }
-          });
+            });
+        } else {
+          post
+            .create(content)
+            .then((result) => {
+              setLoading(false);
+              if (result.status === 200) {
+                setAlertMessage({
+                  severity: "success",
+                  content: "Post Created Successfully",
+                  title: "Post",
+                });
+                setAlert(true);
+                setTimeout(() => {
+                  router.push("/");
+                }, 2000);
+              } else {
+                setAlertMessage({
+                  severity: "error",
+                  content: "Issue Creating Post",
+                  title: "Post",
+                });
+                setAlert(true);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              setLoading(false);
+              setAlertMessage({
+                severity: "error",
+                content: err.message,
+                title: "Issue Creating Post",
+              });
+              setAlert(true);
+            });
         }
       },
       (error) => {
+        setLoading(false);
         setAlertMessage({
           severity: "error",
           content: err.message,
@@ -203,23 +239,25 @@ export default function CreatePostPage() {
             <div className="row mt-3">
               <div className="col-12 text-end">
                 {showPostButton && (
-                  <Button
+                  <LoadingButton
                     variant="contained"
                     sx={{
                       borderRadius: "20px",
                       borderColor: "transparent",
                     }}
                     onClick={() => {
+                      setLoading(true);
                       handleSubmit();
                     }}
                     disableElevation
+                    loading={loading}
                   >
                     {router.query.share ? (
-                      "Share"
+                      <>Share</>
                     ) : (
                       <>{router.query.reply ? "Reply" : "Post"}</>
                     )}
-                  </Button>
+                  </LoadingButton>
                 )}
               </div>
             </div>
