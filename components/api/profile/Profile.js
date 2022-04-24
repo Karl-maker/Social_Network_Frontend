@@ -86,14 +86,12 @@ export default class Profile extends Connection {
       .then((result) => {
         let data;
 
-        if (result.status === 200) {
-          data = result.data[0];
+        data = result;
 
-          this._display_name = data.display_name;
-          this._bio = data.bio;
-          this._is_verified = data.is_verified;
-          this._username = data.user[0].username;
-        }
+        this._display_name = data.display_name;
+        this._bio = data.bio;
+        this._is_verified = data.is_verified;
+        this._username = data.user[0].username;
 
         return result;
       })

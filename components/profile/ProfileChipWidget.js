@@ -12,18 +12,6 @@ export default function ProfileChipWidget() {
   const accountService = useContext(AccountContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const profile = new Profile(
-    process.env.BACKEND_URL,
-    accountService.access_token,
-    {}
-  );
-  const [profileData, setProfileData] = useState(null);
-
-  useEffect(() => {
-    profile.getById(accountService._id).then((result) => {
-      setProfileData(profile);
-    });
-  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,7 +48,7 @@ export default function ProfileChipWidget() {
     );
   };
 
-  if (profileData)
+  if (accountService.isLoggedIn)
     return (
       <div className={widget.chip_fill}>
         <div className="container-flush p-2">
@@ -75,13 +63,13 @@ export default function ProfileChipWidget() {
               <div className="row">
                 <div className="col-12 m-0 p-0">
                   <p className="m-0">
-                    {profileData.display_name && profileData.display_name}
+                    {accountService.display_name && accountService.display_name}
                   </p>
                 </div>
                 <div className="col-12 m-0 p-0">
                   <p className="m-0">
                     <small>
-                      {profileData.username && `@${profileData.username}`}
+                      {accountService.username && `@${accountService.username}`}
                     </small>
                   </p>
                 </div>

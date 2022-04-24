@@ -26,6 +26,7 @@ export default function CreatePostPage() {
   const [content, setContent] = useState("");
   const [rows, setRows] = useState(5);
   const [alert, setAlert] = useState(false);
+  const [showPostButton, setShowPostButton] = useState(false);
   const [alertMessage, setAlertMessage] = useState({});
   const router = useRouter();
 
@@ -35,42 +36,28 @@ export default function CreatePostPage() {
     } else if (router.query.reply) {
       setRows(2);
     }
-    try {
-      if ("geolocation" in navigator) {
-        navigator.permissions
-          .query({ name: "geolocation" })
-          .then(function (result) {
-            if (result.state === "granted") {
-              setAlertMessage({
-                severity: "success",
-                content: "Geolocation Found",
-                title: "Location",
-              });
-              setAlert(true);
-            } else if (result.state === "prompt") {
-            } else if (result.state === "denied") {
-              setAlertMessage({
-                severity: "warning",
-                content: "Geolocation Not Shared",
-                title: "Location",
-              });
-              setAlert(true);
-            }
-          });
-      } else {
-        // No GeoLocation
 
-        setAlertMessage({
-          severity: "error",
-          content: "Geolocation Not Avaliable",
-          title: "Location",
+    try {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (result) {
+          if (result.state == "granted") {
+            setShowPostButton(true);
+          } else if (result.state == "prompt") {
+            setShowPostButton(true);
+          } else if (result.state == "denied") {
+            setAlertMessage({
+              severity: "warning",
+              content: "Denied Use Of Geolocation",
+              title: "Geolocation",
+            });
+            setAlert(true);
+          }
         });
-        setAlert(true);
-      }
     } catch (err) {
       setAlertMessage({
-        severity: "error",
-        content: "Issue Getting Geolocation",
+        severity: "warning",
+        content: "Issue With Use Of Geolocation",
         title: "Geolocation",
       });
       setAlert(true);
@@ -216,23 +203,25 @@ export default function CreatePostPage() {
             )}
             <div className="row mt-3">
               <div className="col-12 text-end">
-                <Button
-                  variant="contained"
-                  sx={{
-                    borderRadius: "20px",
-                    borderColor: "transparent",
-                  }}
-                  onClick={() => {
-                    handleSubmit();
-                  }}
-                  disableElevation
-                >
-                  {router.query.share ? (
-                    "Share"
-                  ) : (
-                    <>{router.query.reply ? "Reply" : "Post"}</>
-                  )}
-                </Button>
+                {showPostButton && (
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: "20px",
+                      borderColor: "transparent",
+                    }}
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                    disableElevation
+                  >
+                    {router.query.share ? (
+                      "Share"
+                    ) : (
+                      <>{router.query.reply ? "Reply" : "Post"}</>
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           </div>

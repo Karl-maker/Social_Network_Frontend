@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 export default function PostWidget({ post, children }) {
   const user = new User(process.env.BACKEND_URL, null, {});
   const accountServices = useContext(AccountContext);
+  const [close, setClose] = useState(false);
   const post_date = new Date(post.data.createdAt);
   const current_date = new Date();
   const how_long_ago = checkHowManyDaysAgo(post_date, current_date);
@@ -35,7 +36,8 @@ export default function PostWidget({ post, children }) {
   const handleDelete = () => {
     post.delete().then((result) => {
       if (result.status === 200) {
-        router.reload(window.location.pathname);
+        // Close Widget
+        setClose(true);
       }
     });
   };
@@ -75,6 +77,10 @@ export default function PostWidget({ post, children }) {
       </Menu>
     );
   };
+
+  if (close) {
+    return <></>;
+  }
 
   return (
     <>
