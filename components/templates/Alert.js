@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AlertTitle, Snackbar } from "@mui/material";
+import { AlertTitle, Snackbar, Collapse } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
 export default function AlertWidget({
@@ -23,20 +23,18 @@ export default function AlertWidget({
   };
 
   return (
-    <Snackbar
-      open={open}
-      autoHideDuration={duration || 6000}
-      onClose={handleClose}
-    >
-      <Alert
-        variant="filled"
-        severity={severity}
+    <Collapse in={open}>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        open={open}
+        autoHideDuration={duration || 6000}
         onClose={handleClose}
-        sx={{ width: "100%" }}
       >
-        <AlertTitle>{title}</AlertTitle>
-        {content}
-      </Alert>
-    </Snackbar>
+        <Alert severity={severity} onClose={handleClose} sx={{ width: "100%" }}>
+          <AlertTitle>{title}</AlertTitle>
+          {content}
+        </Alert>
+      </Snackbar>
+    </Collapse>
   );
 }
