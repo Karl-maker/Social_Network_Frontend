@@ -1,4 +1,7 @@
-import { AccountContext } from "../../components/templates/ContextProvider";
+import {
+  AccountContext,
+  AlertContext,
+} from "../../components/templates/ContextProvider";
 import Post from "../../components/api/posts/Post";
 import widget from "../../styles/modules/Widget.module.css";
 import ChildWidget from "../../components/post/ChildWidget";
@@ -10,7 +13,6 @@ import { MdKeyboardBackspace } from "react-icons/md";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import AlertWidget from "../../components/templates/Alert";
 
 export async function getStaticProps(context) {
   return {
@@ -23,11 +25,12 @@ export async function getStaticProps(context) {
 
 export default function CreatePostPage() {
   const accountServices = useContext(AccountContext);
+  const alertServices = useContext(AlertContext);
+  const setAlertMessage = alertServices.setAlertInfo;
+  const setAlert = alertServices.setAlert;
   const [content, setContent] = useState("");
   const [rows, setRows] = useState(5);
-  const [alert, setAlert] = useState(false);
   const [showPostButton, setShowPostButton] = useState(false);
-  const [alertMessage, setAlertMessage] = useState({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -196,13 +199,6 @@ export default function CreatePostPage() {
 
   return (
     <div>
-      <AlertWidget
-        severity={alertMessage.severity}
-        content={alertMessage.content}
-        title={alertMessage.severity}
-        open={alert}
-        setOpen={setAlert}
-      />
       <Link href="/" passHref>
         <MdKeyboardBackspace className="mx-2" style={{ fontSize: "20px" }} />
       </Link>

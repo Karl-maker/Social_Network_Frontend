@@ -5,14 +5,15 @@ import { Fab, Button } from "@mui/material";
 import { HiPencil } from "react-icons/hi";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
-
 import PostSkeleton from "../components/post/PostSkeleton";
-import AlertWidget from "../components/templates/Alert";
 import styles from "../styles/modules/Home.module.css";
 import PostCollection from "../components/api/posts/PostCollection";
 import PostListWidget from "../components/post/PostListWidget";
 import { noDuplicateObjects } from "../components/utils/array";
-import { AccountContext } from "../components/templates/ContextProvider";
+import {
+  AccountContext,
+  AlertContext,
+} from "../components/templates/ContextProvider";
 import DistanceSlider from "../components/post/DistanceSlider";
 import widget from "../styles/modules/Widget.module.css";
 
@@ -27,6 +28,7 @@ export async function getStaticProps(context) {
 
 export default function Home() {
   const accountServices = useContext(AccountContext);
+  const alertServices = useContext(AlertContext);
 
   let post = new PostCollection(
     process.env.BACKEND_URL || "",
@@ -40,8 +42,6 @@ export default function Home() {
   const [errorData, setErrorData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [permissionButton, setPermissionButton] = useState(false);
-  const [alert, setAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState({});
   const listInnerRef = useRef();
 
   const handleScroll = (e) => {
@@ -69,23 +69,25 @@ export default function Home() {
       })
       .then(({ meta_data, data }) => {
         setPosts(noDuplicateObjects(posts.concat(data), "_id"));
-        setAlertMessage({
+
+        alertServices.setAlertInfo({
           severity: "warning",
           content:
             "Couldn't get geolocation, so we've loaded posts from Port of Spain, Trinidad and Tobago",
           title: "Change Of Plans",
         });
-        setAlert(true);
+
+        alertServices.setAlert(true);
         setIsLoading(false);
       })
       .catch((error) => {
         // Capture Error
-        setAlertMessage({
+        alertServices.setAlertInfo({
           severity: "error",
           content: error.message,
           title: "Issue Occured",
         });
-        setAlert(true);
+        alertServices.setAlert(true);
         setIsLoading(false);
       });
   };
@@ -118,12 +120,12 @@ export default function Home() {
       (error) => {
         // Failed To Get Location
 
-        setAlertMessage({
+        alertServices.setAlertInfo({
           severity: "error",
           content: error.message,
           title: "Issue Occured",
         });
-        setAlert(true);
+        alertServices.setAlert(true);
 
         setPostCoordinatesWithOutPermission();
       }
@@ -147,12 +149,12 @@ export default function Home() {
           } else if (result.state == "prompt") {
             setPermissionButton(true);
           } else if (result.state == "denied") {
-            setAlertMessage({
+            alertServices.setAlertInfo({
               severity: "warning",
               content: "Denied Use Of Geolocation",
               title: "Geolocation",
             });
-            setAlert(true);
+            alertServices.setAlert(true);
 
             setPostCoordinatesWithOutPermission();
           }
@@ -165,13 +167,6 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="container-flush p-4 text-center">
-        <AlertWidget
-          severity={alertMessage.severity}
-          content={alertMessage.content}
-          title={alertMessage.severity}
-          open={alert}
-          setOpen={setAlert}
-        />
         {permissionButton && (
           <div className="col-12 text-center my-3">
             <Button
@@ -195,13 +190,6 @@ export default function Home() {
 
   return (
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
-      <AlertWidget
-        severity={alertMessage.severity}
-        content={alertMessage.content}
-        title={alertMessage.severity}
-        open={alert}
-        setOpen={setAlert}
-      />
       {posts.length === 0 && !isLoading && (
         <div className={widget.secondary}>
           <Link href="/post" passHref>
