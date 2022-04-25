@@ -53,12 +53,10 @@ export default function Header({}) {
           <Image src="/logo192.png" alt="Syncviz Logo" width={70} height={70} />
         </Link>
       </div>
-      <div className="col-8 text-end px-4">
+      <div className="col-8 d-flex justify-content-end px-4">
         {accountServices.isLoggedIn ? (
           <DrawerButton anchor={"right"} element={menu}>
-            {accountServices.displayProfileChip({
-              borderWidth: "0px",
-            })}
+            {accountServices.displayProfilePicture(30)}
           </DrawerButton>
         ) : (
           <Button
