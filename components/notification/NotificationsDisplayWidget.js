@@ -6,7 +6,7 @@ import { useEffect, useState, useContext } from "react";
 import { noDuplicateObjects } from "../../components/utils/array";
 import NotificationListWidget from "./NotificationListWidget";
 
-export default function NotificationSideWidget() {
+export default function NotificationsDisplayWidget() {
   const accountServices = useContext(AccountContext);
   const [notifications, setNotifications] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);

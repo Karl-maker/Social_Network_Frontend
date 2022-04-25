@@ -4,6 +4,8 @@ import { RiEarthFill } from "react-icons/ri";
 import { MdNotificationsNone, MdOutlinePeopleAlt } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { HiPencil } from "react-icons/hi";
+import { AccountContext, AlertContext } from "../templates/ContextProvider";
+import { useContext } from "react";
 
 function Item({ title, icon, link }) {
   const router = useRouter();
@@ -39,6 +41,7 @@ function Item({ title, icon, link }) {
 }
 
 export default function SideNav() {
+  const alertServices = useContext(AlertContext);
   return (
     <ul
       style={{
@@ -58,14 +61,24 @@ export default function SideNav() {
           link="/further-away"
         />
       </li>
-      <li>
-        <Item title="Profile" icon={<FaUserCircle />} link="/profile" />
+      <li
+        onClick={() => {
+          alertServices.setAlertInfo({
+            severity: "warning",
+            title: "No Profile Yet",
+            content:
+              "Profile coming soon where you can see all your posts and add a display name",
+          });
+          alertServices.setAlert(true);
+        }}
+      >
+        <Item title="Profile" icon={<FaUserCircle />} link="/" />
       </li>
       <li>
         <Item
           title="Notifications"
           icon={<MdNotificationsNone />}
-          link="/notification"
+          link="/notifications"
         />
       </li>
     </ul>

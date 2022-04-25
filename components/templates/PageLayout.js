@@ -1,7 +1,7 @@
 import Header from "./Header";
 import { AccountContext } from "../../components/templates/ContextProvider";
 import { useEffect, useState, useContext } from "react";
-import NotificationSideWidget from "../notification/NotificationSideWidget";
+import NotificationSideWidget from "../notification/NotificationsDisplayWidget";
 import ProfileChipWidget from "../profile/ProfileChipWidget";
 import SideNav from "../navigation/SideNav";
 import BottomNav from "../navigation/BottomNav";
