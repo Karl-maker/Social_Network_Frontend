@@ -54,7 +54,7 @@ export default function BottomNav() {
           label="Further"
           icon={<RiEarthFill />}
           onClick={() => {
-            router.push("/happening-further-away");
+            router.push("/further-away");
           }}
         />
         <BottomNavigationAction

@@ -52,7 +52,11 @@ export default function SideNav() {
         <Item title="Close By" icon={<MdOutlinePeopleAlt />} link={"/"} />
       </li>
       <li>
-        <Item title="Further Away" icon={<RiEarthFill />} link="/post" />
+        <Item
+          title="Further Away"
+          icon={<RiEarthFill />}
+          link="/further-away"
+        />
       </li>
       <li>
         <Item title="Profile" icon={<FaUserCircle />} link="/profile" />
