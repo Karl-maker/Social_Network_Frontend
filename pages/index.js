@@ -1,8 +1,9 @@
 // Pre definded
 import { useEffect, useState, useContext, useRef } from "react";
 import util from "util";
-import { Fab, Button } from "@mui/material";
+import { Fab, Button, Slider, IconButton, Tooltip } from "@mui/material";
 import { HiPencil } from "react-icons/hi";
+import { RiEarthFill } from "react-icons/ri";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
 import PostSkeleton from "../components/post/PostSkeleton";
@@ -16,12 +17,13 @@ import {
 } from "../components/templates/ContextProvider";
 import DistanceSlider from "../components/post/DistanceSlider";
 import widget from "../styles/modules/Widget.module.css";
+import { MetersAndKilometers } from "../components/utils/distance";
 
 export async function getStaticProps(context) {
   return {
     props: {
       protected: false,
-      title: "In Your Area",
+      title: "View Post Around You",
     },
   };
 }
@@ -38,8 +40,8 @@ export default function Home() {
   const PAGE_SIZE = 10;
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(1000);
-  const [errorData, setErrorData] = useState();
+  const [maxDistance, setMaxDistance] = useState(5000);
+  const [toggleLoad, setToggleLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [permissionButton, setPermissionButton] = useState(false);
   const listInnerRef = useRef();
@@ -49,6 +51,7 @@ export default function Home() {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
 
       if ((scrollHeight - scrollTop) * 0.9 <= clientHeight) {
+        console.log("scroll load");
         setPageNumber(pageNumber + 1);
       }
     }
@@ -113,7 +116,7 @@ export default function Home() {
           })
           .catch((error) => {
             // Capture Error
-            setErrorData(error);
+
             setIsLoading(false);
           });
       },
@@ -162,76 +165,107 @@ export default function Home() {
     } catch (err) {
       setPostCoordinatesWithPermission();
     }
-  }, [pageNumber, maxDistance]);
-
-  if (isLoading) {
-    return (
-      <div className="container-flush p-4 text-center">
-        {permissionButton && (
-          <div className="col-12 text-center my-3">
-            <Button
-              startIcon={<ImLocation2 />}
-              variant="outlined"
-              onClick={() => {
-                setPostCoordinatesWithPermission();
-              }}
-            >
-              Get Post In Your Location
-            </Button>
-          </div>
-        )}
-        <PostSkeleton />
-        <PostSkeleton />
-        <PostSkeleton />
-        <PostSkeleton />
-      </div>
-    );
-  }
+  }, [pageNumber, toggleLoad]);
 
   return (
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
-      {posts.length === 0 && !isLoading && (
-        <div className={widget.secondary}>
-          <Link href={accountServices.isLoggedIn ? "/post" : "/login"} passHref>
-            <div className="container-flush p-4 text-center">
-              <p style={{ cursor: "pointer", fontSize: "15px" }}>
-                <strong>No Posts Found In Your Location</strong>
-              </p>
-              <p style={{ cursor: "pointer", fontSize: "11px" }}>
-                <small>Be the first to create a post here!</small>{" "}
-                <strong>Post Now</strong>
-              </p>
-            </div>
-          </Link>
-        </div>
-      )}
-      <div style={{ paddingBottom: "130px" }}>
-        <PostListWidget posts={posts} hr={true} />
+      <div className="mt-2 mb-2 px-5">
+        <DistanceSlider
+          maxDistance={maxDistance}
+          setMaxDistance={setMaxDistance}
+          sideElement={
+            <Tooltip
+              title="Refresh Posts"
+              onClick={() => {
+                setIsLoading(true);
+                setPosts([]);
+                setToggleLoad(!toggleLoad);
+              }}
+            >
+              <IconButton aria-label="fingerprint" color="primary">
+                <RiEarthFill />
+              </IconButton>
+            </Tooltip>
+          }
+        />
       </div>
+      <p
+        className="text-muted text-center"
+        style={{ fontSize: "10px" }}
+      >{`Search within ${MetersAndKilometers(maxDistance)}`}</p>
+      <hr />
+      {isLoading ? (
+        <>
+          <div className="container-flush p-4 text-center">
+            {permissionButton && (
+              <div className="col-12 text-center my-3">
+                <Button
+                  startIcon={<ImLocation2 />}
+                  variant="outlined"
+                  onClick={() => {
+                    setPostCoordinatesWithPermission();
+                  }}
+                >
+                  Get Post In Your Location
+                </Button>
+              </div>
+            )}
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+          </div>
+        </>
+      ) : (
+        <>
+          {posts.length === 0 && !isLoading && (
+            <div className={widget.secondary}>
+              <Link
+                href={accountServices.isLoggedIn ? "/post" : "/login"}
+                passHref
+              >
+                <div className="container-flush p-4 text-center">
+                  <p style={{ cursor: "pointer", fontSize: "15px" }}>
+                    <strong>No Posts Found In Your Location</strong>
+                  </p>
+                  <p style={{ cursor: "pointer", fontSize: "11px" }}>
+                    <small>Be the first to create a post here!</small>{" "}
+                    <strong>Post Now</strong>
+                  </p>
+                </div>
+              </Link>
+            </div>
+          )}
 
-      {/*
+          <div style={{ paddingBottom: "130px" }}>
+            <PostListWidget posts={posts} hr={true} />
+          </div>
+
+          {/*
 
         When Scrolled To the end load more content
 
         */}
 
-      {accountServices.isLoggedIn && (
-        <div className="d-lg-none">
-          <Link href="/post" passHref>
-            <Fab
-              aria-label="create post"
-              sx={{
-                position: "absolute",
-                bottom: 70,
-                right: 16,
-                backgroundColor: "#2980b9",
-                color: "#ffff",
-              }}
-            >
-              <HiPencil style={{ fontSize: "20px" }} />
-            </Fab>
-          </Link>
-        </div>
+          {accountServices.isLoggedIn && (
+            <div className="d-lg-none">
+              <Link href="/post" passHref>
+                <Fab
+                  aria-label="create post"
+                  sx={{
+                    position: "absolute",
+                    bottom: 70,
+                    right: 16,
+                    backgroundColor: "#2980b9",
+                    color: "#ffff",
+                  }}
+                >
+                  <HiPencil style={{ fontSize: "20px" }} />
+                </Fab>
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

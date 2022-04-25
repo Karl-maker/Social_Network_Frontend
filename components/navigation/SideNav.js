@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import widget from "../../styles/modules/Widget.module.css";
 import { RiEarthFill } from "react-icons/ri";
-import { MdNotificationsNone, MdOutlinePeopleAlt } from "react-icons/md";
+import { MdNotificationsNone } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { HiPencil } from "react-icons/hi";
 import { AccountContext, AlertContext } from "../templates/ContextProvider";
@@ -52,14 +52,7 @@ export default function SideNav() {
         <Item title="Post" icon={<HiPencil />} link="/post" />
       </li>
       <li>
-        <Item title="Close By" icon={<MdOutlinePeopleAlt />} link={"/"} />
-      </li>
-      <li>
-        <Item
-          title="Further Away"
-          icon={<RiEarthFill />}
-          link="/further-away"
-        />
+        <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
       </li>
       <li
         onClick={() => {

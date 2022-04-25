@@ -1,9 +1,9 @@
 import widget from "../../styles/modules/Widget.module.css";
 import { RiNotification3Fill } from "react-icons/ri";
 import NotificationCollection from "../api/notifications/NotificationCollection";
-import { AccountContext } from "../../components/templates/ContextProvider";
+import { AccountContext } from "../templates/ContextProvider";
 import { useEffect, useState, useContext } from "react";
-import { noDuplicateObjects } from "../../components/utils/array";
+import { noDuplicateObjects } from "../utils/array";
 import NotificationListWidget from "./NotificationListWidget";
 
 export default function NotificationsDisplayWidget() {

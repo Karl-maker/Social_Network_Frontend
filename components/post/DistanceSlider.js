@@ -1,20 +1,72 @@
 import Slider from "@mui/material/Slider";
+import { useContext } from "react";
+import { AlertContext } from "../templates/ContextProvider";
 
-export default function DistanceSlider({ setMaxDistance, maxDistance }) {
+export default function DistanceSlider({
+  setMaxDistance,
+  maxDistance,
+  sideElement,
+}) {
+  const alertServices = useContext(AlertContext);
+  const MINVALUE = 20;
+  const MAXVALUE = 50000;
+
   const handleSliderChange = (event, newValue) => {
-    setMaxDistance(newValue * 1000);
+    if (newValue === MAXVALUE) {
+      alertServices.setAlertInfo({
+        severity: "info",
+        content: `Maxium Distance of ${MAXVALUE} kilometers for a further look`,
+        title: "Reached The Max Distance",
+      });
+      alertServices.setAlert(true);
+    } else if (newValue === MINVALUE) {
+      alertServices.setAlertInfo({
+        severity: "info",
+        content: `Minimum Distance of ${MINVALUE} meters for a closer look`,
+        title: "Can't Get Smaller :/",
+      });
+      alertServices.setAlert(true);
+    }
+    setMaxDistance(newValue);
   };
 
+  const marks = [
+    {
+      value: 20,
+      label: "20m",
+    },
+    {
+      value: 10000,
+      label: "10km",
+    },
+    {
+      value: 50000,
+      label: "50km",
+    },
+  ];
+
+  function valuetext(value) {
+    return `${value}m`;
+  }
+
   return (
-    <>
-      <Slider
-        size="small"
-        defaultValue={50}
-        aria-label="Small"
-        valueLabelDisplay="auto"
-        style={{ width: "100%" }}
-        onChange={handleSliderChange}
-      />
-    </>
+    <div className="row">
+      <div className="col-10">
+        <Slider
+          aria-label="Always visible"
+          defaultValue={maxDistance}
+          valueLabelFormat={valuetext}
+          getAriaValueText={valuetext}
+          step={10}
+          min={MINVALUE}
+          max={MAXVALUE}
+          marks={marks}
+          valueLabelDisplay="off"
+          value={maxDistance}
+          onChange={handleSliderChange}
+        />
+      </div>
+      <div className="col-2">{sideElement}</div>
+    </div>
   );
 }
