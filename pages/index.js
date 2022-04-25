@@ -193,7 +193,7 @@ export default function Home() {
         className="text-muted text-center"
         style={{ fontSize: "10px" }}
       >{`Search within ${MetersAndKilometers(maxDistance)}`}</p>
-      <hr />
+
       {isLoading ? (
         <>
           <div className="container-flush p-4 text-center">
