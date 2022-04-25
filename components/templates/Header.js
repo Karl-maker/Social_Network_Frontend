@@ -32,7 +32,7 @@ export default function Header({}) {
         onClick={() => {
           // Log user out
           accountServices.logout();
-          router.push("/");
+          router.reload(window.location.pathname);
         }}
       >
         <ListItemIcon>
