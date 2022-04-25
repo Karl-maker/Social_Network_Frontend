@@ -38,7 +38,7 @@ export default function Home() {
   const PAGE_SIZE = 10;
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(50000);
+  const [maxDistance, setMaxDistance] = useState(1000);
   const [errorData, setErrorData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [permissionButton, setPermissionButton] = useState(false);
@@ -198,7 +198,8 @@ export default function Home() {
                 <strong>No Posts Found In Your Location</strong>
               </p>
               <p style={{ cursor: "pointer", fontSize: "11px" }}>
-                <small>Be the first to create a post here!</small>
+                <small>Be the first to create a post here!</small>{" "}
+                <strong>Post Now</strong>
               </p>
             </div>
           </Link>
