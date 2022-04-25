@@ -192,7 +192,7 @@ export default function Home() {
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
       {posts.length === 0 && !isLoading && (
         <div className={widget.secondary}>
-          <Link href="/post" passHref>
+          <Link href={accountServices.isLoggedIn ? "/post" : "/login"} passHref>
             <div className="container-flush p-4 text-center">
               <p style={{ cursor: "pointer", fontSize: "15px" }}>
                 <strong>No Posts Found In Your Location</strong>
