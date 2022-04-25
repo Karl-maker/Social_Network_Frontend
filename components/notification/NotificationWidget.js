@@ -5,12 +5,16 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Menu, MenuItem } from "@mui/material";
+import { useContext } from "react";
+import { AlertContext } from "../templates/ContextProvider";
 
 export default function NotificationWidget({ notification }) {
+  const alertServices = useContext(AlertContext);
   const notification_date = new Date(notification.data.createdAt);
   const current_date = new Date();
   const how_long_ago = checkHowManyDaysAgo(notification_date, current_date);
   const router = useRouter();
+  const [show, setShow] = useState(true);
   const [seen, setSeen] = useState(notification.data.seen);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -33,9 +37,25 @@ export default function NotificationWidget({ notification }) {
   };
 
   const handleDelete = (e) => {
-    notification.delete().then(() => {
-      router.reload(window.location.pathname);
-    });
+    notification
+      .delete()
+      .then(() => {
+        setShow(false);
+        alertServices.setAlertInfo({
+          severity: "success",
+          content: "Nofification Deleted",
+          title: "Notification",
+        });
+        alertServices.setAlert(true);
+      })
+      .catch((error) => {
+        alertServices.setAlertInfo({
+          severity: "error",
+          content: "Issue Deleting Nofification",
+          title: "Notification",
+        });
+        alertServices.setAlert(true);
+      });
   };
 
   const PostMenu = () => {
@@ -54,6 +74,10 @@ export default function NotificationWidget({ notification }) {
       </Menu>
     );
   };
+
+  if (!show) {
+    return <></>;
+  }
 
   return (
     <div className={widget.list_with_link}>

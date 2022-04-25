@@ -3,7 +3,10 @@ import User from "../api/users/User";
 import widget from "../../styles/modules/Widget.module.css";
 import ChildWidget from "./ChildWidget";
 import ActivityWidget from "./ActivityWidget";
-import { AccountContext } from "../../components/templates/ContextProvider";
+import {
+  AccountContext,
+  AlertContext,
+} from "../../components/templates/ContextProvider";
 
 import { useEffect, useState, useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
@@ -16,6 +19,7 @@ import { useRouter } from "next/router";
 export default function PostWidget({ post, children }) {
   const user = new User(process.env.BACKEND_URL, null, {});
   const accountServices = useContext(AccountContext);
+  const alertServices = useContext(AlertContext);
   const [close, setClose] = useState(false);
   const post_date = new Date(post.data.createdAt);
   const current_date = new Date();
@@ -34,12 +38,28 @@ export default function PostWidget({ post, children }) {
   };
 
   const handleDelete = () => {
-    post.delete().then((result) => {
-      if (result.status === 200) {
-        // Close Widget
-        setClose(true);
-      }
-    });
+    post
+      .delete()
+      .then((result) => {
+        if (result.status === 200) {
+          // Close Widget
+          alertServices.setAlertInfo({
+            severity: "success",
+            content: "Post Deleted",
+            title: "Post",
+          });
+          alertServices.setAlert(true);
+          setClose(true);
+        }
+      })
+      .catch((err) => {
+        alertServices.setAlertInfo({
+          severity: "error",
+          content: "Issue Deleting Post",
+          title: "Post",
+        });
+        alertServices.setAlert(true);
+      });
   };
 
   useEffect(() => {
