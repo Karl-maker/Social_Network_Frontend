@@ -34,9 +34,7 @@ export default function Login() {
   const handleLogin = (e) => {
     accountServices.login(email, password).then(() => {
       if (accountServices.isLoggedIn) {
-        if (!accountServices.username) {
-          router.push("/create-username");
-        } else setIsLoggedIn(accountServices.isLoggedIn);
+        setIsLoggedIn(accountServices.isLoggedIn);
       } else setError("Email or password is incorrect");
 
       setLoading(false);

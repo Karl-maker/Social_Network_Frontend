@@ -77,6 +77,7 @@ export default class User extends Connection {
       if (result.status === 200) {
         this._id = result.data._id;
         this._email = result.data.email;
+        this._username = result.data.username || null;
         return true;
       }
 
@@ -164,21 +165,27 @@ export default class User extends Connection {
       });
   }
 
-  async register(email, password) {
-    try {
-      const result = await axios.post(`${this.base_url}/api/register`, {
-        email,
-        password,
+  register(email, password) {
+    return fetch(`${this.base_url}/api/register`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error(response.json());
+      })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        throw error;
       });
-
-      if (result.status === 200) {
-        return true;
-      }
-
-      return false;
-    } catch (err) {
-      return false;
-    }
   }
 
   async sendConfirmationEmail(email) {
@@ -197,26 +204,28 @@ export default class User extends Connection {
     }
   }
 
-  async createUsername(username) {
-    try {
-      const result = await axios.post(
-        `${this.base_url}/api/username`,
-        {
-          username,
-        },
-        {
-          headers: { Authorization: `Bearer ${this.access_token}` },
+  createUsername(username) {
+    return fetch(`${this.base_url}/api/username`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: `Bearer ${this.access_token}`,
+      },
+      body: JSON.stringify({ username: username }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
         }
-      );
-
-      if (result.status === 200) {
-        return true;
-      }
-
-      return false;
-    } catch (err) {
-      return false;
-    }
+        throw new Error(response.json());
+      })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
   async updatePassword(password) {

@@ -1,16 +1,15 @@
-import { AccountContext } from "../components/templates/ContextProvider";
-import { useState, useEffect, useContext } from "react";
 import {
-  TextField,
-  CircularProgress,
-  textFieldClasses,
-  Button,
-} from "@mui/material";
+  AccountContext,
+  AlertContext,
+} from "../components/templates/ContextProvider";
+import { useState, useEffect, useContext } from "react";
+import { TextField, CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import widget from "../styles/modules/Widget.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import Profile from "../components/api/profile/Profile";
+import { LoadingButton } from "@mui/lab";
 
 export async function getStaticProps(context) {
   return {
@@ -24,6 +23,7 @@ export async function getStaticProps(context) {
 export default function Registration() {
   const router = useRouter();
   const accountServices = useContext(AccountContext);
+  const alertServices = useContext(AlertContext);
   const [isLoggedIn, setIsLoggedIn] = useState();
   const [loading, setLoading] = useState(false);
   const [successfulRegistration, setSuccessfulRegistration] = useState(false);
@@ -31,9 +31,6 @@ export default function Registration() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-
-  // Temporary
-  return <></>;
 
   if (isLoggedIn) {
     const returnUrl = router.query.return_url || "/";
@@ -44,37 +41,39 @@ export default function Registration() {
     router.push("/login");
   }
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     if (!email) {
-      setError("Must Enter Email");
+      setError("Email is required");
       setLoading(false);
-      return;
     }
 
     if (password === confirmPassword) {
-      accountServices.register(email, password).then((result) => {
+      try {
+        const response = await accountServices.register(email, password);
+
         // Set that registration was successful
 
-        if (result) {
-          // create profile
+        setSuccessfulRegistration(true);
+        alertServices.setAlertInfo({
+          severity: "success",
+          title: "Registered",
+          content: response.message,
+        });
+        alertServices.setAlert(true);
 
-          const profile = new Profile(
-            process.env.BACKEND_URL,
-            accountServices.access_token,
-            {}
-          );
-
-          profile.create({}).then((result) => {
-            console.log(result);
-            setSuccessfulRegistration(true);
-            setLoading(false);
-          });
-        } else {
-          setError("Issue Registering");
-        }
-      });
+        setLoading(false);
+      } catch (error) {
+        alertServices.setAlertInfo({
+          severity: "error",
+          title: "Issue Registering",
+          content: typeof error == "object" ? error.message : error,
+        });
+        alertServices.setAlert(true);
+        setLoading(false);
+      }
     } else {
-      setError("Passwords Must Match");
+      setError("Passwords must match");
+      setLoading(false);
     }
   };
 
@@ -123,7 +122,7 @@ export default function Registration() {
           />
         </div>
         <div className="mt-3">
-          <Button
+          <LoadingButton
             variant="contained"
             sx={{
               borderRadius: "5px",
@@ -135,9 +134,10 @@ export default function Registration() {
               handleLogin(e);
             }}
             disableElevation
+            loading={loading}
           >
-            {loading ? <CircularProgress color="inherit" /> : <>Sign Up</>}
-          </Button>
+            Sign Up
+          </LoadingButton>
         </div>
         {error && (
           <div className="mt-3 ">

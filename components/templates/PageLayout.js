@@ -5,9 +5,42 @@ import NotificationSideWidget from "../notification/NotificationSideWidget";
 import ProfileChipWidget from "../profile/ProfileChipWidget";
 import SideNav from "../navigation/SideNav";
 import BottomNav from "../navigation/BottomNav";
+import CreateUsername from "../sudo-page/CreateUsername";
+import Image from "next/image";
 
 export default function PageLayout({ children }) {
   const accountServices = useContext(AccountContext);
+
+  if (accountServices.isLoggedIn && !accountServices.username) {
+    return (
+      <div className="container-fluid" style={{ backgroundColor: "#ffff" }}>
+        <div className="row ">
+          <div className="col-12 text-center mt-5">
+            <Image
+              src="/logo192.png"
+              alt="Syncviz Logo"
+              width={90}
+              height={90}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-2 col-sm-0 d-none d-lg-block">
+            <div></div>
+          </div>
+          <div className="col-lg-8 col-sm-12 mt-5 mb-5">
+            {/*
+             * Here we will force the user to create a username
+             */}
+            <CreateUsername />
+          </div>
+          <div className="col-lg-2 col-sm-0 d-none d-lg-block">
+            <div></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
