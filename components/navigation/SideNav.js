@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import widget from "../../styles/modules/Widget.module.css";
-import { RiHome2Line } from "react-icons/ri";
-import { MdNotificationsNone } from "react-icons/md";
+import { RiEarthFill } from "react-icons/ri";
+import { MdNotificationsNone, MdOutlinePeopleAlt } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { HiPencil } from "react-icons/hi";
 
@@ -46,10 +46,13 @@ export default function SideNav() {
       }}
     >
       <li>
-        <Item title="Home" icon={<RiHome2Line />} link={"/"} />
+        <Item title="Post" icon={<HiPencil />} link="/post" />
       </li>
       <li>
-        <Item title="Post" icon={<HiPencil />} link="/post" />
+        <Item title="Close By" icon={<MdOutlinePeopleAlt />} link={"/"} />
+      </li>
+      <li>
+        <Item title="Further Away" icon={<RiEarthFill />} link="/post" />
       </li>
       <li>
         <Item title="Profile" icon={<FaUserCircle />} link="/profile" />

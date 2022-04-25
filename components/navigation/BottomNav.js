@@ -1,7 +1,7 @@
 import { BottomNavigationAction, BottomNavigation, Paper } from "@mui/material";
 import { useState, useEffect } from "react";
-import { RiHome2Line } from "react-icons/ri";
-import { MdNotificationsNone } from "react-icons/md";
+import { RiEarthFill } from "react-icons/ri";
+import { MdNotificationsNone, MdOutlinePeopleAlt } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { useRouter } from "next/router";
 
@@ -15,8 +15,10 @@ export default function BottomNav() {
       setValue(1);
     } else if (router.pathname === "/profile") {
       setValue(0);
-    } else if (router.pathname === "/notifications") {
+    } else if (router.pathname === "/further-away") {
       setValue(2);
+    } else if (router.pathname === "/notifications") {
+      setValue(3);
     } else {
       setValue(null);
     }
@@ -42,10 +44,17 @@ export default function BottomNav() {
           }}
         />
         <BottomNavigationAction
-          label="Home"
-          icon={<RiHome2Line />}
+          label="Close By"
+          icon={<MdOutlinePeopleAlt />}
           onClick={() => {
             router.push("/");
+          }}
+        />
+        <BottomNavigationAction
+          label="Further"
+          icon={<RiEarthFill />}
+          onClick={() => {
+            router.push("/happening-further-away");
           }}
         />
         <BottomNavigationAction
