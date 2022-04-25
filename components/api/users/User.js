@@ -1,5 +1,6 @@
 import Connection from "../Connection";
 import axios from "axios";
+import cookie from "../../../helper/cookie";
 import { Chip, Avatar } from "@mui/material";
 
 export default class User extends Connection {
@@ -86,11 +87,12 @@ export default class User extends Connection {
   }
 
   async login(email, password) {
-    return fetch(`${this.base_url}/api/login`, {
+    return fetch(`/api/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: {
         Accept: "*/*",
+        "Access-Control-Allow-Origin": "*",
         "Content-type": "application/json",
       },
       body: JSON.stringify({ email: email, password: password }),
@@ -128,7 +130,7 @@ export default class User extends Connection {
   }
 
   async authenticate() {
-    return fetch(`${this.base_url}/api/authenticate`, {
+    return fetch(`/api/auth/authentication`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -273,17 +275,27 @@ export default class User extends Connection {
   }
 
   async logout() {
-    try {
-      await axios.delete(`${this.base_url}/api/authenticate`, {
-        withCredentials: true,
-      });
+    return fetch(`/api/auth/authentication`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        Accept: "*/*",
+        "Content-type": "API-Key",
+      },
+    })
+      .then((response) => {
+        // Check status code
 
-      this._isLoggedIn = false;
+        if (response.status === 200) {
+          this._isLoggedIn = false;
+          return response.json();
+        }
 
-      return;
-    } catch (err) {
-      return;
-    }
+        throw new Error({
+          message: response.json().message || "Issue with authentication",
+        });
+      })
+      .catch((error) => {});
   }
 
   // JSX

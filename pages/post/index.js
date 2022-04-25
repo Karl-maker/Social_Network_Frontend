@@ -138,7 +138,6 @@ export default function CreatePostPage() {
               }
             })
             .catch((err) => {
-              console.log(err);
               setLoading(false);
               setAlertMessage({
                 severity: "error",
