@@ -1,6 +1,7 @@
 import Slider from "@mui/material/Slider";
 import { useContext } from "react";
 import { AlertContext } from "../templates/ContextProvider";
+import { MetersAndKilometers } from "../utils/distance";
 
 export default function DistanceSlider({
   setMaxDistance,
@@ -15,14 +16,18 @@ export default function DistanceSlider({
     if (newValue === MAXVALUE) {
       alertServices.setAlertInfo({
         severity: "info",
-        content: `Maxium Distance of ${MAXVALUE} kilometers for a further look`,
+        content: `Maxium Distance of ${MetersAndKilometers(
+          MAXVALUE
+        )} for a further look`,
         title: "Reached The Max Distance",
       });
       alertServices.setAlert(true);
     } else if (newValue === MINVALUE) {
       alertServices.setAlertInfo({
         severity: "info",
-        content: `Minimum Distance of ${MINVALUE} meters for a closer look`,
+        content: `Minimum Distance of ${MetersAndKilometers(
+          MINVALUE
+        )} for a closer look`,
         title: "Can't Get Smaller :/",
       });
       alertServices.setAlert(true);
