@@ -34,7 +34,6 @@ export default function DistanceSlider({
       alertServices.setAlert(true);
     }
     setMaxDistance(newValue);
-    additionalAction();
   };
 
   const marks = [
@@ -71,6 +70,7 @@ export default function DistanceSlider({
           valueLabelDisplay="off"
           value={maxDistance}
           onChange={handleSliderChange}
+          onChangeCommitted={additionalAction}
         />
       </div>
       <div className="col-2">{sideElement}</div>

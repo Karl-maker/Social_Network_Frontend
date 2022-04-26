@@ -178,6 +178,7 @@ export default function Home() {
           additionalAction={() => {
             setIsLoading(true);
             setPosts([]);
+            setToggleLoad(!toggleLoad);
           }}
           sideElement={
             <Tooltip
