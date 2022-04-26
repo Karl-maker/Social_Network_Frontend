@@ -18,7 +18,8 @@ export async function getStaticProps(context) {
   return {
     props: {
       protected: true,
-      title: "Create Post",
+      title: "Create",
+      description: "Create a post for others in your area to view.",
     },
   };
 }

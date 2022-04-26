@@ -13,6 +13,7 @@ export async function getStaticProps(context) {
     props: {
       protected: false,
       title: "Login",
+      description: "All users login here to be able to post.",
     },
   };
 }

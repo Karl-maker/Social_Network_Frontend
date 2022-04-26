@@ -24,11 +24,3 @@ a:active {
 li {
   list-style: none;
 }
-
-.primary-theme path {
-  color: #34495e;
-}
-
-.secondary-theme path {
-  color: #2c3e50;
-}

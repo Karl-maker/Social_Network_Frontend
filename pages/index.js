@@ -1,15 +1,12 @@
-// Pre definded
 import { useEffect, useState, useContext, useRef } from "react";
-import util from "util";
-import { Fab, Button, Slider, IconButton, Tooltip } from "@mui/material";
+import { Fab, Button, IconButton, Tooltip } from "@mui/material";
 import { HiPencil } from "react-icons/hi";
 import { RiEarthFill } from "react-icons/ri";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
 import PostSkeleton from "../components/post/PostSkeleton";
-import styles from "../styles/modules/Home.module.css";
-import PostCollection from "../components/api/posts/PostCollection";
 import PostListWidget from "../components/post/PostListWidget";
+import PostCollection from "../components/api/posts/PostCollection";
 import { noDuplicateObjects } from "../components/utils/array";
 import {
   AccountContext,
@@ -19,11 +16,18 @@ import DistanceSlider from "../components/post/DistanceSlider";
 import widget from "../styles/modules/Widget.module.css";
 import { MetersAndKilometers } from "../components/utils/distance";
 
+/*
+ * Page Title and Guard Status
+ *
+ * This allows us to protect each page. Home page is not protected but it has other aspects
+ */
+
 export async function getStaticProps(context) {
   return {
     props: {
       protected: false,
-      title: "View Post Around You",
+      title: "Syncviz",
+      description: "View posts created by other users who are close by.",
     },
   };
 }

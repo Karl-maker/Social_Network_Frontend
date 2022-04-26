@@ -16,6 +16,8 @@ export async function getStaticProps(context) {
     props: {
       protected: false,
       title: "Sign Up",
+      description:
+        "Sign up today so that you can start creating posts for all to view.",
     },
   };
 }
