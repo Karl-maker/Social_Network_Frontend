@@ -54,7 +54,7 @@ export default function DistanceSlider({
           onChangeCommitted={additionalAction}
         />
       </div>
-      <div className="col-2">{sideElement}</div>
+      <div className="col-2 text-center">{sideElement}</div>
     </div>
   );
 }
