@@ -2,9 +2,10 @@ import Connection from "../Connection";
 import axios from "axios";
 import cookie from "../../../helper/cookie";
 import { Chip, Avatar } from "@mui/material";
+import { GoVerified } from "react-icons/go";
 
 export default class User extends Connection {
-  constructor(base_url, access_token, { display_name, username }) {
+  constructor(base_url, access_token, { display_name, username, is_verified }) {
     super(base_url, access_token);
 
     this._id;
@@ -12,6 +13,7 @@ export default class User extends Connection {
     this._username = username || null;
     this._display_name = display_name || null;
     this._isLoggedIn = false;
+    this._is_verified = is_verified || false;
   }
 
   // Getters And Setters
@@ -36,6 +38,10 @@ export default class User extends Connection {
     return this._isLoggedIn;
   }
 
+  get is_verified() {
+    return this._is_verified;
+  }
+
   set username(username) {
     this._username = username;
   }
@@ -48,6 +54,10 @@ export default class User extends Connection {
     this._isLoggedIn = isLoggedIn;
   }
 
+  set is_verified(is_verified) {
+    this._is_verified = is_verified;
+  }
+
   async fetchUserInformation(id) {
     try {
       const results = await axios.get(
@@ -56,6 +66,10 @@ export default class User extends Connection {
 
       try {
         this._username = results.data[0].user[0].username || "";
+      } catch (error) {}
+
+      try {
+        this._is_verified = results.data[0].is_verified || false;
       } catch (error) {}
 
       try {
@@ -322,7 +336,8 @@ export default class User extends Connection {
           this._username ? (
             <>
               <strong>{this._display_name}</strong>{" "}
-              <small>@{this._username}</small>
+              <small>@{this._username}</small>{" "}
+              {this._is_verified && <GoVerified style={{ color: "#0984e3" }} />}{" "}
             </>
           ) : (
             <strong></strong>

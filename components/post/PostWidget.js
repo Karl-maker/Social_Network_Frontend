@@ -68,6 +68,7 @@ export default function PostWidget({ post, children }) {
         new User(process.env.BACKEND_URL, null, {
           ...result,
           username: result.user[0].username,
+          is_verified: result.is_verified,
         })
       );
     });

@@ -2,12 +2,12 @@ import axios from "axios";
 import Connection from "../Connection";
 
 export default class Profile extends Connection {
-  constructor(base_url, access_token, { display_name, bio }) {
+  constructor(base_url, access_token, { display_name, bio, is_verified }) {
     super(base_url, access_token);
 
     this.display_name = display_name || "";
     this.bio = bio || "";
-    this.is_verified;
+    this.is_verified = is_verified || false;
     this.user_id;
     this.username;
   }
