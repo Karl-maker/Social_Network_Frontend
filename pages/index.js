@@ -183,9 +183,7 @@ export default function Home() {
             <Tooltip
               title="Refresh Posts"
               onClick={() => {
-                setIsLoading(true);
-                setPosts([]);
-                setPostCoordinatesWithPermission();
+                setMaxDistance(5000);
               }}
             >
               <IconButton aria-label="fingerprint" color="primary">
