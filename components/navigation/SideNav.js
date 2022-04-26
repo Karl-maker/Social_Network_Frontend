@@ -51,9 +51,6 @@ export default function SideNav() {
       <li>
         <Item title="Post" icon={<HiPencil />} link="/post" />
       </li>
-      <li>
-        <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
-      </li>
       <li
         onClick={() => {
           alertServices.setAlertInfo({
@@ -73,6 +70,9 @@ export default function SideNav() {
           icon={<MdNotificationsNone />}
           link="/notifications"
         />
+      </li>
+      <li>
+        <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
       </li>
     </ul>
   );
