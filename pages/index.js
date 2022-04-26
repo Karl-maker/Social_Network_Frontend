@@ -171,7 +171,7 @@ export default function Home() {
 
   return (
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
-      <div className="mt-2 mb-2 px-5">
+      <div className="mt-2 mb-2 px-4">
         <DistanceSlider
           maxDistance={maxDistance}
           setMaxDistance={setMaxDistance}
