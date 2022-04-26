@@ -65,14 +65,14 @@ export default function SideNav() {
         <Item title="Profile" icon={<FaUserCircle />} link="/" />
       </li>
       <li>
+        <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
+      </li>
+      <li>
         <Item
           title="Notifications"
           icon={<MdNotificationsNone />}
           link="/notifications"
         />
-      </li>
-      <li>
-        <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
       </li>
     </ul>
   );
