@@ -50,8 +50,10 @@ export default function Home() {
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
 
-      if ((scrollHeight - scrollTop) * 0.9 <= clientHeight) {
-        console.log("scroll load");
+      if (
+        (scrollHeight - scrollTop) * 0.9 <= clientHeight &&
+        Number.isInteger(posts.length / 10)
+      ) {
         setPageNumber(pageNumber + 1);
       }
     }
@@ -246,26 +248,25 @@ export default function Home() {
         When Scrolled To the end load more content
 
         */}
-
-          {accountServices.isLoggedIn && (
-            <div className="d-lg-none">
-              <Link href="/post" passHref>
-                <Fab
-                  aria-label="create post"
-                  sx={{
-                    position: "absolute",
-                    bottom: 70,
-                    right: 16,
-                    backgroundColor: "#2980b9",
-                    color: "#ffff",
-                  }}
-                >
-                  <HiPencil style={{ fontSize: "20px" }} />
-                </Fab>
-              </Link>
-            </div>
-          )}
         </>
+      )}
+      {accountServices.isLoggedIn && (
+        <div className="d-lg-none">
+          <Link href="/post" passHref>
+            <Fab
+              aria-label="create post"
+              sx={{
+                position: "absolute",
+                bottom: 70,
+                right: 16,
+                backgroundColor: "#2980b9",
+                color: "#ffff",
+              }}
+            >
+              <HiPencil style={{ fontSize: "20px" }} />
+            </Fab>
+          </Link>
+        </div>
       )}
     </div>
   );
