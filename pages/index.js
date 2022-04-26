@@ -41,7 +41,6 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [maxDistance, setMaxDistance] = useState(5000);
-  const [toggleLoad, setToggleLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [permissionButton, setPermissionButton] = useState(false);
   const listInnerRef = useRef();
@@ -167,7 +166,7 @@ export default function Home() {
     } catch (err) {
       setPostCoordinatesWithPermission();
     }
-  }, [pageNumber, toggleLoad]);
+  }, [pageNumber]);
 
   return (
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
@@ -178,7 +177,7 @@ export default function Home() {
           additionalAction={() => {
             setIsLoading(true);
             setPosts([]);
-            setToggleLoad(!toggleLoad);
+            setPostCoordinatesWithPermission();
           }}
           sideElement={
             <Tooltip
@@ -186,7 +185,7 @@ export default function Home() {
               onClick={() => {
                 setIsLoading(true);
                 setPosts([]);
-                setToggleLoad(!toggleLoad);
+                setPostCoordinatesWithPermission();
               }}
             >
               <IconButton aria-label="fingerprint" color="primary">
