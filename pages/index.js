@@ -181,7 +181,7 @@ export default function Home() {
           }}
           sideElement={
             <Tooltip
-              title="Refresh Posts"
+              title="Set Default Distance"
               onClick={() => {
                 setMaxDistance(5000);
               }}
