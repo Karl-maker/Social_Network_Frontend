@@ -184,6 +184,9 @@ export default function Home() {
               title="Set Default Distance"
               onClick={() => {
                 setMaxDistance(5000);
+                setIsLoading(true);
+                setPosts([]);
+                setPostCoordinatesWithPermission();
               }}
             >
               <IconButton aria-label="fingerprint" color="primary">
