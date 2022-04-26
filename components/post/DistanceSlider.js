@@ -14,25 +14,6 @@ export default function DistanceSlider({
   const MAXVALUE = 50000;
 
   const handleSliderChange = (event, newValue) => {
-    if (newValue === MAXVALUE) {
-      alertServices.setAlertInfo({
-        severity: "info",
-        content: `Maximum Distance of ${MetersAndKilometers(
-          MAXVALUE
-        )} for a further look`,
-        title: "Reached The Max Distance",
-      });
-      alertServices.setAlert(true);
-    } else if (newValue === MINVALUE) {
-      alertServices.setAlertInfo({
-        severity: "info",
-        content: `Minimum Distance of ${MetersAndKilometers(
-          MINVALUE
-        )} for a closer look`,
-        title: "Can't Get Smaller :/",
-      });
-      alertServices.setAlert(true);
-    }
     setMaxDistance(newValue);
   };
 
