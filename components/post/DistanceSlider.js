@@ -17,7 +17,7 @@ export default function DistanceSlider({
     if (newValue === MAXVALUE) {
       alertServices.setAlertInfo({
         severity: "info",
-        content: `Maxium Distance of ${MetersAndKilometers(
+        content: `Maximum Distance of ${MetersAndKilometers(
           MAXVALUE
         )} for a further look`,
         title: "Reached The Max Distance",
