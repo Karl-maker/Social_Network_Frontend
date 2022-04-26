@@ -52,7 +52,7 @@ export default function Home() {
 
       if (
         (scrollHeight - scrollTop) * 0.9 <= clientHeight &&
-        Number.isInteger(posts.length / 10)
+        Number.isInteger(posts.length / PAGE_SIZE)
       ) {
         setPageNumber(pageNumber + 1);
       }
