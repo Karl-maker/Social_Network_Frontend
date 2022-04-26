@@ -175,6 +175,10 @@ export default function Home() {
         <DistanceSlider
           maxDistance={maxDistance}
           setMaxDistance={setMaxDistance}
+          additionalAction={() => {
+            setIsLoading(true);
+            setPosts([]);
+          }}
           sideElement={
             <Tooltip
               title="Refresh Posts"

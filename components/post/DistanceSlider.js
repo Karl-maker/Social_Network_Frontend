@@ -7,6 +7,7 @@ export default function DistanceSlider({
   setMaxDistance,
   maxDistance,
   sideElement,
+  additionalAction,
 }) {
   const alertServices = useContext(AlertContext);
   const MINVALUE = 20;
@@ -33,6 +34,7 @@ export default function DistanceSlider({
       alertServices.setAlert(true);
     }
     setMaxDistance(newValue);
+    additionalAction();
   };
 
   const marks = [

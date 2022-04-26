@@ -19,8 +19,7 @@ export default function CreateUsername() {
       <div className="col-12 text-center p-4">
         <h3 className="display-5 mb-3">Create A Username</h3>
         <p className="text-muted">
-          This is so that other users may have a way to identify you, without
-          revealing your identity
+          Create a username so that everyone can identify you
         </p>
         <TextField
           id="username-input"
