@@ -238,27 +238,26 @@ export default function CreatePostPage() {
             )}
             <div className="row mt-3">
               <div className="col-12 text-end">
-                {showPostButton && (
-                  <LoadingButton
-                    variant="contained"
-                    sx={{
-                      borderRadius: "20px",
-                      borderColor: "transparent",
-                    }}
-                    onClick={() => {
-                      setLoading(true);
-                      handleSubmit();
-                    }}
-                    disableElevation
-                    loading={loading}
-                  >
-                    {router.query.share ? (
-                      <>Share</>
-                    ) : (
-                      <>{router.query.reply ? "Reply" : "Post"}</>
-                    )}
-                  </LoadingButton>
-                )}
+                <LoadingButton
+                  variant="contained"
+                  disabled={!showPostButton}
+                  sx={{
+                    borderRadius: "20px",
+                    borderColor: "transparent",
+                  }}
+                  onClick={() => {
+                    setLoading(true);
+                    handleSubmit();
+                  }}
+                  disableElevation
+                  loading={loading}
+                >
+                  {router.query.share ? (
+                    <>Share</>
+                  ) : (
+                    <>{router.query.reply ? "Reply" : "Post"}</>
+                  )}
+                </LoadingButton>
               </div>
             </div>
           </div>

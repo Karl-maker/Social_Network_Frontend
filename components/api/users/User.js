@@ -357,7 +357,7 @@ export default class User extends Connection {
               this._email.toUpperCase().charAt(0)}
           </>
         ) : (
-          <>{this._email.toUpperCase().charAt(0)}</>
+          <>{(this._email && this._email.toUpperCase().charAt(0)) || ""}</>
         )}
       </Avatar>
     );
