@@ -185,12 +185,6 @@ export default function Home() {
               alertServices.setAlert(true);
             } else if (result.state == "denied") {
               setPermissionButton(false);
-              post.coordinates = {
-                latitude: null,
-                longitude: null,
-              };
-
-              fetchPosts();
               setStatus(
                 <>
                   You can change your <strong>location settings</strong> to view
@@ -238,29 +232,22 @@ export default function Home() {
         navigator.geolocation.getCurrentPosition(
           (results) => {
             post.coordinates = {
-              latitude: results.coords.latitude || null,
-              longitude: results.coords.longitude || null,
+              latitude: results.coords.latitude,
+              longitude: results.coords.longitude,
             };
 
             fetchPosts();
           },
           (err) => {
-            post.coordinates = {
-              latitude: null,
-              longitude: null,
-            };
-
-            fetchPosts();
+            alertServices.setAlertInfo({
+              severity: "error",
+              content: err.message,
+              title: "Issue Getting GeoLocation",
+            });
+            alertServices.setAlert(true);
           }
         );
-      } catch (e) {
-        post.coordinates = {
-          latitude: results.coords.latitude || null,
-          longitude: results.coords.longitude || null,
-        };
-
-        fetchPosts();
-      }
+      } catch (e) {}
     } else {
       const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
