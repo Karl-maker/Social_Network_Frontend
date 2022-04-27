@@ -134,116 +134,120 @@ export default function Home() {
 
   useEffect(() => {
     (function () {
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then(function (result) {
-          if (result.state == "granted") {
-            setStatus(
-              <>
-                Be the first to place a thought here!{" "}
-                <Link href="/post">
-                  <strong>Create a Post</strong>
-                </Link>
-              </>
-            );
-            setPermissionButton(false);
-            navigator.geolocation.getCurrentPosition(
-              (results) => {
-                post.coordinates = {
-                  latitude: results.coords.latitude,
-                  longitude: results.coords.longitude,
-                };
+      try {
+        navigator.permissions
+          .query({ name: "geolocation" })
+          .then(function (result) {
+            if (result.state == "granted") {
+              setStatus(
+                <>
+                  Be the first to place a thought here!{" "}
+                  <Link href="/post">
+                    <strong>Create a Post</strong>
+                  </Link>
+                </>
+              );
+              setPermissionButton(false);
+              navigator.geolocation.getCurrentPosition(
+                (results) => {
+                  post.coordinates = {
+                    latitude: results.coords.latitude,
+                    longitude: results.coords.longitude,
+                  };
 
-                fetchPosts();
-              },
-              (err) => {
-                alertServices.setAlertInfo({
-                  severity: "error",
-                  content: err.message,
-                  title: "Issue Getting GeoLocation",
-                });
-                alertServices.setAlert(true);
-              }
-            );
-          } else if (result.state == "prompt") {
-            setPermissionButton(true);
-            setStatus(
-              <>Allow location to start viewing and sharing thoughts</>
-            );
-            alertServices.setAlertInfo({
-              severity: "info",
-              content: (
+                  fetchPosts();
+                },
+                (err) => {
+                  alertServices.setAlertInfo({
+                    severity: "error",
+                    content: err.message,
+                    title: "Issue Getting GeoLocation",
+                  });
+                  alertServices.setAlert(true);
+                }
+              );
+            } else if (result.state == "prompt") {
+              setPermissionButton(true);
+              setStatus(
+                <>Allow location to start viewing and sharing thoughts</>
+              );
+              alertServices.setAlertInfo({
+                severity: "info",
+                content: (
+                  <>
+                    Select the <strong>GET POST IN YOUR LOCATION</strong> button
+                    to load posts
+                  </>
+                ),
+                title: "GeoLocation Option",
+                vertical: "bottom",
+              });
+              alertServices.setAlert(true);
+            } else if (result.state == "denied") {
+              setPermissionButton(false);
+              setStatus(
                 <>
-                  Select the <strong>GET POST IN YOUR LOCATION</strong> button
-                  to load posts
+                  You can change your <strong>location settings</strong> to view
+                  posts, or try the{" "}
+                  <strong>
+                    Geo-Randomizer <RiEarthFill />
+                  </strong>
                 </>
-              ),
-              title: "GeoLocation Option",
-              vertical: "bottom",
+              );
+              setIsLoading(false);
+              alertServices.setAlertInfo({
+                duration: 10000,
+                severity: "info",
+                content: (
+                  <>
+                    We could not get posts within your area because your
+                    location is <strong>turned off</strong>
+                  </>
+                ),
+                title: (
+                  <>
+                    GeoLocation <strong>Not Found</strong>
+                  </>
+                ),
+                vertical: "bottom",
+              });
+              alertServices.setAlert(true);
+            }
+          })
+          .catch((err) => {
+            alertServices.setAlertInfo({
+              severity: "error",
+              content: err.message,
+              title: "Issue Occured",
             });
             alertServices.setAlert(true);
-          } else if (result.state == "denied") {
-            setPermissionButton(false);
-            setStatus(
-              <>
-                You can change your <strong>location settings</strong> to view
-                posts, or try the{" "}
-                <strong>
-                  Geo-Randomizer <RiEarthFill />
-                </strong>
-              </>
-            );
-            setIsLoading(false);
-            alertServices.setAlertInfo({
-              duration: 10000,
-              severity: "info",
-              content: (
-                <>
-                  We could not get posts within your area because your location
-                  is <strong>turned off</strong>
-                </>
-              ),
-              title: (
-                <>
-                  GeoLocation <strong>Not Found</strong>
-                </>
-              ),
-              vertical: "bottom",
-            });
-            alertServices.setAlert(true);
-          }
-        })
-        .catch((err) => {
-          alertServices.setAlertInfo({
-            severity: "error",
-            content: err.message,
-            title: "Issue Occured",
           });
-          alertServices.setAlert(true);
-        });
+      } catch (err) {}
     })();
   }, []);
 
   useEffect(() => {
     if (isUsingCurrentPosition) {
-      navigator.geolocation.getCurrentPosition(
-        (results) => {
-          post.coordinates = {
-            latitude: results.coords.latitude,
-            longitude: results.coords.longitude,
-          };
+      try {
+        navigator.geolocation.getCurrentPosition(
+          (results) => {
+            post.coordinates = {
+              latitude: results.coords.latitude,
+              longitude: results.coords.longitude,
+            };
 
-          fetchPosts();
-        },
-        (err) => {
-          alertServices.setAlertInfo({
-            severity: "error",
-            content: err.message,
-            title: "Issue Getting GeoLocation",
-          });
-          alertServices.setAlert(true);
-        }
-      );
+            fetchPosts();
+          },
+          (err) => {
+            alertServices.setAlertInfo({
+              severity: "error",
+              content: err.message,
+              title: "Issue Getting GeoLocation",
+            });
+            alertServices.setAlert(true);
+          }
+        );
+      } catch (e) {}
     } else {
       const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
