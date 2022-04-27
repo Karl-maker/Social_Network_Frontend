@@ -61,10 +61,10 @@ export default function CreatePostPage() {
           }
         })
         .catch((err) => {
-          setShowPostButton(false);
+          setShowPostButton(true);
         });
     } catch (err) {
-      setShowPostButton(false);
+      setShowPostButton(true);
     }
   }, []);
 
