@@ -51,6 +51,7 @@ export default function CreatePostPage() {
           } else if (result.state == "prompt") {
             setShowPostButton(true);
           } else if (result.state == "denied") {
+            setShowPostButton(false);
             setAlertMessage({
               severity: "warning",
               content: "Denied Use Of Geolocation",
@@ -60,10 +61,10 @@ export default function CreatePostPage() {
           }
         })
         .catch((err) => {
-          setShowPostButton(true);
+          setShowPostButton(false);
         });
     } catch (err) {
-      setShowPostButton(true);
+      setShowPostButton(false);
     }
   }, []);
 
