@@ -12,6 +12,7 @@ import { AccountContext } from "../templates/ContextProvider";
 import activityMachine from "../state-machine/activity";
 import { useInterpret, useMachine, useActor } from "@xstate/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function ActivityWidget({
   likes,
@@ -20,6 +21,7 @@ export default function ActivityWidget({
   shares,
   post,
 }) {
+  const router = useRouter();
   const accountServices = useContext(AccountContext);
   const icons_style = { color: "#2d3436", fontSize: "20px" };
   const [like, setLike] = useState(likes || { amount: 0 });
@@ -80,20 +82,26 @@ export default function ActivityWidget({
 
        */}
         <div>
-          <Link
-            href={
-              (accountServices.isLoggedIn && {
-                pathname: `/post`,
-                query: { reply: post.data._id },
-              }) ||
-              "/login"
-            }
-            passHref
+          <IconButton
+            aria-label="reply"
+            color="primary"
+            className="p-2"
+            onClick={(e) => {
+              router.push(
+                (accountServices.isLoggedIn && {
+                  pathname: `/post`,
+                  query: { reply: post.data._id },
+                }) ||
+                  "/login"
+              );
+              if (!e) e = window.event;
+              e.cancelBubble = true;
+              if (e.stopPropagation) e.stopPropagation();
+            }}
           >
-            <IconButton aria-label="reply" color="primary" className="p-2">
-              <HiReply style={icons_style} />
-            </IconButton>
-          </Link>
+            <HiReply style={icons_style} />
+          </IconButton>
+
           <small>{reply.amount > 0 && reply.amount}</small>
         </div>
         <div
@@ -120,6 +128,10 @@ export default function ActivityWidget({
                     // Issue liking
                   });
               }
+
+              if (!e) e = window.event;
+              e.cancelBubble = true;
+              if (e.stopPropagation) e.stopPropagation();
             }}
           >
             {activityState.matches("like") ? (
@@ -154,6 +166,10 @@ export default function ActivityWidget({
                     // Issue disliking
                   });
               }
+
+              if (!e) e = window.event;
+              e.cancelBubble = true;
+              if (e.stopPropagation) e.stopPropagation();
             }}
           >
             {activityState.matches("dislike") ? (
@@ -165,20 +181,26 @@ export default function ActivityWidget({
           <small>{dislike.amount > 0 && dislike.amount}</small>
         </div>
         <div>
-          <Link
-            href={
-              (accountServices.isLoggedIn && {
-                pathname: `/post`,
-                query: { share: post.data._id },
-              }) ||
-              "/login"
-            }
-            passHref
+          <IconButton
+            aria-label="share"
+            color="primary"
+            className="p-2"
+            onClick={(e) => {
+              router.push(
+                (accountServices.isLoggedIn && {
+                  pathname: `/post`,
+                  query: { share: post.data._id },
+                }) ||
+                  "/login"
+              );
+              if (!e) e = window.event;
+              e.cancelBubble = true;
+              if (e.stopPropagation) e.stopPropagation();
+            }}
           >
-            <IconButton aria-label="share" color="primary" className="p-2">
-              <FiShare style={icons_style} />
-            </IconButton>
-          </Link>
+            <FiShare style={icons_style} />
+          </IconButton>
+
           <small>{share.amount > 0 && share.amount}</small>
         </div>
       </div>

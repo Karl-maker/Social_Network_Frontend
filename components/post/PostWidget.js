@@ -15,29 +15,32 @@ import { ImLocation2 } from "react-icons/im";
 import Link from "next/link";
 import { Button, Menu, MenuItem, Chip } from "@mui/material";
 import { useRouter } from "next/router";
+import PostSkeleton, { UserSkeleton } from "./PostSkeleton";
+import MenuButton from "../templates/MenuButton";
+import DialogButton from "../templates/DialogButton";
 
 export default function PostWidget({ post, children }) {
-  const user = new User(process.env.BACKEND_URL, null, {});
+  // Context
+
   const accountServices = useContext(AccountContext);
   const alertServices = useContext(AlertContext);
+
+  // User Who Created Post
+  const user = new User(process.env.BACKEND_URL, null, {});
+
+  // useState
   const [close, setClose] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [deleteAlert, triggerDeleteAlert] = useState(false);
+
+  let PostMenu;
   const post_date = new Date(post.data.createdAt);
   const current_date = new Date();
   const how_long_ago = checkHowManyDaysAgo(post_date, current_date);
-  const [userInfo, setUserInfo] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+
   const router = useRouter();
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDelete = () => {
+  const deleteAction = () => {
     post
       .delete()
       .then((result) => {
@@ -49,6 +52,7 @@ export default function PostWidget({ post, children }) {
             title: "Post",
           });
           alertServices.setAlert(true);
+          triggerDeleteAlert(false);
           setClose(true);
         }
       })
@@ -59,8 +63,49 @@ export default function PostWidget({ post, children }) {
           title: "Post",
         });
         alertServices.setAlert(true);
+        triggerDeleteAlert(false);
       });
   };
+
+  // Set Menu Items
+
+  if (post.data.user_id === accountServices.id) {
+    PostMenu = [
+      {
+        label: "View Post",
+        activity: () => {
+          router.push(`/post/${post.data._id}`);
+        },
+      },
+      {
+        label: "Hide Post",
+        activity: () => {
+          setClose(true);
+        },
+      },
+      {
+        label: "Delete Post",
+        activity: () => {
+          triggerDeleteAlert(true);
+        },
+      },
+    ];
+  } else {
+    PostMenu = [
+      {
+        label: "View Post",
+        activity: () => {
+          router.push(`/post/${post.data._id}`);
+        },
+      },
+      {
+        label: "Hide Post",
+        activity: () => {
+          setClose(true);
+        },
+      },
+    ];
+  }
 
   useEffect(() => {
     user.fetchUserInformation(post.data.user_id).then((result) => {
@@ -74,30 +119,7 @@ export default function PostWidget({ post, children }) {
     });
   }, []);
 
-  if (!userInfo) {
-    return <></>;
-  }
-
-  const PostMenu = () => {
-    return (
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        {post.data.user_id === accountServices.id && (
-          <MenuItem onClick={handleDelete}>Delete</MenuItem>
-        )}
-        <Link href={`/post/${post.data._id}`}>
-          <MenuItem>View</MenuItem>
-        </Link>
-      </Menu>
-    );
-  };
+  // Totally hide component
 
   if (close) {
     return <></>;
@@ -105,7 +127,51 @@ export default function PostWidget({ post, children }) {
 
   return (
     <>
-      <div className={widget.primary}>
+      {
+        // Alerts and Dialogs
+      }
+      <DialogButton
+        setOpen={triggerDeleteAlert}
+        open={deleteAlert}
+        actions={
+          <>
+            <Button
+              onClick={() => {
+                deleteAction();
+              }}
+            >
+              Delete
+            </Button>
+            <Button
+              onClick={() => {
+                triggerDeleteAlert(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        }
+        title={"Delete Post"}
+        content={
+          <>
+            If you delete this post you cannot recover it.{" "}
+            <strong>Are you sure you want to delete?</strong>
+          </>
+        }
+      />
+      <div
+        className={widget.primary}
+        onClick={(e) => {
+          router.push(`/post/${post.data._id}`);
+
+          if (!e) e = window.event;
+          e.cancelBubble = true;
+          if (e.stopPropagation) e.stopPropagation();
+        }}
+      >
+        {
+          // Body of widget
+        }
         <div className="container-flush p-3 ">
           <div className="row">
             <div
@@ -116,9 +182,15 @@ export default function PostWidget({ post, children }) {
                 textOverflow: "ellipsis",
               }}
             >
-              <Link href={`/user/${userInfo._id}`} passHref>
-                {userInfo.displayProfileChip({ borderWidth: "0px" })}
-              </Link>
+              {userInfo ? (
+                <div onClick={() => router.push(`/user/${userInfo._id}`)}>
+                  {userInfo.displayProfileChip({ borderWidth: "0px" })}
+                </div>
+              ) : (
+                <div className="px-2 pb-1">
+                  <UserSkeleton />
+                </div>
+              )}
             </div>
             <div className="col-4 mx-0">
               <div className="row">
@@ -142,18 +214,15 @@ export default function PostWidget({ post, children }) {
                   </small>
                 </p>
                 <p className="col-3 text-end mx-0 px-0">
-                  <BsThreeDotsVertical
-                    id="basic-button"
-                    aria-controls={open ? "basic-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                    onClick={handleClick}
-                    style={{
-                      color: "#2d3436",
-                      fontSize: "15px",
-                    }}
-                  />
-                  <PostMenu />
+                  <MenuButton list={PostMenu}>
+                    <BsThreeDotsVertical
+                      id="basic-button"
+                      style={{
+                        color: "#2d3436",
+                        fontSize: "15px",
+                      }}
+                    />
+                  </MenuButton>
                 </p>
               </div>
             </div>

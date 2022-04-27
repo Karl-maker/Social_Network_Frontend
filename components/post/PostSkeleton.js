@@ -14,4 +14,14 @@ const PostSkeleton = () => {
   );
 };
 
+export function UserSkeleton() {
+  return (
+    <>
+      <div className=" p-0 row">
+        <Skeleton width={200} height={30} sx={{ margin: 0 }} />
+      </div>
+    </>
+  );
+}
+
 export default PostSkeleton;
