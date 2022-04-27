@@ -185,6 +185,13 @@ export default function Home() {
               alertServices.setAlert(true);
             } else if (result.state == "denied") {
               setPermissionButton(false);
+
+              post.coordinates = {
+                latitude: null,
+                longitude: null,
+              };
+
+              fetchPosts();
               setStatus(
                 <>
                   You can change your <strong>location settings</strong> to view
@@ -200,8 +207,8 @@ export default function Home() {
                 severity: "info",
                 content: (
                   <>
-                    We could not get posts within your area because your
-                    location is <strong>turned off</strong>
+                    Location would not be accurate since your location settings
+                    are <strong>turned off</strong>
                   </>
                 ),
                 title: (
@@ -239,15 +246,22 @@ export default function Home() {
             fetchPosts();
           },
           (err) => {
-            alertServices.setAlertInfo({
-              severity: "error",
-              content: err.message,
-              title: "Issue Getting GeoLocation",
-            });
-            alertServices.setAlert(true);
+            post.coordinates = {
+              latitude: null,
+              longitude: null,
+            };
+
+            fetchPosts();
           }
         );
-      } catch (e) {}
+      } catch (e) {
+        post.coordinates = {
+          latitude: null,
+          longitude: null,
+        };
+
+        fetchPosts();
+      }
     } else {
       const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
 
