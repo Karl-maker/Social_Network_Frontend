@@ -33,21 +33,59 @@ export async function getStaticProps(context) {
 }
 
 export default function Home() {
+  // Contexts
+
   const accountServices = useContext(AccountContext);
   const alertServices = useContext(AlertContext);
 
-  let post = new PostCollection(
+  // Constants
+
+  const PAGE_SIZE = 10;
+  const LOCATIONS = [
+    {
+      location: "Port of Spain, Trinidad and Tobago",
+      latitude: 10.650488900252434,
+      longitude: -61.51599120383046,
+    },
+    {
+      location: "New York City, United States of America",
+      latitude: 40.73061,
+      longitude: -73.935242,
+    },
+    {
+      location: "Great Britain, United Kingdom",
+      latitude: 53.826,
+      longitude: -2.422,
+    },
+  ];
+
+  // Objects
+
+  const post_collection = new PostCollection(
     process.env.BACKEND_URL || "",
     accountServices.access_token || "",
     {}
   );
-  const PAGE_SIZE = 10;
-  const [posts, setPosts] = useState([]);
-  const [pageNumber, setPageNumber] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(5000);
-  const [isLoading, setIsLoading] = useState(true);
-  const [permissionButton, setPermissionButton] = useState(false);
+
+  // useState hooks
+
+  const [post] = useState(post_collection);
+  const [status, setStatus] = useState(<></>);
+  const [locationInfo, setLocationInfo] = useState("");
+  const [posts, setPosts] = useState([]); // List to feed into post list widget
+  const [isUsingCurrentPosition, setIsUsingCurrentPosition] = useState(true);
+  const [pageNumber, setPageNumber] = useState(0); // Pagination starts at 0
+  const [maxDistance, setMaxDistance] = useState(5000); // Distance to fetch data
+  const [isLoading, setIsLoading] = useState(true); // Loading state to load page with skeleton
+  const [permissionButton, setPermissionButton] = useState(false); // If given permission to use ask for use of geolocation a button would appear on true
+
   const listInnerRef = useRef();
+
+  /*
+
+  handleScroll checks if there is or should be more posts and increase the page number on scroll down
+
+  */
 
   const handleScroll = (e) => {
     if (listInnerRef.current) {
@@ -58,122 +96,183 @@ export default function Home() {
         Number.isInteger(posts.length / PAGE_SIZE)
       ) {
         setPageNumber(pageNumber + 1);
+        fetchPosts();
       }
     }
   };
 
-  const setPostCoordinatesWithOutPermission = () => {
-    post.coordinates = {
-      latitude: 10.650488900252434,
-      longitude: -61.51599120383046,
-    };
-
-    // Get many posts
+  const fetchPosts = () => {
     post
       .fetchManyPosts({
         page_number: pageNumber,
         page_size: PAGE_SIZE,
         max_distance: maxDistance,
       })
-      .then(({ meta_data, data }) => {
+      .then(({ data }) => {
         setPosts(noDuplicateObjects(posts.concat(data), "_id"));
-
-        alertServices.setAlertInfo({
-          severity: "warning",
-          content:
-            "Couldn't get geolocation, so we've loaded posts from Port of Spain, Trinidad and Tobago",
-          title: "Change Of Plans",
-        });
-
-        alertServices.setAlert(true);
         setIsLoading(false);
       })
       .catch((error) => {
-        // Capture Error
         alertServices.setAlertInfo({
           severity: "error",
-          content: error.message,
-          title: "Issue Occured",
+          content: (
+            <>
+              Cannot load posts located here at the moment.{" "}
+              <strong>
+                Try the Geo-Randomizer <RiEarthFill />
+              </strong>
+            </>
+          ),
+          title: "Issue Getting Posts",
         });
         alertServices.setAlert(true);
         setIsLoading(false);
       });
   };
 
-  const setPostCoordinatesWithPermission = () => {
-    navigator.geolocation.getCurrentPosition(
-      (result) => {
-        post.coordinates = {
-          latitude: result.coords.latitude,
-          longitude: result.coords.longitude,
-        };
-
-        // Get many posts
-        post
-          .fetchManyPosts({
-            page_number: pageNumber,
-            page_size: PAGE_SIZE,
-            max_distance: maxDistance,
-          })
-          .then(({ meta_data, data }) => {
-            setPosts(noDuplicateObjects(posts.concat(data), "_id"));
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            // Capture Error
-
-            setIsLoading(false);
-          });
-      },
-      (error) => {
-        // Failed To Get Location
-
-        alertServices.setAlertInfo({
-          severity: "error",
-          content: error.message,
-          title: "Issue Occured",
-        });
-        alertServices.setAlert(true);
-
-        setPostCoordinatesWithOutPermission();
-      }
-    );
-  };
+  // On Mount
 
   useEffect(() => {
-    // Initially set Coordinates as such...
-
-    if (posts.length < (pageNumber + 1) * PAGE_SIZE && posts.length !== 0) {
-      setIsLoading(false);
-      return;
-    }
-
-    try {
+    (function () {
       navigator.permissions
         .query({ name: "geolocation" })
         .then(function (result) {
           if (result.state == "granted") {
-            setPostCoordinatesWithPermission();
+            setStatus(
+              <>
+                Be the first to place a thought here!{" "}
+                <Link href="/post">
+                  <strong>Create a Post</strong>
+                </Link>
+              </>
+            );
+            setPermissionButton(false);
+            navigator.geolocation.getCurrentPosition(
+              (results) => {
+                post.coordinates = {
+                  latitude: results.coords.latitude,
+                  longitude: results.coords.longitude,
+                };
+
+                fetchPosts();
+              },
+              (err) => {
+                alertServices.setAlertInfo({
+                  severity: "error",
+                  content: err.message,
+                  title: "Issue Getting GeoLocation",
+                });
+                alertServices.setAlert(true);
+              }
+            );
           } else if (result.state == "prompt") {
             setPermissionButton(true);
-          } else if (result.state == "denied") {
+            setStatus(
+              <>Allow location to start viewing and sharing thoughts</>
+            );
             alertServices.setAlertInfo({
-              severity: "warning",
-              content: "Denied Use Of Geolocation",
-              title: "Geolocation",
+              severity: "info",
+              content: (
+                <>
+                  Select the <strong>GET POST IN YOUR LOCATION</strong> button
+                  to load posts
+                </>
+              ),
+              title: "GeoLocation Option",
+              vertical: "bottom",
             });
             alertServices.setAlert(true);
-
-            setPostCoordinatesWithOutPermission();
+          } else if (result.state == "denied") {
+            setPermissionButton(false);
+            setStatus(
+              <>
+                You can change your <strong>location settings</strong> to view
+                posts, or try the{" "}
+                <strong>
+                  Geo-Randomizer <RiEarthFill />
+                </strong>
+              </>
+            );
+            setIsLoading(false);
+            alertServices.setAlertInfo({
+              duration: 10000,
+              severity: "info",
+              content: (
+                <>
+                  We could not get posts within your area because your location
+                  is <strong>turned off</strong>
+                </>
+              ),
+              title: (
+                <>
+                  GeoLocation <strong>Not Found</strong>
+                </>
+              ),
+              vertical: "bottom",
+            });
+            alertServices.setAlert(true);
           }
+        })
+        .catch((err) => {
+          alertServices.setAlertInfo({
+            severity: "error",
+            content: err.message,
+            title: "Issue Occured",
+          });
+          alertServices.setAlert(true);
         });
-    } catch (err) {
-      setPostCoordinatesWithPermission();
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (isUsingCurrentPosition) {
+      navigator.geolocation.getCurrentPosition(
+        (results) => {
+          post.coordinates = {
+            latitude: results.coords.latitude,
+            longitude: results.coords.longitude,
+          };
+
+          fetchPosts();
+        },
+        (err) => {
+          alertServices.setAlertInfo({
+            severity: "error",
+            content: err.message,
+            title: "Issue Getting GeoLocation",
+          });
+          alertServices.setAlert(true);
+        }
+      );
+    } else {
+      const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+
+      post.coordinates = {
+        latitude: location.latitude,
+        longitude: location.longitude,
+      };
+
+      setLocationInfo(location.location);
+
+      fetchPosts();
+
+      alertServices.setAlertInfo({
+        severity: "info",
+        content: `Getting posts from ${
+          location.location
+        } around a ${MetersAndKilometers(maxDistance)} wide area`,
+        title: "Geo-Randomize",
+        vertical: "bottom",
+      });
+      alertServices.setAlert(true);
     }
-  }, [pageNumber]);
+  }, [isUsingCurrentPosition]);
 
   return (
     <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
+      {
+        // Slider
+      }
       <div className="mt-2 mb-2 px-4">
         <DistanceSlider
           maxDistance={maxDistance}
@@ -181,46 +280,65 @@ export default function Home() {
           additionalAction={() => {
             setIsLoading(true);
             setPosts([]);
-            setPostCoordinatesWithPermission();
+            fetchPosts();
           }}
           sideElement={
             <Tooltip
-              title="Set Default Distance"
-              onClick={() => {
-                setMaxDistance(5000);
-                setIsLoading(true);
-                setPosts([]);
-                setPostCoordinatesWithPermission();
-              }}
+              title={isUsingCurrentPosition ? "Randomize" : "Current Position"}
             >
-              <IconButton aria-label="fingerprint" color="primary">
+              <IconButton
+                aria-label="globe"
+                sx={{ color: isUsingCurrentPosition ? "grey" : "#2980b9" }}
+                onClick={() => {
+                  /*
+
+                  Clear viewing area and set if viewer should use current position or not
+
+                  */
+
+                  setIsLoading(true);
+                  setPosts([]);
+                  setIsUsingCurrentPosition(!isUsingCurrentPosition);
+                }}
+              >
                 <RiEarthFill />
               </IconButton>
             </Tooltip>
           }
         />
       </div>
-      <p
-        className="text-muted text-center"
-        style={{ fontSize: "10px" }}
-      >{`Search within ${MetersAndKilometers(maxDistance)}`}</p>
-
+      {
+        // Info on fetch
+      }
+      <p className="text-muted text-center" style={{ fontSize: "10px" }}>
+        {isUsingCurrentPosition
+          ? `Search within ${MetersAndKilometers(maxDistance)}`
+          : `${locationInfo} within ${MetersAndKilometers(maxDistance)}`}
+      </p>
+      {
+        // Main Page
+      }
+      {permissionButton && (
+        <div className="col-12 text-center my-3">
+          <Button
+            startIcon={<ImLocation2 />}
+            variant="outlined"
+            onClick={() => {
+              setPermissionButton(false);
+              setPosts([]);
+              fetchPosts();
+            }}
+          >
+            Get Post In Your Location
+          </Button>
+        </div>
+      )}
       {isLoading ? (
         <>
+          {
+            // Show loading
+          }
           <div className="container-flush p-4 text-center">
-            {permissionButton && (
-              <div className="col-12 text-center my-3">
-                <Button
-                  startIcon={<ImLocation2 />}
-                  variant="outlined"
-                  onClick={() => {
-                    setPostCoordinatesWithPermission();
-                  }}
-                >
-                  Get Post In Your Location
-                </Button>
-              </div>
-            )}
             <PostSkeleton />
             <PostSkeleton />
             <PostSkeleton />
@@ -229,22 +347,25 @@ export default function Home() {
         </>
       ) : (
         <>
+          {
+            // Show posts
+          }
           {posts.length === 0 && !isLoading && (
             <div className={widget.secondary}>
-              <Link
-                href={accountServices.isLoggedIn ? "/post" : "/login"}
-                passHref
-              >
-                <div className="container-flush p-4 text-center">
-                  <p style={{ cursor: "pointer", fontSize: "15px" }}>
-                    <strong>No Posts Found In Your Location</strong>
-                  </p>
-                  <p style={{ cursor: "pointer", fontSize: "11px" }}>
-                    <small>Be the first to create a post here!</small>{" "}
-                    <strong>Post Now</strong>
-                  </p>
-                </div>
-              </Link>
+              <div className="container-flush p-4 text-center">
+                <p style={{ cursor: "pointer", fontSize: "15px" }}>
+                  <strong>No Posts Found Here</strong>
+                </p>
+                <p style={{ cursor: "pointer", fontSize: "11px" }}>
+                  {isUsingCurrentPosition ? (
+                    <>{status}</>
+                  ) : (
+                    <>
+                      Someone is yet to populate here with thoughts and messages
+                    </>
+                  )}
+                </p>
+              </div>
             </div>
           )}
 

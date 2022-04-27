@@ -40,6 +40,8 @@ export function ContextProvider({ children }) {
             severity={alertInfo.severity}
             content={alertInfo.content}
             title={alertInfo.title}
+            vertical={alertInfo.vertical}
+            horizontal={alertInfo.horizontal}
           />
           <div className="lightmode">{children}</div>
         </Loading>

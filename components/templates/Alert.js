@@ -9,6 +9,8 @@ export default function AlertWidget({
   open,
   setOpen,
   duration,
+  vertical,
+  horizontal,
 }) {
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -25,7 +27,10 @@ export default function AlertWidget({
   return (
     <Collapse in={open}>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        anchorOrigin={{
+          vertical: vertical || "top",
+          horizontal: horizontal || "left",
+        }}
         open={open}
         autoHideDuration={duration || 6000}
         onClose={handleClose}
