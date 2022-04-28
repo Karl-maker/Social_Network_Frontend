@@ -172,6 +172,12 @@ export default class User extends Connection {
   }
 
   register(email, password) {
+    if (!email) {
+      throw {
+        messages: "Email is required",
+        fields: ["email"],
+      };
+    }
     return fetch(`${this.base_url}/api/register`, {
       method: "POST",
       headers: {
@@ -180,12 +186,15 @@ export default class User extends Connection {
       },
       body: JSON.stringify({ email: email, password: password }),
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
+      .then(async (response) => {
+        // Check status code
+
+        if (!response.ok) {
+          throw await response.json();
         }
-        throw new Error(response.json());
+        return response;
       })
+      .then((response) => response.json())
       .then((response) => {
         return response;
       })

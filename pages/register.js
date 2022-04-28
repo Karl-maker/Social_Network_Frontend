@@ -30,7 +30,7 @@ export default function Registration() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState({ fields: [""], messages: "" });
 
   if (isLoggedIn) {
     const returnUrl = router.query.return_url || "/";
@@ -42,36 +42,55 @@ export default function Registration() {
   }
 
   const handleLogin = async (e) => {
+    setError({ fields: [""], messages: "" });
+
     if (!email) {
-      setError("Email is required");
+      setError({ messages: "email is required", fields: ["email"] });
       setLoading(false);
+      return;
     }
 
-    if (password === confirmPassword) {
+    if (password === confirmPassword && password) {
       try {
-        const response = await accountServices.register(email, password);
+        const response = await accountServices
+          .register(email, password)
+          .then((response) => {
+            console.log(response);
+            setSuccessfulRegistration(true);
+            enqueueSnackbar("Registered", {
+              variant: "success",
+              anchorOrigin: { horizontal: "left", vertical: "top" },
+            });
+          })
+          .catch((err) => {
+            // Check if message is an array, if so grab first element, if not
 
-        // Set that registration was successful
-
-        setSuccessfulRegistration(true);
-        enqueueSnackbar("Registered", {
-          variant: "success",
-          anchorOrigin: { horizontal: "left", vertical: "top" },
+            setError({
+              messages: Array.isArray(err.messages)
+                ? err.messages[0]
+                : err.messages ||
+                  err.message ||
+                  "Unexpected Error, Try again later.",
+              fields: err.fields || [],
+            });
+          });
+      } catch (err) {
+        setError({
+          messages: Array.isArray(error.messages)
+            ? err.messages[0]
+            : err.messages || "Unexpected Error",
+          fields: err.fields || [],
         });
-
-        setLoading(false);
-      } catch (error) {
-        enqueueSnackbar("Issue Registering", {
-          variant: "error",
-          anchorOrigin: { horizontal: "left", vertical: "top" },
-        });
-
-        setLoading(false);
       }
     } else {
-      setError("Passwords must match");
+      setError({
+        messages: "passwords must match",
+        fields: ["password", "confirm-password"],
+      });
       setLoading(false);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -90,6 +109,7 @@ export default function Registration() {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
+            error={error.fields.includes("email")}
           />
         </div>
         <div className="mt-3">
@@ -103,6 +123,7 @@ export default function Registration() {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            error={error.fields.includes("password")}
           />
         </div>
         <div className="mt-3">
@@ -116,6 +137,7 @@ export default function Registration() {
             onChange={(e) => {
               setConfirmPassword(e.target.value);
             }}
+            error={error.fields.includes("confirm-password")}
           />
         </div>
         <div className="mt-3">
@@ -136,9 +158,11 @@ export default function Registration() {
             Sign Up
           </LoadingButton>
         </div>
-        {error && (
+        {error.messages && (
           <div className="mt-3 ">
-            <small style={{ color: "#c0392b" }}>{error}</small>
+            <small style={{ color: "#c0392b" }}>
+              {error.messages.toLowerCase()}
+            </small>
           </div>
         )}
         <div className="mt-3 mb-4">

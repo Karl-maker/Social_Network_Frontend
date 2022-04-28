@@ -126,7 +126,9 @@ export default function Login() {
         </div>
         {error.message && (
           <div className="mt-3 ">
-            <small style={{ color: "#c0392b" }}>{error.message}</small>
+            <small style={{ color: "#c0392b" }}>
+              {error.message.toLowerCase()}
+            </small>
           </div>
         )}
         <div className="mt-3 mb-4">
