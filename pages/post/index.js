@@ -1,7 +1,4 @@
-import {
-  AccountContext,
-  AlertContext,
-} from "../../components/templates/ContextProvider";
+import { AccountContext } from "../../components/templates/ContextProvider";
 import Post from "../../components/api/posts/Post";
 import widget from "../../styles/modules/Widget.module.css";
 import ChildWidget from "../../components/post/ChildWidget";
@@ -13,6 +10,7 @@ import { MdKeyboardBackspace } from "react-icons/md";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useSnackbar } from "notistack";
 
 export async function getStaticProps(context) {
   return {
@@ -25,10 +23,8 @@ export async function getStaticProps(context) {
 }
 
 export default function CreatePostPage() {
+  const { enqueueSnackbar } = useSnackbar();
   const accountServices = useContext(AccountContext);
-  const alertServices = useContext(AlertContext);
-  const setAlertMessage = alertServices.setAlertInfo;
-  const setAlert = alertServices.setAlert;
   const [content, setContent] = useState("");
   const [rows, setRows] = useState(5);
   const [showPostButton, setShowPostButton] = useState(false);
@@ -52,15 +48,29 @@ export default function CreatePostPage() {
             setShowPostButton(true);
           } else if (result.state == "denied") {
             setShowPostButton(true);
-            setAlertMessage({
-              severity: "warning",
-              content: "Denied Use Of Geolocation",
-              title: "Geolocation",
-            });
-            setAlert(true);
+            enqueueSnackbar(
+              <small>
+                <strong>GeoLocation Not Avaliable</strong> location for this
+                post won't be accurate
+              </small>,
+              {
+                variant: "info",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
+              }
+            );
           }
         })
         .catch((err) => {
+          enqueueSnackbar(
+            <small>
+              <strong>GeoLocation Not Supported By Browser</strong> location for
+              this post won't be accurate
+            </small>,
+            {
+              variant: "info",
+              anchorOrigin: { horizontal: "left", vertical: "top" },
+            }
+          );
           setShowPostButton(true);
         });
     } catch (err) {
@@ -91,33 +101,24 @@ export default function CreatePostPage() {
               .then((result) => {
                 setLoading(false);
                 if (result.status === 200) {
-                  setAlertMessage({
-                    severity: "success",
-                    content: "Share Created Successfully",
-                    title: "Post",
+                  enqueueSnackbar(<small>Post Shared</small>, {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
-                  setTimeout(() => {
-                    router.push("/");
-                  }, 2000);
+
+                  router.push("/");
                 } else {
-                  setAlertMessage({
-                    severity: "error",
-                    content: "Issue Creating Share",
-                    title: "Post",
+                  enqueueSnackbar(<small>Issue Sharing Post</small>, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
                 }
               })
               .catch((err) => {
-                console.log(err);
-                setLoading(false);
-                setAlertMessage({
-                  severity: "error",
-                  content: err.message,
-                  title: "Issue Sharing Post",
+                enqueueSnackbar(<small>Issue Sharing Post</small>, {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
                 });
-                setAlert(true);
               });
           } else if (router.query.reply) {
             post
@@ -125,32 +126,24 @@ export default function CreatePostPage() {
               .then((result) => {
                 setLoading(false);
                 if (result.status === 200) {
-                  setAlertMessage({
-                    severity: "success",
-                    content: "Response Created Successfully",
-                    title: "Post",
+                  enqueueSnackbar(<small>Response Created</small>, {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
-                  setTimeout(() => {
-                    router.push("/");
-                  }, 2000);
+
+                  router.push("/");
                 } else {
-                  setAlertMessage({
-                    severity: "error",
-                    content: "Issue Creating Response",
-                    title: "Post",
+                  enqueueSnackbar(<small></small>, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
                 }
               })
               .catch((err) => {
-                setLoading(false);
-                setAlertMessage({
-                  severity: "error",
-                  content: err.message,
-                  title: "Issue Responding To Post",
+                enqueueSnackbar(<small>Issue Responding To Post</small>, {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
                 });
-                setAlert(true);
               });
           } else {
             post
@@ -158,33 +151,23 @@ export default function CreatePostPage() {
               .then((result) => {
                 setLoading(false);
                 if (result.status === 200) {
-                  setAlertMessage({
-                    severity: "success",
-                    content: "Post Created Successfully",
-                    title: "Post",
+                  enqueueSnackbar(<small>Post Created</small>, {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
-                  setTimeout(() => {
-                    router.push("/");
-                  }, 2000);
+                  router.push("/");
                 } else {
-                  setAlertMessage({
-                    severity: "error",
-                    content: "Issue Creating Post",
-                    title: "Post",
+                  enqueueSnackbar(<small>Issue</small>, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
                 }
               })
               .catch((err) => {
-                console.log(err);
-                setLoading(false);
-                setAlertMessage({
-                  severity: "error",
-                  content: err.message,
-                  title: "Issue Creating Post",
+                enqueueSnackbar(<small>Issue Creating Post</small>, {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
                 });
-                setAlert(true);
               });
           }
         },
@@ -201,33 +184,25 @@ export default function CreatePostPage() {
               .then((result) => {
                 setLoading(false);
                 if (result.status === 200) {
-                  setAlertMessage({
-                    severity: "success",
-                    content: "Share Created Successfully",
-                    title: "Post",
+                  enqueueSnackbar(<small>Post Shared</small>, {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
-                  setTimeout(() => {
-                    router.push("/");
-                  }, 2000);
+
+                  router.push("/");
                 } else {
-                  setAlertMessage({
-                    severity: "error",
-                    content: "Issue Creating Share",
-                    title: "Post",
+                  enqueueSnackbar(<small>Issue Sharing Post</small>, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
                 }
               })
               .catch((err) => {
-                console.log(err);
                 setLoading(false);
-                setAlertMessage({
-                  severity: "error",
-                  content: err.message,
-                  title: "Issue Sharing Post",
+                enqueueSnackbar(<small>Issue Sharing Post</small>, {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
                 });
-                setAlert(true);
               });
           } else if (router.query.reply) {
             post
@@ -235,32 +210,25 @@ export default function CreatePostPage() {
               .then((result) => {
                 setLoading(false);
                 if (result.status === 200) {
-                  setAlertMessage({
-                    severity: "success",
-                    content: "Response Created Successfully",
-                    title: "Post",
+                  enqueueSnackbar(<small>Responded To Post</small>, {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
-                  setTimeout(() => {
-                    router.push("/");
-                  }, 2000);
+
+                  router.push("/");
                 } else {
-                  setAlertMessage({
-                    severity: "error",
-                    content: "Issue Creating Response",
-                    title: "Post",
+                  enqueueSnackbar(<small>Issue Responding To Post</small>, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
                 }
               })
               .catch((err) => {
                 setLoading(false);
-                setAlertMessage({
-                  severity: "error",
-                  content: err.message,
-                  title: "Issue Responding To Post",
+                enqueueSnackbar(<small>Issue Responding To Post</small>, {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
                 });
-                setAlert(true);
               });
           } else {
             post
@@ -268,43 +236,38 @@ export default function CreatePostPage() {
               .then((result) => {
                 setLoading(false);
                 if (result.status === 200) {
-                  setAlertMessage({
-                    severity: "success",
-                    content: "Post Created Successfully",
-                    title: "Post",
+                  enqueueSnackbar(<small>Post Created</small>, {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
-                  setTimeout(() => {
-                    router.push("/");
-                  }, 2000);
+
+                  router.push("/");
                 } else {
-                  setAlertMessage({
-                    severity: "error",
-                    content: "Issue Creating Post",
-                    title: "Post",
+                  enqueueSnackbar(<small>Issue Creating Post</small>, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  setAlert(true);
                 }
               })
               .catch((err) => {
-                console.log(err);
                 setLoading(false);
-                setAlertMessage({
-                  severity: "error",
-                  content: err.message,
-                  title: "Issue Creating Post",
+                enqueueSnackbar(<small>Issue Creating Post</small>, {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
                 });
-                setAlert(true);
               });
           }
 
-          setAlertMessage({
-            severity: "info",
-            content:
-              "No GeoLocation found, however we will still attempt to create your post although the location won't be accurate.",
-            title: "No GeoLocation",
-          });
-          setAlert(true);
+          enqueueSnackbar(
+            <small>
+              No GeoLocation found, however we will still attempt to create your
+              post although the location won't be accurate.
+            </small>,
+            {
+              variant: "info",
+              anchorOrigin: { horizontal: "left", vertical: "top" },
+            }
+          );
         }
       );
     } catch (err) {
@@ -325,33 +288,25 @@ export default function CreatePostPage() {
           .then((result) => {
             setLoading(false);
             if (result.status === 200) {
-              setAlertMessage({
-                severity: "success",
-                content: "Share Created Successfully",
-                title: "Post",
+              enqueueSnackbar(<small>Post Shared</small>, {
+                variant: "success",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
               });
-              setAlert(true);
-              setTimeout(() => {
-                router.push("/");
-              }, 2000);
+
+              router.push("/");
             } else {
-              setAlertMessage({
-                severity: "error",
-                content: "Issue Creating Share",
-                title: "Post",
+              enqueueSnackbar(<small>Issue Sharing Post</small>, {
+                variant: "error",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
               });
-              setAlert(true);
             }
           })
           .catch((err) => {
-            console.log(err);
             setLoading(false);
-            setAlertMessage({
-              severity: "error",
-              content: err.message,
-              title: "Issue Sharing Post",
+            enqueueSnackbar(<small>Issue Sharing Post</small>, {
+              variant: "error",
+              anchorOrigin: { horizontal: "left", vertical: "top" },
             });
-            setAlert(true);
           });
       } else if (router.query.reply) {
         post
@@ -359,32 +314,25 @@ export default function CreatePostPage() {
           .then((result) => {
             setLoading(false);
             if (result.status === 200) {
-              setAlertMessage({
-                severity: "success",
-                content: "Response Created Successfully",
-                title: "Post",
+              enqueueSnackbar(<small>Responded To Post</small>, {
+                variant: "success",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
               });
-              setAlert(true);
-              setTimeout(() => {
-                router.push("/");
-              }, 2000);
+
+              router.push("/");
             } else {
-              setAlertMessage({
-                severity: "error",
-                content: "Issue Creating Response",
-                title: "Post",
+              enqueueSnackbar(<small>Issue Responding To Post</small>, {
+                variant: "error",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
               });
-              setAlert(true);
             }
           })
           .catch((err) => {
             setLoading(false);
-            setAlertMessage({
-              severity: "error",
-              content: err.message,
-              title: "Issue Responding To Post",
+            enqueueSnackbar(<small>Issue Responding To Post</small>, {
+              variant: "error",
+              anchorOrigin: { horizontal: "left", vertical: "top" },
             });
-            setAlert(true);
           });
       } else {
         post
@@ -392,33 +340,25 @@ export default function CreatePostPage() {
           .then((result) => {
             setLoading(false);
             if (result.status === 200) {
-              setAlertMessage({
-                severity: "success",
-                content: "Post Created Successfully",
-                title: "Post",
+              enqueueSnackbar(<small>Post Created</small>, {
+                variant: "success",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
               });
-              setAlert(true);
-              setTimeout(() => {
-                router.push("/");
-              }, 2000);
+
+              router.push("/");
             } else {
-              setAlertMessage({
-                severity: "error",
-                content: "Issue Creating Post",
-                title: "Post",
+              enqueueSnackbar(<small>Issue Creating Post</small>, {
+                variant: "error",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
               });
-              setAlert(true);
             }
           })
           .catch((err) => {
-            console.log(err);
             setLoading(false);
-            setAlertMessage({
-              severity: "error",
-              content: err.message,
-              title: "Issue Creating Post",
+            enqueueSnackbar(<small>Issue Creating Post</small>, {
+              variant: "error",
+              anchorOrigin: { horizontal: "left", vertical: "top" },
             });
-            setAlert(true);
           });
       }
     }

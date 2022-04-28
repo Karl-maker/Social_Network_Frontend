@@ -1,7 +1,4 @@
-import {
-  AccountContext,
-  AlertContext,
-} from "../components/templates/ContextProvider";
+import { AccountContext } from "../components/templates/ContextProvider";
 import { useState, useEffect, useContext } from "react";
 import { TextField, CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
@@ -10,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Profile from "../components/api/profile/Profile";
 import { LoadingButton } from "@mui/lab";
+import { useSnackbar } from "notistack";
 
 export async function getStaticProps(context) {
   return {
@@ -24,8 +22,8 @@ export async function getStaticProps(context) {
 
 export default function Registration() {
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const accountServices = useContext(AccountContext);
-  const alertServices = useContext(AlertContext);
   const [isLoggedIn, setIsLoggedIn] = useState();
   const [loading, setLoading] = useState(false);
   const [successfulRegistration, setSuccessfulRegistration] = useState(false);
@@ -56,21 +54,18 @@ export default function Registration() {
         // Set that registration was successful
 
         setSuccessfulRegistration(true);
-        alertServices.setAlertInfo({
-          severity: "success",
-          title: "Registered",
-          content: response.message,
+        enqueueSnackbar("Registered", {
+          variant: "success",
+          anchorOrigin: { horizontal: "left", vertical: "top" },
         });
-        alertServices.setAlert(true);
 
         setLoading(false);
       } catch (error) {
-        alertServices.setAlertInfo({
-          severity: "error",
-          title: "Issue Registering",
-          content: typeof error == "object" ? error.message : error,
+        enqueueSnackbar("Issue Registering", {
+          variant: "error",
+          anchorOrigin: { horizontal: "left", vertical: "top" },
         });
-        alertServices.setAlert(true);
+
         setLoading(false);
       }
     } else {
