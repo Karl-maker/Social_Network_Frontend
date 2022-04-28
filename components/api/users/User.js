@@ -137,7 +137,7 @@ export default class User extends Connection {
   }
 
   async authenticate() {
-    return fetch(`/api/auth`, {
+    return fetch(`/api/auth/authenticate`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -301,7 +301,7 @@ export default class User extends Connection {
   }
 
   async logout() {
-    return fetch(`/api/auth/logout`, {
+    return fetch(`/api/auth/authenticate`, {
       method: "DELETE",
       credentials: "include",
       headers: {

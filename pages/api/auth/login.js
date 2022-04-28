@@ -44,8 +44,9 @@ async function login(req, res) {
         secure: false,
         httpOnly: true,
         expire: 400000 + Date.now(),
-        path: `/api/auth/authentication`,
+        path: `/api/auth/authenticate`,
       });
+
       //   res.getHeader("Set-Cookie");
       res.status(200).json({ access_token });
     } catch (error) {
