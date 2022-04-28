@@ -8,6 +8,7 @@ import PostSkeleton from "../components/post/PostSkeleton";
 import PostListWidget from "../components/post/PostListWidget";
 import PostCollection from "../components/api/posts/PostCollection";
 import { noDuplicateObjects } from "../components/utils/array";
+import { useSnackbar } from "notistack";
 import {
   AccountContext,
   AlertContext,
@@ -37,6 +38,7 @@ export default function Home() {
 
   const accountServices = useContext(AccountContext);
   const alertServices = useContext(AlertContext);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   // Constants
 
@@ -108,25 +110,21 @@ export default function Home() {
         page_size: PAGE_SIZE,
         max_distance: maxDistance,
       })
-      .then(({ data }) => {
-        setPosts(noDuplicateObjects(posts.concat(data), "_id"));
+      .then((result) => {
+        if (result) {
+          const { data } = result;
+          setPosts(noDuplicateObjects(posts.concat(data), "_id"));
+        } else {
+          throw {
+            message: <small>Unexpected Error. Please try again later.</small>,
+          };
+        }
+
         setIsLoading(false);
       })
       .catch((error) => {
-        alertServices.setAlertInfo({
-          severity: "error",
-          content: (
-            <>
-              Cannot load posts located here at the moment.{" "}
-              <strong>
-                Try the Geo-Randomizer <RiEarthFill />
-              </strong>
-            </>
-          ),
-          title: "Issue Getting Posts",
-        });
-        alertServices.setAlert(true);
         setIsLoading(false);
+        throw error;
       });
   };
 
@@ -155,15 +153,20 @@ export default function Home() {
                     longitude: results.coords.longitude,
                   };
 
-                  fetchPosts();
+                  try {
+                    fetchPosts();
+                  } catch (err) {
+                    enqueueSnackbar(err.message, {
+                      variant: "error",
+                      anchorOrigin: { horizontal: "left", vertical: "top" },
+                    });
+                  }
                 },
                 (err) => {
-                  alertServices.setAlertInfo({
-                    severity: "error",
-                    content: err.message,
-                    title: "Issue Getting GeoLocation",
+                  enqueueSnackbar(err.message, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
-                  alertServices.setAlert(true);
                 }
               );
             } else if (result.state == "prompt") {
@@ -171,18 +174,17 @@ export default function Home() {
               setStatus(
                 <>Allow location to start viewing and sharing thoughts</>
               );
-              alertServices.setAlertInfo({
-                severity: "info",
-                content: (
-                  <>
-                    Select the <strong>GET POST IN YOUR LOCATION</strong> button
-                    to load posts
-                  </>
-                ),
-                title: "GeoLocation Option",
-                vertical: "bottom",
-              });
-              alertServices.setAlert(true);
+
+              enqueueSnackbar(
+                <small>
+                  Select the <strong>GET POST IN YOUR LOCATION</strong> button
+                  to load posts
+                </small>,
+                {
+                  variant: "info",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
+                }
+              );
             } else if (result.state == "denied") {
               setPermissionButton(false);
 
@@ -191,7 +193,15 @@ export default function Home() {
                 longitude: null,
               };
 
-              fetchPosts();
+              try {
+                fetchPosts();
+              } catch (err) {
+                enqueueSnackbar(err.message, {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
+                });
+              }
+
               setStatus(
                 <>
                   You can change your <strong>location settings</strong> to view
@@ -202,32 +212,13 @@ export default function Home() {
                 </>
               );
               setIsLoading(false);
-              alertServices.setAlertInfo({
-                duration: 10000,
-                severity: "info",
-                content: (
-                  <>
-                    Location would not be accurate since your location settings
-                    are <strong>turned off</strong>
-                  </>
-                ),
-                title: (
-                  <>
-                    GeoLocation <strong>Not Found</strong>
-                  </>
-                ),
-                vertical: "bottom",
-              });
-              alertServices.setAlert(true);
             }
           })
           .catch((err) => {
-            alertServices.setAlertInfo({
-              severity: "error",
-              content: err.message,
-              title: "Issue Occured",
+            enqueueSnackbar(err.message, {
+              variant: "error",
+              anchorOrigin: { horizontal: "left", vertical: "top" },
             });
-            alertServices.setAlert(true);
           });
       } catch (err) {}
     })();
@@ -243,7 +234,14 @@ export default function Home() {
               longitude: results.coords.longitude,
             };
 
-            fetchPosts();
+            try {
+              fetchPosts();
+            } catch (err) {
+              enqueueSnackbar(err.message, {
+                variant: "error",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
+              });
+            }
           },
           (err) => {
             post.coordinates = {
@@ -251,24 +249,26 @@ export default function Home() {
               longitude: null,
             };
 
-            fetchPosts();
+            try {
+              fetchPosts();
+            } catch (err) {
+              enqueueSnackbar(err.message, {
+                variant: "error",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
+              });
+            }
 
-            alertServices.setAlertInfo({
-              duration: 10000,
-              severity: "info",
-              content: (
-                <>
-                  Location would not be accurate since your location settings
-                  are <strong>turned off</strong>
-                </>
-              ),
-              title: (
-                <>
-                  GeoLocation <strong>Not Found</strong>
-                </>
-              ),
-              vertical: "bottom",
-            });
+            enqueueSnackbar(
+              <small>
+                Location would not be accurate since your location settings are{" "}
+                <strong>turned off</strong>
+              </small>,
+              {
+                variant: "info",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
+              }
+            );
+
             alertServices.setAlert(true);
           }
         );
@@ -278,25 +278,25 @@ export default function Home() {
           longitude: null,
         };
 
-        fetchPosts();
+        try {
+          fetchPosts();
+        } catch (err) {
+          enqueueSnackbar(err.message, {
+            variant: "error",
+            anchorOrigin: { horizontal: "left", vertical: "top" },
+          });
+        }
 
-        alertServices.setAlertInfo({
-          duration: 10000,
-          severity: "info",
-          content: (
-            <>
-              Location would not be accurate since your location settings are{" "}
-              <strong>turned off</strong>
-            </>
-          ),
-          title: (
-            <>
-              GeoLocation <strong>Not Found</strong>
-            </>
-          ),
-          vertical: "bottom",
-        });
-        alertServices.setAlert(true);
+        enqueueSnackbar(
+          <small>
+            Location would not be accurate since your location settings are{" "}
+            <strong>turned off</strong>
+          </small>,
+          {
+            variant: "info",
+            anchorOrigin: { horizontal: "left", vertical: "top" },
+          }
+        );
       }
     } else {
       const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
@@ -308,17 +308,25 @@ export default function Home() {
 
       setLocationInfo(location.location);
 
-      fetchPosts();
+      try {
+        fetchPosts();
+      } catch (err) {
+        enqueueSnackbar(err.message, {
+          variant: "error",
+          anchorOrigin: { horizontal: "left", vertical: "top" },
+        });
+      }
 
-      alertServices.setAlertInfo({
-        severity: "info",
-        content: `Getting posts from ${
-          location.location
-        } around a ${MetersAndKilometers(maxDistance)} wide area`,
-        title: "Geo-Randomize",
-        vertical: "bottom",
-      });
-      alertServices.setAlert(true);
+      enqueueSnackbar(
+        <small>
+          Getting posts from <strong>{location.location}</strong> around a{" "}
+          {MetersAndKilometers(maxDistance)} wide area
+        </small>,
+        {
+          variant: "info",
+          anchorOrigin: { horizontal: "left", vertical: "top" },
+        }
+      );
     }
   }, [isUsingCurrentPosition]);
 
