@@ -108,6 +108,7 @@ export default function CreatePostPage() {
 
                   router.push("/");
                 } else {
+                  setLoading(false);
                   enqueueSnackbar(<small>Issue Sharing Post</small>, {
                     variant: "error",
                     anchorOrigin: { horizontal: "left", vertical: "top" },
@@ -115,6 +116,7 @@ export default function CreatePostPage() {
                 }
               })
               .catch((err) => {
+                setLoading(false);
                 enqueueSnackbar(<small>Issue Sharing Post</small>, {
                   variant: "error",
                   anchorOrigin: { horizontal: "left", vertical: "top" },
@@ -133,13 +135,15 @@ export default function CreatePostPage() {
 
                   router.push("/");
                 } else {
-                  enqueueSnackbar(<small></small>, {
+                  setLoading(false);
+                  enqueueSnackbar(<small>Issue Responding To Post</small>, {
                     variant: "error",
                     anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
                 }
               })
               .catch((err) => {
+                setLoading(false);
                 enqueueSnackbar(<small>Issue Responding To Post</small>, {
                   variant: "error",
                   anchorOrigin: { horizontal: "left", vertical: "top" },
@@ -157,13 +161,14 @@ export default function CreatePostPage() {
                   });
                   router.push("/");
                 } else {
-                  enqueueSnackbar(<small>Issue</small>, {
+                  enqueueSnackbar(<small>Issue Creating Post</small>, {
                     variant: "error",
                     anchorOrigin: { horizontal: "left", vertical: "top" },
                   });
                 }
               })
               .catch((err) => {
+                setLoading(false);
                 enqueueSnackbar(<small>Issue Creating Post</small>, {
                   variant: "error",
                   anchorOrigin: { horizontal: "left", vertical: "top" },
