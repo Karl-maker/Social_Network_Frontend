@@ -229,12 +229,15 @@ export default class User extends Connection {
       },
       body: JSON.stringify({ username: username }),
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
+      .then(async(response) => {
+
+        if (!response.ok) {
+          throw await response.json();
         }
-        throw new Error(response.json());
+        
+        return response;
       })
+      .then((response) => response.json())
       .then((response) => {
         return response;
       })

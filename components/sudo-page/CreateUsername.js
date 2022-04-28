@@ -10,6 +10,7 @@ export default function CreateUsername() {
   const accountServices = useContext(AccountContext);
   const [loading, setLoading] = useState("");
   const [username, setUsername] = useState("");
+  const [error, setError] = useState({ message: "" });
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -30,6 +31,13 @@ export default function CreateUsername() {
             setUsername(e.target.value);
           }}
         />
+        {error.message && (
+          <div className="mt-3 ">
+            <small style={{ color: "#c0392b" }}>
+              {error.message.toLowerCase()}
+            </small>
+          </div>
+        )}
       </div>
       <div className="col-12 text-center pb-3">
         <LoadingButton
@@ -38,6 +46,11 @@ export default function CreateUsername() {
           disableElevation
           onClick={() => {
             setLoading(true);
+            if (!username) {
+              setError({ message: "username needs to be created" });
+              setLoading(false);
+              return;
+            }
             accountServices
               .createUsername(username)
               .then((result) => {
@@ -57,16 +70,12 @@ export default function CreateUsername() {
                 }, 1000);
               })
               .catch((error) => {
-                enqueueSnackbar(
-                  <small>
-                    <strong>Error Creating Username</strong>
-                  </small>,
-                  {
-                    variant: "error",
-                    anchorOrigin: { horizontal: "left", vertical: "top" },
-                  }
-                );
-
+                // Show Error
+                console.log(error);
+                setError({
+                  message:
+                    error.message || error.messages || "Unexpected Error",
+                });
                 setLoading(false);
               });
           }}
