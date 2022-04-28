@@ -51,7 +51,7 @@ export default function CreatePostPage() {
           } else if (result.state == "prompt") {
             setShowPostButton(true);
           } else if (result.state == "denied") {
-            setShowPostButton(false);
+            setShowPostButton(true);
             setAlertMessage({
               severity: "warning",
               content: "Denied Use Of Geolocation",
@@ -71,132 +71,357 @@ export default function CreatePostPage() {
   const handleSubmit = (e) => {
     let coordinates = { latitude: null, longitude: null };
 
-    navigator.geolocation.getCurrentPosition(
-      (result) => {
-        const { latitude, longitude } = result.coords;
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (result) => {
+          const { latitude, longitude } = result.coords;
 
-        coordinates.latitude = latitude;
-        coordinates.longitude = longitude;
+          coordinates.latitude = latitude;
+          coordinates.longitude = longitude;
 
-        const post = new Post(
-          process.env.BACKEND_URL,
-          accountServices.access_token,
-          { coordinates }
-        );
+          const post = new Post(
+            process.env.BACKEND_URL,
+            accountServices.access_token,
+            { coordinates }
+          );
 
-        if (router.query.share) {
-          post
-            .createAShare(content, router.query.share)
-            .then((result) => {
-              setLoading(false);
-              if (result.status === 200) {
-                setAlertMessage({
-                  severity: "success",
-                  content: "Share Created Successfully",
-                  title: "Post",
-                });
-                setAlert(true);
-                setTimeout(() => {
-                  router.push("/");
-                }, 2000);
-              } else {
+          if (router.query.share) {
+            post
+              .createAShare(content, router.query.share)
+              .then((result) => {
+                setLoading(false);
+                if (result.status === 200) {
+                  setAlertMessage({
+                    severity: "success",
+                    content: "Share Created Successfully",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 2000);
+                } else {
+                  setAlertMessage({
+                    severity: "error",
+                    content: "Issue Creating Share",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                setLoading(false);
                 setAlertMessage({
                   severity: "error",
-                  content: "Issue Creating Share",
-                  title: "Post",
+                  content: err.message,
+                  title: "Issue Sharing Post",
                 });
                 setAlert(true);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              setLoading(false);
-              setAlertMessage({
-                severity: "error",
-                content: err.message,
-                title: "Issue Sharing Post",
               });
-              setAlert(true);
-            });
-        } else if (router.query.reply) {
-          post
-            .createAReply(content, router.query.reply)
-            .then((result) => {
-              setLoading(false);
-              if (result.status === 200) {
-                setAlertMessage({
-                  severity: "success",
-                  content: "Response Created Successfully",
-                  title: "Post",
-                });
-                setAlert(true);
-                setTimeout(() => {
-                  router.push("/");
-                }, 2000);
-              } else {
+          } else if (router.query.reply) {
+            post
+              .createAReply(content, router.query.reply)
+              .then((result) => {
+                setLoading(false);
+                if (result.status === 200) {
+                  setAlertMessage({
+                    severity: "success",
+                    content: "Response Created Successfully",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 2000);
+                } else {
+                  setAlertMessage({
+                    severity: "error",
+                    content: "Issue Creating Response",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
                 setAlertMessage({
                   severity: "error",
-                  content: "Issue Creating Response",
-                  title: "Post",
+                  content: err.message,
+                  title: "Issue Responding To Post",
                 });
                 setAlert(true);
-              }
-            })
-            .catch((err) => {
-              setLoading(false);
-              setAlertMessage({
-                severity: "error",
-                content: err.message,
-                title: "Issue Responding To Post",
               });
-              setAlert(true);
-            });
-        } else {
-          post
-            .create(content)
-            .then((result) => {
-              setLoading(false);
-              if (result.status === 200) {
-                setAlertMessage({
-                  severity: "success",
-                  content: "Post Created Successfully",
-                  title: "Post",
-                });
-                setAlert(true);
-                setTimeout(() => {
-                  router.push("/");
-                }, 2000);
-              } else {
+          } else {
+            post
+              .create(content)
+              .then((result) => {
+                setLoading(false);
+                if (result.status === 200) {
+                  setAlertMessage({
+                    severity: "success",
+                    content: "Post Created Successfully",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 2000);
+                } else {
+                  setAlertMessage({
+                    severity: "error",
+                    content: "Issue Creating Post",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                setLoading(false);
                 setAlertMessage({
                   severity: "error",
-                  content: "Issue Creating Post",
-                  title: "Post",
+                  content: err.message,
+                  title: "Issue Creating Post",
                 });
                 setAlert(true);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              setLoading(false);
-              setAlertMessage({
-                severity: "error",
-                content: err.message,
-                title: "Issue Creating Post",
               });
-              setAlert(true);
-            });
+          }
+        },
+        (error) => {
+          const post = new Post(
+            process.env.BACKEND_URL,
+            accountServices.access_token,
+            { coordinates }
+          );
+
+          if (router.query.share) {
+            post
+              .createAShare(content, router.query.share)
+              .then((result) => {
+                setLoading(false);
+                if (result.status === 200) {
+                  setAlertMessage({
+                    severity: "success",
+                    content: "Share Created Successfully",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 2000);
+                } else {
+                  setAlertMessage({
+                    severity: "error",
+                    content: "Issue Creating Share",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                setLoading(false);
+                setAlertMessage({
+                  severity: "error",
+                  content: err.message,
+                  title: "Issue Sharing Post",
+                });
+                setAlert(true);
+              });
+          } else if (router.query.reply) {
+            post
+              .createAReply(content, router.query.reply)
+              .then((result) => {
+                setLoading(false);
+                if (result.status === 200) {
+                  setAlertMessage({
+                    severity: "success",
+                    content: "Response Created Successfully",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 2000);
+                } else {
+                  setAlertMessage({
+                    severity: "error",
+                    content: "Issue Creating Response",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
+                setAlertMessage({
+                  severity: "error",
+                  content: err.message,
+                  title: "Issue Responding To Post",
+                });
+                setAlert(true);
+              });
+          } else {
+            post
+              .create(content)
+              .then((result) => {
+                setLoading(false);
+                if (result.status === 200) {
+                  setAlertMessage({
+                    severity: "success",
+                    content: "Post Created Successfully",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 2000);
+                } else {
+                  setAlertMessage({
+                    severity: "error",
+                    content: "Issue Creating Post",
+                    title: "Post",
+                  });
+                  setAlert(true);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                setLoading(false);
+                setAlertMessage({
+                  severity: "error",
+                  content: err.message,
+                  title: "Issue Creating Post",
+                });
+                setAlert(true);
+              });
+          }
+
+          setAlertMessage({
+            severity: "info",
+            content:
+              "No GeoLocation found, however we will still attempt to create your post although the location won't be accurate.",
+            title: "No GeoLocation",
+          });
+          setAlert(true);
         }
-      },
-      (error) => {
-        setLoading(false);
-        setAlertMessage({
-          severity: "error",
-          content: err.message,
-          title: "Issue Creating Post",
-        });
-        setAlert(true);
+      );
+    } catch (err) {
+      const post = new Post(
+        process.env.BACKEND_URL,
+        accountServices.access_token,
+        {
+          coordinates: {
+            longitude: null,
+            latitude: null,
+          },
+        }
+      );
+
+      if (router.query.share) {
+        post
+          .createAShare(content, router.query.share)
+          .then((result) => {
+            setLoading(false);
+            if (result.status === 200) {
+              setAlertMessage({
+                severity: "success",
+                content: "Share Created Successfully",
+                title: "Post",
+              });
+              setAlert(true);
+              setTimeout(() => {
+                router.push("/");
+              }, 2000);
+            } else {
+              setAlertMessage({
+                severity: "error",
+                content: "Issue Creating Share",
+                title: "Post",
+              });
+              setAlert(true);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+            setAlertMessage({
+              severity: "error",
+              content: err.message,
+              title: "Issue Sharing Post",
+            });
+            setAlert(true);
+          });
+      } else if (router.query.reply) {
+        post
+          .createAReply(content, router.query.reply)
+          .then((result) => {
+            setLoading(false);
+            if (result.status === 200) {
+              setAlertMessage({
+                severity: "success",
+                content: "Response Created Successfully",
+                title: "Post",
+              });
+              setAlert(true);
+              setTimeout(() => {
+                router.push("/");
+              }, 2000);
+            } else {
+              setAlertMessage({
+                severity: "error",
+                content: "Issue Creating Response",
+                title: "Post",
+              });
+              setAlert(true);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            setAlertMessage({
+              severity: "error",
+              content: err.message,
+              title: "Issue Responding To Post",
+            });
+            setAlert(true);
+          });
+      } else {
+        post
+          .create(content)
+          .then((result) => {
+            setLoading(false);
+            if (result.status === 200) {
+              setAlertMessage({
+                severity: "success",
+                content: "Post Created Successfully",
+                title: "Post",
+              });
+              setAlert(true);
+              setTimeout(() => {
+                router.push("/");
+              }, 2000);
+            } else {
+              setAlertMessage({
+                severity: "error",
+                content: "Issue Creating Post",
+                title: "Post",
+              });
+              setAlert(true);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+            setAlertMessage({
+              severity: "error",
+              content: err.message,
+              title: "Issue Creating Post",
+            });
+            setAlert(true);
+          });
       }
-    );
+    }
   };
 
   return (

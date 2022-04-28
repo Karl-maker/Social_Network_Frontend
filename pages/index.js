@@ -252,6 +252,24 @@ export default function Home() {
             };
 
             fetchPosts();
+
+            alertServices.setAlertInfo({
+              duration: 10000,
+              severity: "info",
+              content: (
+                <>
+                  Location would not be accurate since your location settings
+                  are <strong>turned off</strong>
+                </>
+              ),
+              title: (
+                <>
+                  GeoLocation <strong>Not Found</strong>
+                </>
+              ),
+              vertical: "bottom",
+            });
+            alertServices.setAlert(true);
           }
         );
       } catch (e) {
@@ -261,6 +279,24 @@ export default function Home() {
         };
 
         fetchPosts();
+
+        alertServices.setAlertInfo({
+          duration: 10000,
+          severity: "info",
+          content: (
+            <>
+              Location would not be accurate since your location settings are{" "}
+              <strong>turned off</strong>
+            </>
+          ),
+          title: (
+            <>
+              GeoLocation <strong>Not Found</strong>
+            </>
+          ),
+          vertical: "bottom",
+        });
+        alertServices.setAlert(true);
       }
     } else {
       const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
