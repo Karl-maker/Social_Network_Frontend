@@ -49,7 +49,9 @@ async function login(req, res) {
       //   res.getHeader("Set-Cookie");
       res.status(200).json({ access_token });
     } catch (error) {
-      res.status(500).json({ ...error });
+      res
+        .status(error.status || 500)
+        .json({ message: error.message || "Unexpected Error" });
     }
   }
 }

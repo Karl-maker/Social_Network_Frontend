@@ -24,8 +24,10 @@ export default function Login() {
   const [isLoggedIn, setIsLoggedIn] = useState(accountServices.isLoggedIn);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [emailPrompt, setEmailPrompt] = useState(false);
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [passwordPrompt, setPasswordPrompt] = useState(false);
+  const [error, setError] = useState({});
 
   if (isLoggedIn) {
     const returnUrl = router.query.return_url || "/";
@@ -33,13 +35,20 @@ export default function Login() {
   }
 
   const handleLogin = (e) => {
-    accountServices.login(email, password).then(() => {
-      if (accountServices.isLoggedIn) {
-        setIsLoggedIn(accountServices.isLoggedIn);
-      } else setError("Email or password is incorrect");
-
-      setLoading(false);
-    });
+    accountServices
+      .login(email, password)
+      .then(() => {
+        if (accountServices.isLoggedIn) {
+          setIsLoggedIn(accountServices.isLoggedIn);
+        } else {
+          setError({ message: "Unexpected Error: Please Try Again Later" });
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setError(err);
+      });
   };
 
   return (
@@ -50,6 +59,8 @@ export default function Login() {
         </div>
         <div className="mt-3">
           <TextField
+            error={emailPrompt}
+            helperText={emailPrompt && "Email or username must be included"}
             id="email-or-username-input"
             size="small"
             label="Email / Username"
@@ -62,6 +73,8 @@ export default function Login() {
         </div>
         <div className="mt-3">
           <TextField
+            error={passwordPrompt}
+            helperText={passwordPrompt && "Password must be included"}
             id="password-input"
             size="small"
             label="Password"
@@ -88,6 +101,21 @@ export default function Login() {
             }}
             onClick={(e) => {
               setLoading(true);
+              setEmailPrompt(false);
+              setPasswordPrompt(false);
+
+              if (!email) {
+                setEmailPrompt(true);
+              }
+              if (!password) {
+                setPasswordPrompt(true);
+              }
+
+              if (!password || !email) {
+                setLoading(false);
+                return;
+              }
+
               handleLogin(e);
             }}
             disableElevation
@@ -96,9 +124,9 @@ export default function Login() {
             Login
           </LoadingButton>
         </div>
-        {error && (
+        {error.message && (
           <div className="mt-3 ">
-            <small style={{ color: "#c0392b" }}>{error}</small>
+            <small style={{ color: "#c0392b" }}>{error.message}</small>
           </div>
         )}
         <div className="mt-3 mb-4">

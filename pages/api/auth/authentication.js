@@ -29,7 +29,6 @@ export default async function authenticate(req, res) {
         access_token,
       });
     } catch (err) {
-      console.log(err);
       res.status(500).json({ ...err });
     }
   } else if (req.method === "DELETE") {

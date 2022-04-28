@@ -101,7 +101,7 @@ export default class User extends Connection {
     }
   }
 
-  async login(email, password) {
+  login(email, password) {
     return fetch(`/api/auth/login`, {
       method: "POST",
       credentials: "include",
@@ -112,35 +112,27 @@ export default class User extends Connection {
       },
       body: JSON.stringify({ email: email, password: password }),
     })
-      .then((response) => {
+      .then(async (response) => {
         // Check status code
 
-        if (response.status === 200) {
-          return response.json();
+        if (!response.ok) {
+          throw await response.json();
         }
-
-        throw new Error({
-          message: response.json().message || "Issue with login",
-        });
+        return response;
       })
+      .then((response) => response.json())
       .then(async (response) => {
         if (response.access_token) {
-          this.access_token = response.access_token;
+          this._access_token = response.access_token;
 
           await this.fetchCurrentUser();
           await this.fetchUserInformation(this._id);
 
           this._isLoggedIn = true;
-
-          return response;
         }
-
-        // If login didn't work
-
-        throw response;
       })
-      .catch((err) => {
-        console.log(JSON.stringify(err));
+      .catch((error) => {
+        throw error;
       });
   }
 

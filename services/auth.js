@@ -15,8 +15,9 @@ const login = async ({ email, password }) => {
 
   if (!user) {
     throw {
+      status: 404,
       name: "NotFound",
-      message: "No account created with that email",
+      message: "You have entered an invalid username, email or password",
     };
   }
 
@@ -24,8 +25,9 @@ const login = async ({ email, password }) => {
 
   if (!validate) {
     throw {
-      name: "Unauthorized",
-      message: "Email or Password is not correct",
+      status: 404,
+      name: "NotFound",
+      message: "You have entered an invalid username, email or password",
     };
   }
 
