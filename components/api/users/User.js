@@ -137,7 +137,7 @@ export default class User extends Connection {
   }
 
   async authenticate() {
-    return fetch(`/api/auth/authentication`, {
+    return fetch(`/api/auth`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -229,12 +229,11 @@ export default class User extends Connection {
       },
       body: JSON.stringify({ username: username }),
     })
-      .then(async(response) => {
-
+      .then(async (response) => {
         if (!response.ok) {
           throw await response.json();
         }
-        
+
         return response;
       })
       .then((response) => response.json())
@@ -302,7 +301,7 @@ export default class User extends Connection {
   }
 
   async logout() {
-    return fetch(`/api/auth/authentication`, {
+    return fetch(`/api/auth/logout`, {
       method: "DELETE",
       credentials: "include",
       headers: {

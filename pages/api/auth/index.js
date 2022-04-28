@@ -31,21 +31,5 @@ export default async function authenticate(req, res) {
     } catch (err) {
       res.status(500).json({ ...err });
     }
-  } else if (req.method === "DELETE") {
-    await cors(req, res);
-
-    await dbConnect();
-    token
-      .deleteRefreshToken(parseCookies(req).refresh_token)
-      .then(() => {
-        res.status(200).json({
-          message: "User logged out",
-        });
-      })
-      .catch((err) => {
-        res.status(500).json({
-          err,
-        });
-      });
   }
 }

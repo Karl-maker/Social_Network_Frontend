@@ -59,9 +59,7 @@ export function ContextProvider({ children }) {
             error: (
               <BiErrorCircle className="m-2" style={{ fontSize: "25px" }} />
             ),
-            info: (
-              <AiFillInfoCircle className="m-2" style={{ fontSize: "25px" }} />
-            ),
+            info: <></>,
             success: (
               <BsCheck2Circle className="m-2" style={{ fontSize: "25px" }} />
             ),
