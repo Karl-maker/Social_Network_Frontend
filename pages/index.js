@@ -9,10 +9,7 @@ import PostListWidget from "../components/post/PostListWidget";
 import PostCollection from "../components/api/posts/PostCollection";
 import { noDuplicateObjects } from "../components/utils/array";
 import { useSnackbar } from "notistack";
-import {
-  AccountContext,
-  AlertContext,
-} from "../components/templates/ContextProvider";
+import { AccountContext } from "../components/templates/ContextProvider";
 import DistanceSlider from "../components/post/DistanceSlider";
 import widget from "../styles/modules/Widget.module.css";
 import { MetersAndKilometers } from "../components/utils/distance";
@@ -37,7 +34,6 @@ export default function Home() {
   // Contexts
 
   const accountServices = useContext(AccountContext);
-  const alertServices = useContext(AlertContext);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   // Constants
@@ -268,8 +264,6 @@ export default function Home() {
                 anchorOrigin: { horizontal: "left", vertical: "top" },
               }
             );
-
-            alertServices.setAlert(true);
           }
         );
       } catch (e) {

@@ -3,10 +3,7 @@ import User from "../api/users/User";
 import widget from "../../styles/modules/Widget.module.css";
 import ChildWidget from "./ChildWidget";
 import ActivityWidget from "./ActivityWidget";
-import {
-  AccountContext,
-  AlertContext,
-} from "../../components/templates/ContextProvider";
+import { AccountContext } from "../../components/templates/ContextProvider";
 
 import { useEffect, useState, useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
@@ -18,12 +15,14 @@ import { useRouter } from "next/router";
 import PostSkeleton, { UserSkeleton } from "./PostSkeleton";
 import MenuButton from "../templates/MenuButton";
 import DialogButton from "../templates/DialogButton";
+import { useSnackbar } from "notistack";
+import { success } from "webpack-cli/lib/utils/logger";
 
 export default function PostWidget({ post, children }) {
   // Context
 
   const accountServices = useContext(AccountContext);
-  const alertServices = useContext(AlertContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   // User Who Created Post
   const user = new User(process.env.BACKEND_URL, null, {});
@@ -46,23 +45,26 @@ export default function PostWidget({ post, children }) {
       .then((result) => {
         if (result.status === 200) {
           // Close Widget
-          alertServices.setAlertInfo({
-            severity: "success",
-            content: "Post Deleted",
-            title: "Post",
+          enqueueSnackbar(<small>Deleted Post</small>, {
+            variant: "success",
+            anchorOrigin: { horizontal: "left", vertical: "top" },
           });
-          alertServices.setAlert(true);
+
           triggerDeleteAlert(false);
           setClose(true);
         }
       })
       .catch((err) => {
-        alertServices.setAlertInfo({
-          severity: "error",
-          content: "Issue Deleting Post",
-          title: "Post",
-        });
-        alertServices.setAlert(true);
+        enqueueSnackbar(
+          <small>
+            <strong>Issue Deleting Post</strong> Try again later.
+          </small>,
+          {
+            variant: "error",
+            anchorOrigin: { horizontal: "left", vertical: "top" },
+          }
+        );
+
         triggerDeleteAlert(false);
       });
   };
