@@ -4,13 +4,14 @@ import { RiEarthFill } from "react-icons/ri";
 import { MdNotificationsNone } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { useRouter } from "next/router";
-import { AlertContext, AccountContext } from "../templates/ContextProvider";
+import { AccountContext } from "../templates/ContextProvider";
+import { useSnackbar } from "notistack";
 
 export default function BottomNav() {
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const [value, setValue] = useState(0);
   const [pathName, setPathName] = useState(router.pathname);
-  const alertServices = useContext(AlertContext);
   const accountService = useContext(AccountContext);
 
   useEffect(() => {
@@ -42,13 +43,16 @@ export default function BottomNav() {
             label="Profile"
             icon={<FaUserCircle />}
             onClick={() => {
-              alertServices.setAlertInfo({
-                severity: "warning",
-                title: "No Profile Yet",
-                content:
-                  "Profile coming soon where you can see all your posts and add a display name",
-              });
-              alertServices.setAlert(true);
+              enqueueSnackbar(
+                <small>
+                  Profile coming soon where you can see all your posts and add a
+                  display name
+                </small>,
+                {
+                  variant: "warning",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
+                }
+              );
             }}
           />
         )}

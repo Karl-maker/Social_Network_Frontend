@@ -1,6 +1,5 @@
 import Slider from "@mui/material/Slider";
 import { useContext } from "react";
-import { AlertContext } from "../templates/ContextProvider";
 import { MetersAndKilometers } from "../utils/distance";
 
 export default function DistanceSlider({
@@ -9,7 +8,6 @@ export default function DistanceSlider({
   sideElement,
   additionalAction,
 }) {
-  const alertServices = useContext(AlertContext);
   const MINVALUE = 20;
   const MAXVALUE = 50000;
 

@@ -1,18 +1,17 @@
-import { AccountContext, AlertContext } from "../templates/ContextProvider";
+import { AccountContext } from "../templates/ContextProvider";
 import { useContext, useState } from "react";
 import { TextField, CircularProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import widget from "../../styles/modules/Widget.module.css";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 
 export default function CreateUsername() {
   const accountServices = useContext(AccountContext);
-  const alertServices = useContext(AlertContext);
-  const setAlert = alertServices.setAlert;
-  const setAlertMessage = alertServices.setAlertInfo;
   const [loading, setLoading] = useState("");
   const [username, setUsername] = useState("");
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <div className={widget.primary}>
@@ -42,29 +41,33 @@ export default function CreateUsername() {
             accountServices
               .createUsername(username)
               .then((result) => {
-                setAlertMessage({
-                  severity: "success",
-                  content: "Username created",
-                  title: "Username",
-                });
-
+                enqueueSnackbar(
+                  <small>
+                    <strong>Username Created Successfully</strong>
+                  </small>,
+                  {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
+                  }
+                );
                 setLoading(false);
 
                 setTimeout(() => {
                   router.reload(window.location.pathname);
                 }, 1000);
-
-                setAlert(true);
               })
               .catch((error) => {
-                setAlertMessage({
-                  severity: "error",
-                  content: "Issue Creating Username",
-                  title: "Username",
-                });
+                enqueueSnackbar(
+                  <small>
+                    <strong>Error Creating Username</strong>
+                  </small>,
+                  {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "left", vertical: "top" },
+                  }
+                );
 
                 setLoading(false);
-                setAlert(true);
               });
           }}
         >

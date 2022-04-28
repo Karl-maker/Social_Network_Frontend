@@ -6,10 +6,10 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Menu, MenuItem } from "@mui/material";
 import { useContext } from "react";
-import { AlertContext } from "../templates/ContextProvider";
+import { useSnackbar } from "notistack";
 
 export default function NotificationWidget({ notification }) {
-  const alertServices = useContext(AlertContext);
+  const { enqueueSnackbar } = useSnackbar();
   const notification_date = new Date(notification.data.createdAt);
   const current_date = new Date();
   const how_long_ago = checkHowManyDaysAgo(notification_date, current_date);
@@ -41,20 +41,16 @@ export default function NotificationWidget({ notification }) {
       .delete()
       .then(() => {
         setShow(false);
-        alertServices.setAlertInfo({
-          severity: "success",
-          content: "Nofification Deleted",
-          title: "Notification",
+        enqueueSnackbar("Nofification Deleted", {
+          variant: "success",
+          anchorOrigin: { horizontal: "left", vertical: "top" },
         });
-        alertServices.setAlert(true);
       })
       .catch((error) => {
-        alertServices.setAlertInfo({
-          severity: "error",
-          content: "Issue Deleting Nofification",
-          title: "Notification",
+        enqueueSnackbar("Issue Nofification Deleted", {
+          variant: "error",
+          anchorOrigin: { horizontal: "left", vertical: "top" },
         });
-        alertServices.setAlert(true);
       });
   };
 
