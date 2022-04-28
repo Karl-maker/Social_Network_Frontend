@@ -16,7 +16,6 @@ import PostSkeleton, { UserSkeleton } from "./PostSkeleton";
 import MenuButton from "../templates/MenuButton";
 import DialogButton from "../templates/DialogButton";
 import { useSnackbar } from "notistack";
-import { success } from "webpack-cli/lib/utils/logger";
 
 export default function PostWidget({ post, children }) {
   // Context
