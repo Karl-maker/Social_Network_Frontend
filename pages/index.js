@@ -326,15 +326,6 @@ export default function Home() {
         );
       }
     } else {
-      const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-
-      post.coordinates = {
-        latitude: location.latitude,
-        longitude: location.longitude,
-      };
-
-      setLocationInfo(location.location);
-
       try {
         fetchPosts();
       } catch (err) {
@@ -346,7 +337,7 @@ export default function Home() {
 
       enqueueSnackbar(
         <small>
-          Getting posts from <strong>{location.location}</strong> around a{" "}
+          Getting posts from <strong>{locationInfo}</strong> around a{" "}
           {MetersAndKilometers(maxDistance)} wide area
         </small>,
         {
@@ -367,9 +358,9 @@ export default function Home() {
           maxDistance={maxDistance}
           setMaxDistance={setMaxDistance}
           additionalAction={() => {
-            setPageNumber(0);
-            setIsLoading(true);
             setPosts([]);
+            setIsLoading(true);
+            setPageNumber(0);
             fetchPosts();
           }}
           sideElement={
@@ -385,9 +376,19 @@ export default function Home() {
                   Clear viewing area and set if viewer should use current position or not
 
                   */
-                  setPageNumber(0);
                   setIsLoading(true);
                   setPosts([]);
+
+                  if (isUsingCurrentPosition) {
+                    const location =
+                      LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+                    setLocationInfo(location.location);
+                    post.coordinates = {
+                      latitude: location.latitude,
+                      longitude: location.longitude,
+                    };
+                  }
+                  setPageNumber(0);
                   setIsUsingCurrentPosition(!isUsingCurrentPosition);
                 }}
               >
