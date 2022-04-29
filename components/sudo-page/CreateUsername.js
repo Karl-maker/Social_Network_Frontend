@@ -69,12 +69,15 @@ export default function CreateUsername() {
                   router.reload(window.location.pathname);
                 }, 1000);
               })
-              .catch((error) => {
+              .catch((err) => {
                 // Show Error
-                console.log(error);
+                console.log(err);
                 setError({
-                  message:
-                    error.message || error.messages || "Unexpected Error",
+                  message: Array.isArray(err.messages)
+                    ? err.messages[0]
+                    : err.messages ||
+                      err.message ||
+                      "Unexpected Error, Try again later.",
                 });
                 setLoading(false);
               });
