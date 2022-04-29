@@ -173,7 +173,7 @@ export default function PostWidget({ post, children }) {
         {
           // Body of widget
         }
-        <div className="container-flush p-3 ">
+        <div className="container-flush p-lg-3 p-1 ">
           <div className="row">
             <div
               className="col-8"
