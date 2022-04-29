@@ -1,7 +1,14 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import { Fab, Button, IconButton, Tooltip } from "@mui/material";
+import {
+  Fab,
+  Button,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+} from "@mui/material";
 import { HiPencil } from "react-icons/hi";
 import { RiEarthFill } from "react-icons/ri";
+import { BsChevronCompactDown } from "react-icons/bs";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
 import PostSkeleton from "../components/post/PostSkeleton";
@@ -13,6 +20,7 @@ import { AccountContext } from "../components/templates/ContextProvider";
 import DistanceSlider from "../components/post/DistanceSlider";
 import widget from "../styles/modules/Widget.module.css";
 import { MetersAndKilometers } from "../components/utils/distance";
+import VisibilitySensor from "react-visibility-sensor";
 
 /*
  * Page Title and Guard Status
@@ -66,7 +74,7 @@ export default function Home() {
   );
 
   // useState hooks
-
+  const [buttonLoad, setButtonLoad] = useState(false);
   const [post] = useState(post_collection);
   const [status, setStatus] = useState(<></>);
   const [locationInfo, setLocationInfo] = useState("");
@@ -77,26 +85,41 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true); // Loading state to load page with skeleton
   const [permissionButton, setPermissionButton] = useState(false); // If given permission to use ask for use of geolocation a button would appear on true
 
-  const listInnerRef = useRef();
-
   /*
 
   handleScroll checks if there is or should be more posts and increase the page number on scroll down
 
   */
 
-  const handleScroll = (e) => {
-    if (listInnerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+  const LoadMorePrompt = () => {
+    if (Number.isInteger(posts.length / PAGE_SIZE) && posts.length) {
+      // Show Prompt to get more
 
-      if (
-        (scrollHeight - scrollTop) * 0.7 <= clientHeight &&
-        Number.isInteger(posts.length / PAGE_SIZE)
-      ) {
-        setPageNumber(pageNumber + 1);
-        fetchPosts();
-      }
+      return (
+        <VisibilitySensor
+          delayedCall={true}
+          intervalDelay={1000}
+          onChange={(isVisible) => {
+            if (isVisible) {
+              setButtonLoad(true);
+              setPageNumber(pageNumber + 1);
+            }
+          }}
+        >
+          <div className="m-5 p-3 row">
+            <div className="col-12 text-center">
+              {buttonLoad ? (
+                <CircularProgress />
+              ) : (
+                <BsChevronCompactDown fontSize={40} />
+              )}
+            </div>
+          </div>
+        </VisibilitySensor>
+      );
     }
+
+    return <></>;
   };
 
   const fetchPosts = () => {
@@ -117,9 +140,11 @@ export default function Home() {
         }
 
         setIsLoading(false);
+        setButtonLoad(false);
       })
       .catch((error) => {
         setIsLoading(false);
+        setButtonLoad(false);
         throw error;
       });
   };
@@ -330,10 +355,10 @@ export default function Home() {
         }
       );
     }
-  }, [isUsingCurrentPosition]);
+  }, [isUsingCurrentPosition, pageNumber]);
 
   return (
-    <div className={widget.list} onScroll={handleScroll} ref={listInnerRef}>
+    <div className={widget.list}>
       {
         // Slider
       }
@@ -342,6 +367,7 @@ export default function Home() {
           maxDistance={maxDistance}
           setMaxDistance={setMaxDistance}
           additionalAction={() => {
+            setPageNumber(0);
             setIsLoading(true);
             setPosts([]);
             fetchPosts();
@@ -359,7 +385,7 @@ export default function Home() {
                   Clear viewing area and set if viewer should use current position or not
 
                   */
-
+                  setPageNumber(0);
                   setIsLoading(true);
                   setPosts([]);
                   setIsUsingCurrentPosition(!isUsingCurrentPosition);
@@ -435,6 +461,7 @@ export default function Home() {
 
           <div style={{ paddingBottom: "130px" }}>
             <PostListWidget posts={posts} hr={true} />
+            <LoadMorePrompt className="mt-2" />
           </div>
 
           {/*
