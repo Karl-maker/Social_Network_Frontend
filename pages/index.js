@@ -100,7 +100,7 @@ export default function Home() {
   };
 
   const fetchPosts = () => {
-    post
+    return post
       .fetchManyPosts({
         page_number: pageNumber,
         page_size: PAGE_SIZE,
@@ -219,6 +219,14 @@ export default function Home() {
       } catch (err) {}
     })();
   }, []);
+
+  // Issue:
+
+  /*
+
+  When using global randomizer it doesn't give the user's post class back current location
+
+  */
 
   useEffect(() => {
     if (isUsingCurrentPosition) {
