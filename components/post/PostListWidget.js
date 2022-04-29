@@ -4,7 +4,7 @@ import ReplyWidget from "./ReplyWidget";
 import Link from "next/link";
 import widget from "../../styles/modules/Widget.module.css";
 
-export default function PostListWidget({ posts, type, hr, children }) {
+export default function PostListWidget({ posts, type, hr, noBorder }) {
   const [list, setList] = useState([]);
   useEffect(() => {
     setList(posts);
@@ -14,11 +14,12 @@ export default function PostListWidget({ posts, type, hr, children }) {
     <>
       <li key={post.data._id}>
         {type === "replies" && (
-          <div className="mt-2">
+          <div className="mt-2 p-2">
             <ReplyWidget post={post} />
+            <hr style={{ margin: 0, padding: 0 }} />
           </div>
         )}
-        {!type && <PostWidget post={post} hr={hr} />}
+        {!type && <PostWidget post={post} hr={hr} noBorder={noBorder} />}
       </li>
     </>
   ));
@@ -27,7 +28,6 @@ export default function PostListWidget({ posts, type, hr, children }) {
     <ul className="p-0">
       {/* set distance and have other options and info here such as current location*/}
       {listPosts}
-      {posts.length > 5 && children}
     </ul>
   );
 }

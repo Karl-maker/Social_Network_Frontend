@@ -60,11 +60,10 @@ export default function PostPage() {
     <div className={widget.list}>
       {postInfo ? (
         <>
-          <PostWidget post={postInfo}>
-            {router.query.id && (
-              <RepliesList className="mx-2" post_id={router.query.id} />
-            )}
-          </PostWidget>
+          <PostWidget post={postInfo} />
+          {router.query.id && (
+            <RepliesList className="mx-2" post_id={router.query.id} />
+          )}
         </>
       ) : (
         <div className="container-flush p-4 text-center">

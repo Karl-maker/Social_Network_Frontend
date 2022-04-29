@@ -23,29 +23,22 @@ export default function RepliesList({ post_id }) {
   useEffect(() => {
     // Initially set Coordinates as such...
 
-    navigator.geolocation.getCurrentPosition((result) => {
-      post_collection.coordinates = {
-        latitude: result.coords.latitude,
-        longitude: result.coords.longitude,
-      };
+    // Get many posts
+    post_collection
+      .fetchReplies(post_id, {
+        page_number: pageNumber,
+        page_size: PAGE_SIZE,
+      })
+      .then(({ data }) => {
+        setReplies(noDuplicateObjects(replies.concat(data), "_id"));
+      })
+      .catch((error) => {
+        // Capture Error
+        setErrorData("Issue Getting Responses");
+        setLoading(false);
+      });
 
-      // Get many posts
-      post_collection
-        .fetchReplies(post_id, {
-          page_number: pageNumber,
-          page_size: PAGE_SIZE,
-        })
-        .then(({ data }) => {
-          setReplies(noDuplicateObjects(replies.concat(data), "_id"));
-        })
-        .catch((error) => {
-          // Capture Error
-          setErrorData("Issue Getting Responses");
-          setLoading(false);
-        });
-
-      setLoading(false);
-    });
+    setLoading(false);
   }, [pageNumber]);
 
   if (loading) {
@@ -62,7 +55,7 @@ export default function RepliesList({ post_id }) {
   return (
     <>
       {replies.length > 0 ? (
-        <PostListWidget posts={replies} type="replies" />
+        <PostListWidget posts={replies} noBorder={true} type="replies" />
       ) : (
         <></>
       )}

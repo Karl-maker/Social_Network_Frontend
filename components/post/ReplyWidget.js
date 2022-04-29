@@ -12,14 +12,14 @@ import { ImLocation2 } from "react-icons/im";
 import Link from "next/link";
 import { Button, Menu, MenuItem, Chip } from "@mui/material";
 import { useRouter } from "next/router";
+import { UserSkeleton } from "./PostSkeleton";
 
 export default function ReplyWidget({ post }) {
-  const user = new User(process.env.BACKEND_URL, null, {});
   const accountServices = useContext(AccountContext);
   const post_date = new Date(post.data.createdAt);
   const current_date = new Date();
   const how_long_ago = checkHowManyDaysAgo(post_date, current_date);
-  const [userInfo, setUserInfo] = useState(null);
+  const [user, setUser] = useState(new User(process.env.BACKEND_URL, null, {}));
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -42,13 +42,13 @@ export default function ReplyWidget({ post }) {
 
   useEffect(() => {
     user.fetchUserInformation(post.data.user_id).then((result) => {
-      setUserInfo(result);
+      setUser(
+        new User(process.env.BACKEND_URL, null, {
+          username: result.user[0].username,
+        })
+      );
     });
   }, []);
-
-  if (!userInfo) {
-    return <></>;
-  }
 
   const PostMenu = () => {
     return (
@@ -72,8 +72,8 @@ export default function ReplyWidget({ post }) {
   };
 
   return (
-    <div className={widget.secondary}>
-      <div className="container-flush p-4">
+    <div>
+      <div className="container-flush px-lg-3 py-0 px-2">
         <div className="row">
           <div
             className="col-8"
@@ -83,14 +83,13 @@ export default function ReplyWidget({ post }) {
               textOverflow: "ellipsis",
             }}
           >
-            <Link href={`/user/${userInfo._id}`} passHref>
+            <Link href={`/user/${user._id}`} passHref>
               <p style={{ cursor: "pointer", fontSize: "18px" }}>
-                <small>
-                  <strong>{userInfo.display_name}</strong>
-                </small>
-                <small style={{ marginLeft: "5px", fontSize: "14px" }}>{`@${
-                  userInfo.user[0].username || ""
-                }`}</small>
+                {user.username ? (
+                  user.displayProfileChip({ borderWidth: "0px" })
+                ) : (
+                  <UserSkeleton />
+                )}
               </p>
             </Link>
           </div>

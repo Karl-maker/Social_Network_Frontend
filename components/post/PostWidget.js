@@ -17,7 +17,7 @@ import MenuButton from "../templates/MenuButton";
 import DialogButton from "../templates/DialogButton";
 import { useSnackbar } from "notistack";
 
-export default function PostWidget({ post, children }) {
+export default function PostWidget({ post, children, noBorder }) {
   // Context
 
   const accountServices = useContext(AccountContext);
@@ -161,7 +161,7 @@ export default function PostWidget({ post, children }) {
         }
       />
       <div
-        className={widget.primary}
+        className={!noBorder && widget.primary}
         onClick={(e) => {
           router.push(`/post/${post.data._id}`);
 

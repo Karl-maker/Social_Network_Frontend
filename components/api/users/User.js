@@ -5,10 +5,14 @@ import { Chip, Avatar } from "@mui/material";
 import { GoVerified } from "react-icons/go";
 
 export default class User extends Connection {
-  constructor(base_url, access_token, { display_name, username, is_verified }) {
+  constructor(
+    base_url,
+    access_token,
+    { display_name, username, is_verified, id }
+  ) {
     super(base_url, access_token);
 
-    this._id;
+    this._id = id || null;
     this._email;
     this._username = username || null;
     this._display_name = display_name || null;
