@@ -45,6 +45,7 @@ export default function ReplyWidget({ post }) {
       setUser(
         new User(process.env.BACKEND_URL, null, {
           username: result.user[0].username,
+          is_verified: result.is_verified,
         })
       );
     });
@@ -73,7 +74,7 @@ export default function ReplyWidget({ post }) {
 
   return (
     <div>
-      <div className="container-flush px-lg-3 py-0 px-2">
+      <div className="container-flush px-lg-3 pb-2 px-2">
         <div className="row">
           <div
             className="col-8"
