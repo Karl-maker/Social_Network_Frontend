@@ -71,14 +71,21 @@ export default function CreateUsername() {
               })
               .catch((err) => {
                 // Show Error
-                console.log(err);
-                setError({
-                  message: Array.isArray(err.messages)
-                    ? err.messages[0]
-                    : err.messages ||
-                      err.message ||
-                      "Unexpected Error, Try again later.",
-                });
+
+                if (err.message == "Already have a profile") {
+                  // Rare instance of user having a profile and creating a username, not just updating
+                  err.message = "hmmm.... you already had a profile but ok.";
+                  router.reload(window.location.pathname);
+                }
+
+                if (err)
+                  setError({
+                    message: Array.isArray(err.messages)
+                      ? err.messages[0]
+                      : err.messages ||
+                        err.message ||
+                        "Unexpected Error, Try again later.",
+                  });
                 setLoading(false);
               });
           }}
