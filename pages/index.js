@@ -90,7 +90,7 @@ export default function Home() {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
 
       if (
-        (scrollHeight - scrollTop) * 0.8 <= clientHeight &&
+        (scrollHeight - scrollTop) * 0.7 <= clientHeight &&
         Number.isInteger(posts.length / PAGE_SIZE)
       ) {
         setPageNumber(pageNumber + 1);
