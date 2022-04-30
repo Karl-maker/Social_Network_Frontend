@@ -8,7 +8,7 @@ export default class User extends Connection {
   constructor(
     base_url,
     access_token,
-    { display_name, username, is_verified, id }
+    { display_name, username, is_verified, id, image }
   ) {
     super(base_url, access_token);
 
@@ -18,6 +18,7 @@ export default class User extends Connection {
     this._display_name = display_name || null;
     this._isLoggedIn = false;
     this._is_verified = is_verified || false;
+    this._image = image || null;
   }
 
   // Getters And Setters
@@ -78,6 +79,10 @@ export default class User extends Connection {
 
       try {
         this._display_name = results.data[0].display_name;
+      } catch (error) {}
+
+      try {
+        this._image = results.data[0].image;
       } catch (error) {}
 
       return results.data[0];
@@ -355,16 +360,11 @@ export default class User extends Connection {
 
   displayProfilePicture(size) {
     return (
-      <Avatar sx={{ bgcolor: "#dfe6e9" }}>
-        {this._username ? (
-          <>
-            {this._username.toUpperCase().charAt(0) ||
-              this._display_name.toUpperCase().charAt(0) ||
-              this._email.toUpperCase().charAt(0)}
-          </>
-        ) : (
-          <>{(this._email && this._email.toUpperCase().charAt(0)) || ""}</>
-        )}
+      <Avatar sx={{ bgcolor: "#dfe6e9" }} src={this._image}>
+        <>
+          {this._username.toUpperCase().charAt(0) ||
+            this._email.toUpperCase().charAt(0)}
+        </>
       </Avatar>
     );
   }

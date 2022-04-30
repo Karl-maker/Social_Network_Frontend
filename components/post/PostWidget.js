@@ -115,6 +115,7 @@ export default function PostWidget({ post, children, noBorder }) {
           ...result,
           username: result.user[0].username,
           is_verified: result.is_verified,
+          image: result.image,
         })
       );
     });
