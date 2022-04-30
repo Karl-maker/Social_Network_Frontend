@@ -9,13 +9,110 @@ Dealing with searching and getting posts
 */
 
 export default class PostCollection extends Connect {
-  constructor(base_url, access_token, { coordinates }) {
+  constructor(base_url, access_token, { coordinates, max_distance }) {
     super(base_url, access_token);
 
     this.coordinates = coordinates || { latitude: null, longitude: null };
+    this.max_distance = max_distance || 5000;
+    this.page_number = 0;
+    this.page_size = 10;
+    this.location = "";
+
+    this.LOCATIONS = [
+      {
+        location: "Port of Spain, Trinidad and Tobago",
+        latitude: 10.650488900252434,
+        longitude: -61.51599120383046,
+      },
+      // {
+      //   location: "New York City, United States of America",
+      //   latitude: 40.73061,
+      //   longitude: -73.935242,
+      // },
+      // {
+      //   location: "Great Britain, United Kingdom",
+      //   latitude: 53.826,
+      //   longitude: -2.422,
+      // },
+    ];
+  }
+
+  // Getters and Setters
+
+  get coordinates() {
+    return this._coordinates;
+  }
+
+  set coordinates(coordinates) {
+    this._coordinates = coordinates;
+  }
+
+  get location() {
+    return this._location;
+  }
+
+  set location(location) {
+    this._location = location;
+  }
+
+  get max_distance() {
+    return this._max_distance;
+  }
+
+  set max_distance(max_distance) {
+    this._max_distance = max_distance;
+  }
+
+  get page_number() {
+    return this._page_number;
+  }
+
+  set page_number(page_number) {
+    this._page_number = page_number;
+  }
+
+  get page_size() {
+    return this._page_size;
+  }
+
+  set page_size(page_size) {
+    this._page_size = page_size;
   }
 
   // Methods
+
+  locationRandomizer() {
+    const { location, latitude, longitude } =
+      this.LOCATIONS[Math.floor(Math.random() * this.LOCATIONS.length)];
+
+    this._coordinates = {
+      latitude: latitude,
+      longitude: longitude,
+    };
+
+    this._location = location;
+  }
+
+  async newFetchManyPosts() {
+    try {
+      const result = await axios.get(
+        `${this.base_url}/api/posts?max_distance=${this.max_distance}&page_size=${this.page_size}&page_number=${this.page_number}&latitude=${this.coordinates.latitude}&longitude=${this.coordinates.longitude}`
+      );
+      let data_list = [];
+
+      for (let i = 0; i < result.data[0].data.length; i++) {
+        data_list.push(
+          new Post(this.base_url, this.access_token, {
+            data: result.data[0].data[i],
+          })
+        );
+      }
+
+      return { meta_data: result.data[0].meta_data, data: data_list };
+    } catch (err) {
+      return;
+    }
+  }
 
   async fetchManyPosts({ page_number, page_size, max_distance }) {
     try {
@@ -74,15 +171,5 @@ export default class PostCollection extends Connect {
     } catch (err) {
       return;
     }
-  }
-
-  // Getters and Setters
-
-  get coordinates() {
-    return this._coordinates;
-  }
-
-  set coordinates(coordinates) {
-    this._coordinates = coordinates;
   }
 }

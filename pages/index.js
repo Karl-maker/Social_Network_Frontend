@@ -42,28 +42,7 @@ export default function Home() {
   // Contexts
 
   const accountServices = useContext(AccountContext);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-  // Constants
-
-  const PAGE_SIZE = 10;
-  const LOCATIONS = [
-    {
-      location: "Port of Spain, Trinidad and Tobago",
-      latitude: 10.650488900252434,
-      longitude: -61.51599120383046,
-    },
-    {
-      location: "New York City, United States of America",
-      latitude: 40.73061,
-      longitude: -73.935242,
-    },
-    {
-      location: "Great Britain, United Kingdom",
-      latitude: 53.826,
-      longitude: -2.422,
-    },
-  ];
+  const { enqueueSnackbar } = useSnackbar();
 
   // Objects
 
@@ -77,11 +56,8 @@ export default function Home() {
   const [buttonLoad, setButtonLoad] = useState(false);
   const [post] = useState(post_collection);
   const [status, setStatus] = useState(<></>);
-  const [locationInfo, setLocationInfo] = useState("");
   const [posts, setPosts] = useState([]); // List to feed into post list widget
   const [isUsingCurrentPosition, setIsUsingCurrentPosition] = useState(true);
-  const [pageNumber, setPageNumber] = useState(0); // Pagination starts at 0
-  const [maxDistance, setMaxDistance] = useState(5000); // Distance to fetch data
   const [isLoading, setIsLoading] = useState(true); // Loading state to load page with skeleton
   const [permissionButton, setPermissionButton] = useState(false); // If given permission to use ask for use of geolocation a button would appear on true
 
@@ -92,7 +68,7 @@ export default function Home() {
   */
 
   const LoadMorePrompt = () => {
-    if (Number.isInteger(posts.length / PAGE_SIZE) && posts.length) {
+    if (Number.isInteger(posts.length / post.page_size) && posts.length) {
       // Show Prompt to get more
 
       return (
@@ -102,7 +78,8 @@ export default function Home() {
           onChange={(isVisible) => {
             if (isVisible) {
               setButtonLoad(true);
-              setPageNumber(pageNumber + 1);
+              post.page_number = post.page_number + 1;
+              fetchPosts();
             }
           }}
         >
@@ -124,11 +101,7 @@ export default function Home() {
 
   const fetchPosts = () => {
     return post
-      .fetchManyPosts({
-        page_number: pageNumber,
-        page_size: PAGE_SIZE,
-        max_distance: maxDistance,
-      })
+      .newFetchManyPosts()
       .then((result) => {
         if (result) {
           const { data } = result;
@@ -337,8 +310,8 @@ export default function Home() {
 
       enqueueSnackbar(
         <small>
-          Getting posts from <strong>{locationInfo}</strong> around a{" "}
-          {MetersAndKilometers(maxDistance)} wide area
+          Getting posts from <strong>{post.location}</strong> around a{" "}
+          {MetersAndKilometers(post.max_distance)} wide area
         </small>,
         {
           variant: "info",
@@ -346,7 +319,7 @@ export default function Home() {
         }
       );
     }
-  }, [isUsingCurrentPosition, pageNumber]);
+  }, [isUsingCurrentPosition, post.page_number]);
 
   return (
     <div className={widget.list}>
@@ -355,12 +328,14 @@ export default function Home() {
       }
       <div className="mt-2 mb-2 px-4">
         <DistanceSlider
-          maxDistance={maxDistance}
-          setMaxDistance={setMaxDistance}
+          maxDistance={post.max_distance}
+          setMaxDistance={(value) => {
+            post.max_distance = value;
+          }}
           additionalAction={() => {
-            setPosts([]);
             setIsLoading(true);
-            setPageNumber(0);
+            post.page_number = 0;
+            setPosts([]);
             fetchPosts();
           }}
           sideElement={
@@ -380,15 +355,9 @@ export default function Home() {
                   setPosts([]);
 
                   if (isUsingCurrentPosition) {
-                    const location =
-                      LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-                    setLocationInfo(location.location);
-                    post.coordinates = {
-                      latitude: location.latitude,
-                      longitude: location.longitude,
-                    };
+                    post.locationRandomizer();
                   }
-                  setPageNumber(0);
+                  post.page_number = 0;
                   setIsUsingCurrentPosition(!isUsingCurrentPosition);
                 }}
               >
@@ -403,8 +372,8 @@ export default function Home() {
       }
       <p className="text-muted text-center" style={{ fontSize: "10px" }}>
         {isUsingCurrentPosition
-          ? `Search within ${MetersAndKilometers(maxDistance)}`
-          : `${locationInfo} within ${MetersAndKilometers(maxDistance)}`}
+          ? `Search within ${MetersAndKilometers(post.max_distance)}`
+          : `${post.location} within ${MetersAndKilometers(post.max_distance)}`}
       </p>
       {
         // Main Page
