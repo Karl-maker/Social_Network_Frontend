@@ -11,7 +11,7 @@ function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>{pageProps.title || "Syncviz"}</title>
+        <title>{pageProps.title || "Dripplie"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
@@ -19,7 +19,7 @@ function App({ Component, pageProps }) {
         />
         <meta
           name="keywords"
-          content="Social Media, Location, Syncviz, Look Around"
+          content="Social Media, Location, Dripplie, Look Around"
         />
         <meta name="author" content="Karl-Johan Bailey" />
       </Head>

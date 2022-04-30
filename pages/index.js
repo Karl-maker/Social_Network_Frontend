@@ -32,7 +32,7 @@ export async function getStaticProps(context) {
   return {
     props: {
       protected: false,
-      title: "Syncviz",
+      title: "Dripplie",
       description: "View posts created by other users who are close by.",
     },
   };

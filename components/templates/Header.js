@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { AccountContext } from "./ContextProvider";
 import { FaUserCircle } from "react-icons/fa";
 import { HiLogout } from "react-icons/hi";
+import { IoWater } from "react-icons/io";
 import DrawerButton from "./DrawerButton";
 import {
   List,
@@ -50,7 +51,12 @@ export default function Header({}) {
     <>
       <div className="col-4 px-4 m-0">
         <Link href="/" passHref>
-          <Image src="/logo192.png" alt="Syncviz Logo" width={70} height={70} />
+          <Image
+            src="/logo192.png"
+            alt="dripplie-logo"
+            width={50}
+            height={50}
+          />
         </Link>
       </div>
       <div className="col-8 d-flex justify-content-end px-4">

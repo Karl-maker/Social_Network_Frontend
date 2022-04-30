@@ -46,7 +46,7 @@ export default function PageLayout({ children }) {
     <>
       <div className="container-fluid" style={{ backgroundColor: "#ffff" }}>
         <div
-          className="row align-items-center pt-0 sticky-top"
+          className="row align-items-center pt-3 sticky-top"
           style={{
             opacity: 0.99,
             backdropFilter: "blur(20px)",

@@ -97,7 +97,12 @@ export default function Registration() {
     <div className={widget.primary}>
       <div className="text-center">
         <div>
-          <Image src="/logo192.png" alt="Syncviz Logo" width={90} height={90} />
+          <Image
+            src="/logo192.png"
+            alt="dripplie-logo"
+            width={90}
+            height={90}
+          />
         </div>
         <div className="mt-3">
           <TextField
