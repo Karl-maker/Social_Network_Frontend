@@ -69,9 +69,10 @@ export default function Header({}) {
             variant="contained"
             href="/login"
             sx={{
-              borderRadius: "20px",
+              borderRadius: "18px",
               borderColor: "transparent",
               backgroundColor: "#2980b9",
+              paddingX: "25px",
             }}
             disableElevation
           >
