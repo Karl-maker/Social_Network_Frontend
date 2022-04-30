@@ -342,8 +342,7 @@ export default class User extends Connection {
         label={
           this._username ? (
             <>
-              <strong>{this._display_name}</strong>{" "}
-              <small>@{this._username}</small>{" "}
+              <small>{this._username}</small>{" "}
               {this._is_verified && <GoVerified style={{ color: "#0984e3" }} />}{" "}
             </>
           ) : (
