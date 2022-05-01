@@ -96,13 +96,8 @@ export default function Registration() {
   return (
     <div className={widget.primary}>
       <div className="text-center">
-        <div>
-          <Image
-            src="/logo192.png"
-            alt="dripplie-logo"
-            width={90}
-            height={90}
-          />
+        <div className="mt-2">
+          <Image src="/dripplie-banner-center.svg" height={110} width={110} />
         </div>
         <div className="mt-3">
           <TextField

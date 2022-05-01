@@ -16,12 +16,7 @@ export default function PageLayout({ children }) {
       <div className="container-fluid" style={{ backgroundColor: "#ffff" }}>
         <div className="row ">
           <div className="col-12 text-center mt-5">
-            <Image
-              src="/logo192.png"
-              alt="Syncviz Logo"
-              width={90}
-              height={90}
-            />
+            <Image src="/dripplie-banner-center.svg" height={90} width={90} />
           </div>
         </div>
         <div className="row">
