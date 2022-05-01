@@ -13,7 +13,7 @@ export async function getStaticProps(context) {
 export default function Notifications() {
   return (
     <div className="row">
-      <div className="col-12">
+      <div className="col-12 mb-5">
         <NotificationsDisplayWidget />
       </div>
     </div>

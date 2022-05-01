@@ -41,6 +41,7 @@ function Item({ title, icon, link }) {
 }
 
 export default function SideNav() {
+  const accountService = useContext(AccountContext);
   return (
     <ul
       style={{
@@ -50,21 +51,12 @@ export default function SideNav() {
       <li>
         <Item title="Post" icon={<HiPencil />} link="/post" />
       </li>
-      <li
-        onClick={() => {
-          enqueueSnackbar(
-            <small>
-              Profile coming soon where you can see all your posts and add a
-              display name
-            </small>,
-            {
-              variant: "warning",
-              anchorOrigin: { horizontal: "left", vertical: "top" },
-            }
-          );
-        }}
-      >
-        <Item title="Profile" icon={<FaUserCircle />} link="/" />
+      <li>
+        <Item
+          title="Profile"
+          icon={<FaUserCircle />}
+          link={`/profile/${accountService.id}`}
+        />
       </li>
       <li>
         <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />

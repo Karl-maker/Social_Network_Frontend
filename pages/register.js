@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import widget from "../styles/modules/Widget.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import Profile from "../components/api/profile/Profile";
 import { LoadingButton } from "@mui/lab";
 import { useSnackbar } from "notistack";
 
@@ -97,7 +96,11 @@ export default function Registration() {
     <div className={widget.primary}>
       <div className="text-center">
         <div className="mt-2">
-          <Image src="/dripplie-banner-center.svg" height={110} width={110} />
+          <Image
+            src="/dripplie-banner-center(blue).svg"
+            height={110}
+            width={110}
+          />
         </div>
         <div className="mt-3">
           <TextField

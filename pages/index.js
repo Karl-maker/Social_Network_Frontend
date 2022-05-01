@@ -68,7 +68,7 @@ export default function Home() {
   */
 
   const LoadMorePrompt = () => {
-    if (Number.isInteger(posts.length / post.page_size) && posts.length) {
+    if (posts.length < post.total) {
       // Show Prompt to get more
 
       return (

@@ -57,7 +57,7 @@ export default function Header({}) {
       <div className="col-8 d-flex justify-content-end px-4">
         {accountServices.isLoggedIn ? (
           <DrawerButton anchor={"right"} element={menu}>
-            {accountServices.displayProfilePicture(30)}
+            {accountServices.displayProfileChip({ borderWidth: "0px" })}
           </DrawerButton>
         ) : (
           <Button

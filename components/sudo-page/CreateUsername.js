@@ -74,7 +74,7 @@ export default function CreateUsername() {
 
                 if (err.message == "Already have a profile") {
                   // Rare instance of user having a profile and creating a username, not just updating
-                  err.message = "hmmm.... you already had a profile but ok.";
+
                   router.reload(window.location.pathname);
                 }
 

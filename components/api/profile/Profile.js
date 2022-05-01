@@ -42,6 +42,10 @@ export default class Profile extends Connection {
     this._bio = bio;
   }
 
+  set is_verified(is_verified) {
+    this._is_verified = is_verified;
+  }
+
   async create({ display_name, bio }) {
     const result = await axios.post(
       `${this.base_url}/api/profile`,
@@ -88,7 +92,6 @@ export default class Profile extends Connection {
 
         data = result;
 
-        this._display_name = data.display_name;
         this._bio = data.bio;
         this._is_verified = data.is_verified;
         this._username = data.user[0].username;
@@ -96,7 +99,7 @@ export default class Profile extends Connection {
         return result;
       })
       .catch((error) => {
-        //
+        throw error;
       });
   }
 }

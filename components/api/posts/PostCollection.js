@@ -17,6 +17,7 @@ export default class PostCollection extends Connect {
     this.page_number = 0;
     this.page_size = 10;
     this.location = "";
+    this.total = 0;
 
     this.LOCATIONS = [
       {
@@ -53,6 +54,14 @@ export default class PostCollection extends Connect {
 
   set location(location) {
     this._location = location;
+  }
+
+  get total() {
+    return this._total;
+  }
+
+  set total(total) {
+    this._total = total;
   }
 
   get max_distance() {
@@ -93,6 +102,30 @@ export default class PostCollection extends Connect {
     this._location = location;
   }
 
+  async fetchUserPosts(user_id) {
+    try {
+      const result = await axios.get(
+        `${this.base_url}/api/posts/${user_id}?page_size=${this.page_size}&page_number=${this.page_number}`
+      );
+      let data_list = [];
+
+      for (let i = 0; i < result.data[0].data.length; i++) {
+        data_list.push(
+          new Post(this.base_url, this.access_token, {
+            data: result.data[0].data[i],
+          })
+        );
+      }
+
+      this._total = result.data[0].metadata[0].total;
+
+      return { meta_data: result.data[0].metadata, data: data_list };
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+  }
+
   async newFetchManyPosts() {
     try {
       const result = await axios.get(
@@ -108,8 +141,11 @@ export default class PostCollection extends Connect {
         );
       }
 
-      return { meta_data: result.data[0].meta_data, data: data_list };
+      this._total = result.data[0].metadata[0].total;
+
+      return { meta_data: result.data[0].metadata, data: data_list };
     } catch (err) {
+      console.log(err);
       return;
     }
   }

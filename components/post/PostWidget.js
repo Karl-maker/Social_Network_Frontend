@@ -116,6 +116,7 @@ export default function PostWidget({ post, children, noBorder }) {
           username: result.user[0].username,
           is_verified: result.is_verified,
           image: result.image,
+          id: result.user_id,
         })
       );
     });
@@ -185,7 +186,15 @@ export default function PostWidget({ post, children, noBorder }) {
               }}
             >
               {userInfo ? (
-                <div onClick={() => router.push(`/user/${userInfo._id}`)}>
+                <div
+                  onClick={(e) => {
+                    router.push(`/profile/${userInfo.id}`);
+
+                    if (!e) e = window.event;
+                    e.cancelBubble = true;
+                    if (e.stopPropagation) e.stopPropagation();
+                  }}
+                >
                   {userInfo.displayProfileChip({ borderWidth: "0px" })}
                 </div>
               ) : (

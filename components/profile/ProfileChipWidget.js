@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import widget from "../../styles/modules/Widget.module.css";
-import Profile from "../api/profile/Profile";
 import { Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/router";
 

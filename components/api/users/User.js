@@ -8,7 +8,7 @@ export default class User extends Connection {
   constructor(
     base_url,
     access_token,
-    { display_name, username, is_verified, id, image }
+    { display_name, username, is_verified, id, image, bio }
   ) {
     super(base_url, access_token);
 
@@ -19,6 +19,7 @@ export default class User extends Connection {
     this._isLoggedIn = false;
     this._is_verified = is_verified || false;
     this._image = image || null;
+    this._bio = bio === "" ? "" : bio || null;
   }
 
   // Getters And Setters
@@ -47,8 +48,16 @@ export default class User extends Connection {
     return this._is_verified;
   }
 
+  get bio() {
+    return this._bio;
+  }
+
   set username(username) {
     this._username = username;
+  }
+
+  set bio(bio) {
+    this._bio = bio;
   }
 
   set display_name(display_name) {
@@ -78,8 +87,10 @@ export default class User extends Connection {
       } catch (error) {}
 
       try {
-        this._display_name = results.data[0].display_name;
-      } catch (error) {}
+        this._bio = results.data[0].bio || "";
+      } catch (error) {
+        this._bio = "";
+      }
 
       try {
         this._image = results.data[0].image;
@@ -339,7 +350,7 @@ export default class User extends Connection {
     return (
       <Chip
         variant={variant || "outlined"}
-        avatar={this.displayProfilePicture(23)}
+        avatar={onlyUsername ? false : this.displayProfilePicture(23)}
         sx={{
           borderWidth: borderWidth || "0px solid",
           color: color || "#2d3436",
@@ -360,7 +371,10 @@ export default class User extends Connection {
 
   displayProfilePicture(size) {
     return (
-      <Avatar sx={{ bgcolor: "#dfe6e9" }} src={this._image}>
+      <Avatar
+        sx={{ bgcolor: "#dfe6e9", width: size, height: size }}
+        src={this._image}
+      >
         <>
           {this._username.toUpperCase().charAt(0) ||
             this._email.toUpperCase().charAt(0)}
