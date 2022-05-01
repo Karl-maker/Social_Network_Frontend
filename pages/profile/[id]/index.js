@@ -120,7 +120,7 @@ export default function ProfilePage() {
 
   return (
     <div className={widget.list}>
-      <div className="container-flush">
+      <div className="container-flush mb-5">
         <div className="row">
           {
             // Back Button and More info Button
