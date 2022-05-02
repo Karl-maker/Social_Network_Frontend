@@ -120,8 +120,8 @@ export default function ProfilePage() {
 
   return (
     <div className={widget.list}>
-      <div className="mb-5">
-        <div className="row">
+      <div className="container px-0">
+        <div className="row ">
           {
             // Back Button and More info Button
           }
@@ -154,6 +154,7 @@ export default function ProfilePage() {
                 {profile.displayProfileChip({
                   onlyUsername: true,
                   borderWidth: "0px",
+                  fontSize: "20px",
                 })}
               </>
             ) : (

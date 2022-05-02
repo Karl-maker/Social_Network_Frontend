@@ -346,7 +346,7 @@ export default class User extends Connection {
 
   // JSX
 
-  displayProfileChip({ borderWidth, color, variant, onlyUsername }) {
+  displayProfileChip({ borderWidth, color, variant, onlyUsername, fontSize }) {
     return (
       <Chip
         variant={variant || "outlined"}
@@ -354,6 +354,7 @@ export default class User extends Connection {
         sx={{
           borderWidth: borderWidth || "0px solid",
           color: color || "#2d3436",
+          fontSize: fontSize || "15px",
         }}
         label={
           this._username ? (

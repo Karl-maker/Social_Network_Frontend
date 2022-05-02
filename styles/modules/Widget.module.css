@@ -32,6 +32,7 @@
 
 .list {
   overflow: auto;
+  overflow-x: hidden;
   -ms-overflow-style: "none";
   scrollbar-width: "none";
   height: 90vh;
