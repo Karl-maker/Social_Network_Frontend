@@ -7,7 +7,7 @@ export default function Custom500() {
         <div className="col-12 text-center">
           <p>Unexpect Error</p>
           <p>
-            <Link href="/">
+            <Link href="/" passHref>
               <small>Go Back To Home Page</small>
             </Link>
           </p>
