@@ -7,6 +7,7 @@ import { AccountContext } from "../../components/templates/ContextProvider";
 
 import { useEffect, useState, useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { AiFillEye, AiFillEyeInvisible, AiFillDelete } from "react-icons/ai";
 import { BsArrowReturnRight, BsThreeDotsVertical } from "react-icons/bs";
 import { ImLocation2 } from "react-icons/im";
 import Link from "next/link";
@@ -31,7 +32,8 @@ export default function PostWidget({ post, children, noBorder }) {
   const [userInfo, setUserInfo] = useState(null);
   const [deleteAlert, triggerDeleteAlert] = useState(false);
 
-  let PostMenu;
+  let PostMenu,
+    AccountSection = null;
   const post_date = new Date(post.data.createdAt);
   const current_date = new Date();
   const how_long_ago = checkHowManyDaysAgo(post_date, current_date);
@@ -70,44 +72,34 @@ export default function PostWidget({ post, children, noBorder }) {
 
   // Set Menu Items
 
-  if (post.data.user_id === accountServices.id) {
-    PostMenu = [
-      {
-        label: "View Post",
-        activity: () => {
-          router.push(`/post/${post.data._id}`);
-        },
+  PostMenu = [
+    {
+      icon: <AiFillEye />,
+      label: "View Post",
+      activity: () => {
+        router.push(`/post/${post.data._id}`);
       },
-      {
-        label: "Hide Post",
-        activity: () => {
-          setClose(true);
-        },
+    },
+    {
+      icon: <AiFillEyeInvisible />,
+      label: "Hide Post",
+      activity: () => {
+        setClose(true);
       },
+    },
+  ];
+
+  if (accountServices.id == post.data.user_id) {
+    AccountSection = [
       {
+        icon: <AiFillDelete />,
         label: "Delete Post",
         activity: () => {
           triggerDeleteAlert(true);
         },
       },
     ];
-  } else {
-    PostMenu = [
-      {
-        label: "View Post",
-        activity: () => {
-          router.push(`/post/${post.data._id}`);
-        },
-      },
-      {
-        label: "Hide Post",
-        activity: () => {
-          setClose(true);
-        },
-      },
-    ];
   }
-
   useEffect(() => {
     user.fetchUserInformation(post.data.user_id).then((result) => {
       setUserInfo(
@@ -225,7 +217,7 @@ export default function PostWidget({ post, children, noBorder }) {
                   </small>
                 </p>
                 <p className="col-3 text-end mx-0 px-0">
-                  <MenuButton list={PostMenu}>
+                  <MenuButton list={PostMenu} section={AccountSection}>
                     <BsThreeDotsVertical
                       id="basic-button"
                       style={{

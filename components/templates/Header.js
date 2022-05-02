@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
+import MenuButton from "./MenuButton";
 
 export default function Header({}) {
   const router = useRouter();
@@ -25,28 +26,6 @@ export default function Header({}) {
     if (accountServices.isLoggedIn) setUsername(accountServices.username);
   }, []);
 
-  const menu = (
-    <List>
-      <Divider />
-      <ListItem
-        button
-        onClick={() => {
-          // Log user out
-          accountServices.logout();
-          router.reload(window.location.pathname);
-        }}
-      >
-        <ListItemIcon>
-          {
-            // Icons come here
-          }
-          <HiLogout />
-        </ListItemIcon>
-        <ListItemText primary={"Log Out"} />
-      </ListItem>
-    </List>
-  );
-
   return (
     <>
       <div className="col-4 px-4 m-0">
@@ -56,9 +35,31 @@ export default function Header({}) {
       </div>
       <div className="col-8 d-flex justify-content-end px-4">
         {accountServices.isLoggedIn ? (
-          <DrawerButton anchor={"right"} element={menu}>
+          <MenuButton
+            list={[
+              {
+                icon: accountServices.displayProfilePicture(25),
+                label: "Profile",
+                activity: () => {
+                  router.push(`/profile/${accountServices._id}`);
+                },
+              },
+            ]}
+            section={[
+              {
+                icon: <HiLogout />,
+                label: "Logout",
+                activity: () => {
+                  accountServices.logout();
+                  router.reload(window.location.pathname);
+                },
+              },
+            ]}
+            horizontal="left"
+            vertical="bottom"
+          >
             {accountServices.displayProfileChip({ borderWidth: "0px" })}
-          </DrawerButton>
+          </MenuButton>
         ) : (
           <Button
             variant="contained"
