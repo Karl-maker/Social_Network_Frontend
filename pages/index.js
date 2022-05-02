@@ -68,7 +68,7 @@ export default function Home() {
   */
 
   const LoadMorePrompt = () => {
-    if (posts.length < post.total) {
+    if (posts.length < post.total && posts.length != 0) {
       // Show Prompt to get more
 
       return (

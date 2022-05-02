@@ -52,7 +52,7 @@ export default function ProfilePage() {
   );
 
   const LoadMorePrompt = () => {
-    if (posts.length < postCollection.total) {
+    if (posts.length < postCollection.total && posts.length != 0) {
       // Show Prompt to get more
 
       return (
