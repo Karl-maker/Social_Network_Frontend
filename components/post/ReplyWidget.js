@@ -44,6 +44,7 @@ export default function ReplyWidget({ post }) {
     user.fetchUserInformation(post.data.user_id).then((result) => {
       setUser(
         new User(process.env.BACKEND_URL, null, {
+          id: result.user[0]._id,
           username: result.user[0].username,
           is_verified: result.is_verified,
         })
@@ -74,7 +75,16 @@ export default function ReplyWidget({ post }) {
 
   return (
     <div>
-      <div className="container-flush px-lg-3 pb-2 px-2">
+      <div
+        className="container-flush px-lg-3 pb-2 px-2"
+        onClick={(e) => {
+          router.push(`/post/${post.data._id}`);
+
+          if (!e) e = window.event;
+          e.cancelBubble = true;
+          if (e.stopPropagation) e.stopPropagation();
+        }}
+      >
         <div className="row">
           <div
             className="col-8"
@@ -84,15 +94,22 @@ export default function ReplyWidget({ post }) {
               textOverflow: "ellipsis",
             }}
           >
-            <Link href={`/user/${user._id}`} passHref>
-              <p style={{ cursor: "pointer", fontSize: "18px" }}>
-                {user.username ? (
-                  user.displayProfileChip({ borderWidth: "0px" })
-                ) : (
-                  <UserSkeleton />
-                )}
-              </p>
-            </Link>
+            <p
+              style={{ cursor: "pointer", fontSize: "18px" }}
+              onClick={(e) => {
+                router.push(`/profile/${user._id}`);
+
+                if (!e) e = window.event;
+                e.cancelBubble = true;
+                if (e.stopPropagation) e.stopPropagation();
+              }}
+            >
+              {user.username ? (
+                user.displayProfileChip({ borderWidth: "0px" })
+              ) : (
+                <UserSkeleton />
+              )}
+            </p>
           </div>
           <div className="col-4 mx-0">
             <div className="row">

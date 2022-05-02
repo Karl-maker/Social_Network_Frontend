@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import User from "../../../components/api/users/User";
 import PostCollection from "../../../components/api/posts/PostCollection";
-import { Button, CircularProgress, IconButton, Skeleton } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  Skeleton,
+  TextareaAutosize,
+} from "@mui/material";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { BsChevronCompactDown } from "react-icons/bs";
 import widget from "../../../styles/modules/Widget.module.css";
@@ -40,6 +47,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [buttonLoad, setButtonLoad] = useState(false);
+  const [prompt, setPrompt] = useState("");
   const [postCollection] = useState(
     new PostCollection(
       process.env.BACKEND_URL || "",
@@ -109,13 +117,41 @@ export default function ProfilePage() {
         console.log(err);
       });
 
-    postCollection
-      .fetchUserPosts(router.query.id)
-      .then(async ({ data, meta_data }) => {
-        setPosts(await noDuplicateObjects(posts.concat(data), "_id"));
-        setLoading(false);
-      })
-      .catch((err) => {});
+    if (accountServices.isLoggedIn) {
+      postCollection
+        .fetchUserPosts(router.query.id, {
+          access_token: accountServices.access_token,
+        })
+        .then(async ({ data, meta_data }) => {
+          setPosts(await noDuplicateObjects(posts.concat(data), "_id"));
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          setPrompt(
+            <div className={widget.secondary}>
+              <div className="p-5">
+                {err.message.toLowerCase() || "Unexpected Error"}
+              </div>
+            </div>
+          );
+        });
+    } else {
+      setPrompt(
+        <Button
+          variant="outlined"
+          onClick={() => {
+            router.push({
+              pathname: "/login",
+              query: { return_url: router.asPath },
+            });
+          }}
+        >
+          Login to view profile
+        </Button>
+      );
+      setLoading(false);
+    }
   }, [router.query.id]);
 
   return (
@@ -229,12 +265,24 @@ export default function ProfilePage() {
               {
                 // Show posts
               }
-              {posts.length === 0 && (
-                <div className="container-flush p-4 text-center">
-                  <p style={{ cursor: "pointer", fontSize: "15px" }}>
-                    <strong>User Has No Posts</strong>
-                  </p>
-                </div>
+              {posts.length == 0 && (
+                <>
+                  {!prompt ? (
+                    <div className="container-flush p-4 text-center">
+                      <p style={{ cursor: "pointer", fontSize: "15px" }}>
+                        <div className={widget.secondary}>
+                          <div className="p-5">User Has No Posts</div>
+                        </div>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="container-flush p-5 text-center">
+                      <p style={{ cursor: "pointer", fontSize: "15px" }}>
+                        {prompt}
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
 
               <div style={{ paddingBottom: "130px" }}>

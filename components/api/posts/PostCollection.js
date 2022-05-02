@@ -102,28 +102,46 @@ export default class PostCollection extends Connect {
     this._location = location;
   }
 
-  async fetchUserPosts(user_id) {
-    try {
-      const result = await axios.get(
-        `${this.base_url}/api/posts/${user_id}?page_size=${this.page_size}&page_number=${this.page_number}`
-      );
-      let data_list = [];
-
-      for (let i = 0; i < result.data[0].data.length; i++) {
-        data_list.push(
-          new Post(this.base_url, this.access_token, {
-            data: result.data[0].data[i],
-          })
-        );
+  async fetchUserPosts(user_id, { access_token }) {
+    return fetch(
+      `${this.base_url}/api/posts/${user_id}?page_size=${this.page_size}&page_number=${this.page_number}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "*/*",
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "application/json",
+          Authorization: `Bearer ${access_token || this.access_token}`,
+        },
       }
+    )
+      .then(async (response) => {
+        // Check status code
 
-      this._total = result.data[0].metadata[0].total;
+        if (!response.ok) {
+          throw await response.json();
+        }
+        return response;
+      })
+      .then((response) => response.json())
+      .then(async (result) => {
+        let data_list = [];
 
-      return { meta_data: result.data[0].metadata, data: data_list };
-    } catch (err) {
-      console.log(err);
-      return;
-    }
+        for (let i = 0; i < result[0].data.length; i++) {
+          data_list.push(
+            new Post(this.base_url, this.access_token, {
+              data: result[0].data[i],
+            })
+          );
+        }
+
+        this._total = result[0].metadata[0].total;
+
+        return { meta_data: result[0].metadata, data: data_list };
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
   async newFetchManyPosts() {
