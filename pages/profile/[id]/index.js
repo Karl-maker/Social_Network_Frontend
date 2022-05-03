@@ -100,6 +100,8 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
+    setPosts([]);
+
     profile
       .fetchUserInformation(router.query.id)
       .then((result) => {
@@ -123,7 +125,7 @@ export default function ProfilePage() {
           access_token: accountServices.access_token,
         })
         .then(async ({ data, meta_data }) => {
-          setPosts(await noDuplicateObjects(posts.concat(data), "_id"));
+          setPosts(data);
           setLoading(false);
         })
         .catch((err) => {
