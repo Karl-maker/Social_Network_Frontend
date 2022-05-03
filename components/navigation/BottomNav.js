@@ -15,7 +15,7 @@ export default function BottomNav() {
   useEffect(() => {
     if (router.pathname === "/") {
       setValue(1);
-    } else if (router.pathname.includes("/profile")) {
+    } else if (router.pathname.includes("profile")) {
       setValue(0);
     } else if (router.pathname === "/notifications") {
       setValue(2);
