@@ -41,7 +41,7 @@ export default function BottomNav() {
       >
         {accountService.isLoggedIn && (
           <BottomNavigationAction
-            icon={<FaUserCircle fontSize={25} />}
+            icon={accountService.displayProfilePicture(25)}
             onClick={() => {
               router.push(`/profile/${accountService.id}`);
             }}

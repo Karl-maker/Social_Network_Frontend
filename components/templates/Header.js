@@ -56,7 +56,7 @@ export default function Header({}) {
                     accountServices
                       .logout()
                       .then(() => {
-                        router.reload(window.location.pathname);
+                        router.push("/");
                       })
                       .catch((error) => {
                         enqueueSnackbar("Issue Logging Out, Try Again Later", {
