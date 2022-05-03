@@ -4,9 +4,11 @@ import { GoPrimitiveDot } from "react-icons/go";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useContext } from "react";
 import { useSnackbar } from "notistack";
+import { AiFillEye, AiFillDelete } from "react-icons/ai";
+import MenuButton from "../templates/MenuButton";
 
 export default function NotificationWidget({ notification }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -16,27 +18,18 @@ export default function NotificationWidget({ notification }) {
   const router = useRouter();
   const [show, setShow] = useState(true);
   const [seen, setSeen] = useState(notification.data.seen);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const onClick = (e) => {
+  const onClick = () => {
     // Set to seen and go to link...
 
     notification.seen().then((result) => {
       setSeen(true);
-      router.push(`${notification.data.link}`);
     });
+
+    router.push(`${notification.data.link}`);
   };
 
-  const handleDelete = (e) => {
+  const handleDelete = () => {
     notification
       .delete()
       .then(() => {
@@ -54,31 +47,23 @@ export default function NotificationWidget({ notification }) {
       });
   };
 
-  const PostMenu = () => {
-    return (
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-        <MenuItem onClick={onClick}>View</MenuItem>
-      </Menu>
-    );
-  };
-
   if (!show) {
     return <></>;
   }
 
   return (
     <div className={widget.list_with_link}>
-      <div className="p-2 m-0 row">
-        <div className="col-8 d-flex align-items-center">
+      <div
+        className="p-2 m-0 row"
+        onClick={(e) => {
+          notification.seen().then((result) => {
+            setSeen(true);
+          });
+
+          router.push(`${notification.data.link}`);
+        }}
+      >
+        <div className="col-10 d-flex align-items-center">
           <p
             style={{ color: "#718093", marginLeft: "15px" }}
             className="p-2 m-0"
@@ -91,29 +76,44 @@ export default function NotificationWidget({ notification }) {
             </small>
           </p>
         </div>
-        <div
-          className="col-2 d-flex align-items-center"
-          style={{ alignContent: "center" }}
-        >
-          {!seen && <GoPrimitiveDot style={{ color: "#0984e3" }} />}
-        </div>
+
         <div
           className="col-2 d-flex align-items-center p-0 text-end"
           style={{ alignContent: "center", fontSize: "10px" }}
         >
-          <BsThreeDotsVertical
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            style={{
-              color: "#2d3436",
-              fontSize: "12px",
-              marginLeft: "20px",
-            }}
-          />
-          <PostMenu />
+          {!seen ? (
+            <GoPrimitiveDot style={{ color: "#0984e3" }} />
+          ) : (
+            <GoPrimitiveDot style={{ color: "transparent" }} />
+          )}
+          <MenuButton
+            list={[
+              {
+                icon: <AiFillEye />,
+                label: "View",
+                activity: () => {
+                  onClick();
+                },
+              },
+            ]}
+            section={[
+              {
+                icon: <AiFillDelete />,
+                label: "Delete",
+                activity: () => {
+                  handleDelete();
+                },
+              },
+            ]}
+          >
+            <BsThreeDotsVertical
+              style={{
+                color: "#2d3436",
+                fontSize: "12px",
+                marginLeft: "20px",
+              }}
+            />
+          </MenuButton>
         </div>
       </div>
     </div>

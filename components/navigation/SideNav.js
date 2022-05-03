@@ -2,18 +2,20 @@ import { useRouter } from "next/router";
 import widget from "../../styles/modules/Widget.module.css";
 import { RiEarthFill } from "react-icons/ri";
 import { MdNotificationsNone } from "react-icons/md";
+import { AiFillSetting } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
-import { HiPencil } from "react-icons/hi";
+import { HiLogout, HiPencil } from "react-icons/hi";
 import { AccountContext } from "../templates/ContextProvider";
 import { useContext } from "react";
+import { Divider } from "@mui/material";
 
-function Item({ title, icon, link }) {
+function Item({ title, icon, link, action }) {
   const router = useRouter();
   return (
     <div
       className={widget.chip}
       onClick={() => {
-        router.push(link || "/");
+        link ? router.push(link) : action();
       }}
     >
       <div className="container p-2">
@@ -49,7 +51,17 @@ export default function SideNav() {
       }}
     >
       <li>
+        <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
+      </li>
+      <li>
         <Item title="Post" icon={<HiPencil />} link="/post" />
+      </li>
+      <li>
+        <Item
+          title="Notifications"
+          icon={<MdNotificationsNone />}
+          link="/notifications"
+        />
       </li>
       <li>
         <Item
@@ -59,13 +71,17 @@ export default function SideNav() {
         />
       </li>
       <li>
-        <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
+        <Item title="Settings" icon={<AiFillSetting />} link={"/"} />
       </li>
+      <Divider />
       <li>
         <Item
-          title="Notifications"
-          icon={<MdNotificationsNone />}
-          link="/notifications"
+          title="Logout"
+          icon={<HiLogout />}
+          action={() => {
+            accountService.logout();
+            router.reload(window.location.pathname);
+          }}
         />
       </li>
     </ul>

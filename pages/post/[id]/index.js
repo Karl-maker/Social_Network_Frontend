@@ -31,6 +31,7 @@ export async function getStaticPaths() {
 export default function PostPage() {
   const router = useRouter();
   const accountServices = useContext(AccountContext);
+  const [prompt, setPrompt] = useState("");
   const [postInfo, setPostInfo] = useState(null);
 
   useEffect(() => {
@@ -52,11 +53,18 @@ export default function PostPage() {
           } else {
             router.push({ url: "/" });
           }
+        })
+        .catch((err) => {
+          setPrompt("Unexpected Error");
         });
     }
   }, [router.query.id]);
 
-  return (
+  return prompt ? (
+    <div className={widget.secondary}>
+      <div className="text-center p-5">{prompt}</div>
+    </div>
+  ) : (
     <div className={widget.list}>
       {postInfo ? (
         <>

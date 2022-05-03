@@ -27,55 +27,57 @@ export default function Header({}) {
   }, []);
 
   return (
-    <>
-      <div className="col-4 px-4 m-0">
-        <Link href="/" passHref>
-          <Image src="/dripplie-banner(blue).svg" height={70} width={100} />
-        </Link>
-      </div>
-      <div className="col-8 d-flex justify-content-end px-4">
-        {accountServices.isLoggedIn ? (
-          <MenuButton
-            list={[
-              {
-                icon: accountServices.displayProfilePicture(25),
-                label: "Profile",
-                activity: () => {
-                  router.push(`/profile/${accountServices._id}`);
+    <div className="container-fluid p-0 m-0">
+      <div className="row">
+        <div className="col-4 px-4 m-0">
+          <Link href="/" passHref>
+            <Image src="/dripplie-banner(blue).svg" height={70} width={100} />
+          </Link>
+        </div>
+        <div className="col-8 d-flex justify-content-end align-items-center px-4 ">
+          {accountServices.isLoggedIn ? (
+            <MenuButton
+              list={[
+                {
+                  icon: accountServices.displayProfilePicture(25),
+                  label: "Profile",
+                  activity: () => {
+                    router.push(`/profile/${accountServices._id}`);
+                  },
                 },
-              },
-            ]}
-            section={[
-              {
-                icon: <HiLogout />,
-                label: "Logout",
-                activity: () => {
-                  accountServices.logout();
-                  router.reload(window.location.pathname);
+              ]}
+              section={[
+                {
+                  icon: <HiLogout />,
+                  label: "Logout",
+                  activity: () => {
+                    accountServices.logout();
+                    router.reload(window.location.pathname);
+                  },
                 },
-              },
-            ]}
-            horizontal="left"
-            vertical="bottom"
-          >
-            {accountServices.displayProfileChip({ borderWidth: "0px" })}
-          </MenuButton>
-        ) : (
-          <Button
-            variant="contained"
-            href="/login"
-            sx={{
-              borderRadius: "18px",
-              borderColor: "transparent",
-              backgroundColor: "#2980b9",
-              paddingX: "25px",
-            }}
-            disableElevation
-          >
-            Login
-          </Button>
-        )}
+              ]}
+              horizontal="left"
+              vertical="bottom"
+            >
+              {accountServices.displayProfileChip({ borderWidth: "0px" })}
+            </MenuButton>
+          ) : (
+            <Button
+              variant="contained"
+              href="/login"
+              sx={{
+                borderRadius: "18px",
+                borderColor: "transparent",
+                backgroundColor: "#2980b9",
+                paddingX: "25px",
+              }}
+              disableElevation
+            >
+              Login
+            </Button>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

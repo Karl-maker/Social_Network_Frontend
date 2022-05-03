@@ -31,6 +31,10 @@ export default class Notification extends Connection {
   }
 
   async seen() {
+    if (this._data.seen) {
+      return true;
+    }
+
     try {
       const result = await axios.put(
         `${this.base_url}/api/notification/${this.data._id}`,
