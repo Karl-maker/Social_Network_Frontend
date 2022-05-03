@@ -7,9 +7,11 @@ import { FaUserCircle } from "react-icons/fa";
 import { HiLogout, HiPencil } from "react-icons/hi";
 import { AccountContext } from "../templates/ContextProvider";
 import { useContext } from "react";
+import { useSnackbar } from "notistack";
 import { Divider } from "@mui/material";
 
 function Item({ title, icon, link, action }) {
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   return (
     <div
@@ -79,8 +81,17 @@ export default function SideNav() {
           title="Logout"
           icon={<HiLogout />}
           action={() => {
-            accountService.logout();
-            router.reload(window.location.pathname);
+            accountServices
+              .logout()
+              .then(() => {
+                router.reload(window.location.pathname);
+              })
+              .catch((error) => {
+                enqueueSnackbar("Issue Logging Out, Try Again Later", {
+                  variant: "error",
+                  anchorOrigin: { horizontal: "left", vertical: "top" },
+                });
+              });
           }}
         />
       </li>

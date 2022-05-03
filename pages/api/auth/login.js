@@ -40,12 +40,10 @@ async function login(req, res) {
         token: refresh_token,
       });
 
-      let date = new Date();
-
       res.cookie("refresh_token", refresh_token, {
         secure: false,
         httpOnly: true,
-        expire: date.setDate(date.getDate() + 30),
+        expires: new Date(Date.now() + 30 * 24 * 3600000),
         path: `/api/auth/authenticate`,
       });
 

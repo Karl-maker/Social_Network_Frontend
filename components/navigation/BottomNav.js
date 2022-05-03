@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { RiEarthFill } from "react-icons/ri";
 import { MdNotificationsNone } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
+import { AiFillSetting } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { AccountContext } from "../templates/ContextProvider";
 
@@ -17,8 +18,10 @@ export default function BottomNav() {
       setValue(1);
     } else if (router.pathname.includes("profile")) {
       setValue(0);
-    } else if (router.pathname === "/notifications") {
+    } else if (router.pathname.includes("notifications")) {
       setValue(2);
+    } else if (router.pathname.includes("settings")) {
+      setValue(3);
     } else {
       setValue(null);
     }
@@ -38,26 +41,31 @@ export default function BottomNav() {
       >
         {accountService.isLoggedIn && (
           <BottomNavigationAction
-            label="Profile"
-            icon={<FaUserCircle />}
+            icon={<FaUserCircle fontSize={25} />}
             onClick={() => {
               router.push(`/profile/${accountService.id}`);
             }}
           />
         )}
         <BottomNavigationAction
-          label="Look Around"
-          icon={<RiEarthFill />}
+          icon={<RiEarthFill fontSize={25} />}
           onClick={() => {
             router.push("/");
           }}
         />
         {accountService.isLoggedIn && (
           <BottomNavigationAction
-            label="Notification"
-            icon={<MdNotificationsNone />}
+            icon={<MdNotificationsNone fontSize={25} />}
             onClick={() => {
               router.push("/notifications");
+            }}
+          />
+        )}
+        {accountService.isLoggedIn && (
+          <BottomNavigationAction
+            icon={<AiFillSetting fontSize={25} />}
+            onClick={() => {
+              router.push("/settings");
             }}
           />
         )}

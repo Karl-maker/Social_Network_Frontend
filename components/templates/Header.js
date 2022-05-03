@@ -16,8 +16,10 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import MenuButton from "./MenuButton";
+import { useSnackbar } from "notistack";
 
 export default function Header({}) {
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const accountServices = useContext(AccountContext);
   const [username, setUsername] = useState("");
@@ -51,8 +53,17 @@ export default function Header({}) {
                   icon: <HiLogout />,
                   label: "Logout",
                   activity: () => {
-                    accountServices.logout();
-                    router.reload(window.location.pathname);
+                    accountServices
+                      .logout()
+                      .then(() => {
+                        router.reload(window.location.pathname);
+                      })
+                      .catch((error) => {
+                        enqueueSnackbar("Issue Logging Out, Try Again Later", {
+                          variant: "error",
+                          anchorOrigin: { horizontal: "left", vertical: "top" },
+                        });
+                      });
                   },
                 },
               ]}

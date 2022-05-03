@@ -32,7 +32,12 @@ export default async function authenticate(req, res) {
       res.status(500).json({ ...err });
     }
   } else if (req.method === "DELETE") {
-    await dbConnect();
+    try {
+      await dbConnect();
+    } catch (err) {
+      res.status(500).json({ ...err });
+    }
+
     token
       .deleteRefreshToken(parseCookies(req).refresh_token)
       .then(() => {

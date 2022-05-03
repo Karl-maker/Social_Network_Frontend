@@ -329,19 +329,19 @@ export default class User extends Connection {
         "Content-type": "API-Key",
       },
     })
-      .then((response) => {
+      .then(async (response) => {
         // Check status code
 
-        if (response.status === 200) {
-          this._isLoggedIn = false;
-          return response.json();
+        if (!response.ok) {
+          throw await response.json();
         }
 
-        throw new Error({
-          message: response.json().message || "Issue with authentication",
-        });
+        this._isLoggedIn = false;
+        return response;
       })
-      .catch((error) => {});
+      .catch((error) => {
+        throw error;
+      });
   }
 
   // JSX
