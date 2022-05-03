@@ -13,7 +13,7 @@ export async function getStaticProps(context) {
 export default function Notifications() {
   return (
     <div className="row">
-      <div className="col-12" style={{ paddingBottom: "150px" }}>
+      <div className="col-12" style={{ paddingBottom: "180px" }}>
         <NotificationsDisplayWidget />
       </div>
     </div>
