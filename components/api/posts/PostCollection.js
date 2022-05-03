@@ -135,9 +135,23 @@ export default class PostCollection extends Connect {
           );
         }
 
-        this._total = result[0].metadata[0].total;
+        try {
+          this._total = result[0].metadata[0].total || 0;
+        } catch (err) {
+          this._total = 0;
+        }
 
-        return { meta_data: result[0].metadata, data: data_list };
+        try {
+          return {
+            meta_data: result[0].metadata || { total: 0 },
+            data: data_list,
+          };
+        } catch (err) {
+          return {
+            meta_data: { total: 0 },
+            data: [],
+          };
+        }
       })
       .catch((error) => {
         throw error;
