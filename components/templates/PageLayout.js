@@ -68,9 +68,10 @@ export default function PageLayout({ children }) {
           Main Body
 
           */}
-          <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
+
           {accountServices.isLoggedIn ? (
             <>
+              <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
               <div className="col-lg-2 col-sm-0 p-0 d-none d-lg-block">
                 <SideNav />
               </div>
@@ -78,12 +79,15 @@ export default function PageLayout({ children }) {
               <div className="col-lg-3 col-sm-0 d-none d-lg-block p-0 m-0">
                 <NotificationSideWidget />
               </div>
+              <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
             </>
           ) : (
-            <div className="col-lg-10 col-sm-12">{children}</div>
+            <>
+              <div className="col-lg-3 col-sm-0 d-none d-lg-block"></div>
+              <div className="col-lg-6 col-sm-12">{children}</div>
+              <div className="col-lg-3 col-sm-0 d-none d-lg-block"></div>
+            </>
           )}
-
-          <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
         </div>
         <div className="d-lg-none">
           <BottomNav />

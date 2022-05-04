@@ -63,11 +63,8 @@ export default function NotificationWidget({ notification }) {
           router.push(`${notification.data.link}`);
         }}
       >
-        <div className="col-10 d-flex align-items-center">
-          <p
-            style={{ color: "#718093", marginLeft: "15px" }}
-            className="p-2 m-0"
-          >
+        <div className="col-10 d-flex align-items-center ">
+          <p style={{ color: "#718093" }} className="p-1 m-0">
             <small>{notification.data.content}</small>
             <small
               style={{ fontSize: "10px", color: "#0984e3", marginLeft: "5px" }}

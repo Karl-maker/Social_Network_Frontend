@@ -1,7 +1,7 @@
 import { BottomNavigationAction, BottomNavigation, Paper } from "@mui/material";
 import { useState, useEffect, useContext } from "react";
 import { RiEarthFill } from "react-icons/ri";
-import { MdNotificationsNone } from "react-icons/md";
+import { MdNotifications } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { AiFillSetting } from "react-icons/ai";
 import { useRouter } from "next/router";
@@ -55,7 +55,7 @@ export default function BottomNav() {
         />
         {accountService.isLoggedIn && (
           <BottomNavigationAction
-            icon={<MdNotificationsNone fontSize={25} />}
+            icon={<MdNotifications fontSize={25} />}
             onClick={() => {
               router.push("/notifications");
             }}
