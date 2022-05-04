@@ -8,6 +8,10 @@ body {
   overflow: hidden;
 }
 
+*::-webkit-scrollbar {
+  display: none;
+}
+
 a,
 a:hover,
 a:focus,
@@ -19,6 +23,8 @@ a:active {
 
 * {
   box-sizing: border-box;
+  -ms-overflow-style: "none";
+  scrollbar-width: "none";
 }
 
 li {

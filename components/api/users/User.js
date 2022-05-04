@@ -79,6 +79,10 @@ export default class User extends Connection {
       );
 
       try {
+        this._id = results.data[0].user_id || id;
+      } catch (error) {}
+
+      try {
         this._username = results.data[0].user[0].username || "";
       } catch (error) {}
 

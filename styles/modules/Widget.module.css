@@ -97,6 +97,10 @@
     padding: -30px;
     margin-top: 20px;
   }
+
+  .list_with_link {
+    border-radius: 15px;
+  }
 }
 
 @media (min-width: 990px) {

@@ -60,13 +60,6 @@ export default function SideNav() {
       </li>
       <li>
         <Item
-          title="Notifications"
-          icon={<MdNotificationsNone />}
-          link="/notifications"
-        />
-      </li>
-      <li>
-        <Item
           title="Profile"
           icon={<FaUserCircle />}
           link={`/profile/${accountService.id}`}

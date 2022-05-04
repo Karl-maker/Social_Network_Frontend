@@ -9,6 +9,8 @@ import { useContext } from "react";
 import { useSnackbar } from "notistack";
 import { AiFillEye, AiFillDelete } from "react-icons/ai";
 import MenuButton from "../templates/MenuButton";
+import { useEffect } from "react";
+import User from "../api/users/User";
 
 export default function NotificationWidget({ notification }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -18,6 +20,12 @@ export default function NotificationWidget({ notification }) {
   const router = useRouter();
   const [show, setShow] = useState(true);
   const [seen, setSeen] = useState(notification.data.seen);
+  const [hasUserInfo, setHasUserInfo] = useState(false);
+  const [user, setUser] = useState(
+    new User(process.env.BACKEND_URL, null, {
+      username: notification.data.content.split(" ")[0],
+    })
+  );
 
   const onClick = () => {
     // Set to seen and go to link...
@@ -47,72 +55,142 @@ export default function NotificationWidget({ notification }) {
       });
   };
 
+  useEffect(() => {
+    if (notification.data.done_by) {
+      user
+        .fetchUserInformation(notification.data.done_by)
+        .then((result) => {
+          setUser(user);
+          setHasUserInfo(true);
+        })
+        .catch((error) => {});
+    }
+  }, []);
+
   if (!show) {
     return <></>;
   }
 
-  return (
-    <div className={widget.list_with_link}>
-      <div
-        className="p-2 m-0 row"
-        onClick={(e) => {
-          notification.seen().then((result) => {
-            setSeen(true);
-          });
-
-          router.push(`${notification.data.link}`);
-        }}
-      >
-        <div className="col-10 d-flex align-items-center ">
-          <p style={{ color: "#718093" }} className="p-1 m-0">
-            <small>{notification.data.content}</small>
-            <small
-              style={{ fontSize: "10px", color: "#0984e3", marginLeft: "5px" }}
-            >
-              {how_long_ago}
-            </small>
-          </p>
-        </div>
-
+  if (notification.data.type === "post_interaction") {
+    return (
+      <div className={widget.list_with_link}>
         <div
-          className="col-2 d-flex align-items-center p-0 text-end"
-          style={{ alignContent: "center", fontSize: "10px" }}
+          className="p-3 m-0 row"
+          onClick={(e) => {
+            notification.seen().then((result) => {
+              setSeen(true);
+            });
+
+            router.push(`${notification.data.link}`);
+          }}
         >
-          {!seen ? (
-            <GoPrimitiveDot style={{ color: "#0984e3" }} />
-          ) : (
-            <GoPrimitiveDot style={{ color: "transparent" }} />
-          )}
-          <MenuButton
-            list={[
-              {
-                icon: <AiFillEye />,
-                label: "View",
-                activity: () => {
-                  onClick();
-                },
-              },
-            ]}
-            section={[
-              {
-                icon: <AiFillDelete />,
-                label: "Delete",
-                activity: () => {
-                  handleDelete();
-                },
-              },
-            ]}
+          {
+            // Main Body
+          }
+          <div className="col-10 d-flex align-items-center ">
+            <div className="container p-0 m-0">
+              <div className="row">
+                <div className="col-12 p-0 m-0">
+                  {
+                    // Icon to show it has to do with a post?
+                  }
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12 p-0 m-0 d-flex flex-row">
+                  {hasUserInfo && (
+                    <div
+                      onClick={(e) => {
+                        router.push(`/profile/${user.id}`);
+                        if (!e) e = window.event;
+                        e.cancelBubble = true;
+                        if (e.stopPropagation) e.stopPropagation();
+                      }}
+                      className="mx-1"
+                    >
+                      {user.displayProfilePicture(35)}
+                    </div>
+                  )}
+                  <p style={{ color: "#718093" }} className="p-1 m-0">
+                    <small>
+                      <strong
+                        onClick={(e) => {
+                          router.push(`/profile/${user.id}`);
+
+                          if (!e) e = window.event;
+                          e.cancelBubble = true;
+                          if (e.stopPropagation) e.stopPropagation();
+                        }}
+                      >
+                        {user.username}
+                      </strong>
+                      {notification.data.content.slice(
+                        notification.data.content.indexOf(user.username) +
+                          user.username.length
+                      )}
+                    </small>
+                    <small
+                      className="text-muted"
+                      style={{
+                        fontSize: "10px",
+
+                        marginLeft: "5px",
+                      }}
+                    >
+                      {how_long_ago}
+                    </small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {
+            // Info and Seen
+          }
+
+          <div
+            className="col-2 d-flex align-items-center p-0 m-0 text-end"
+            style={{ alignContent: "center", fontSize: "10px" }}
           >
-            <BsThreeDotsVertical
-              style={{
-                color: "#2d3436",
-                fontSize: "12px",
-                marginLeft: "20px",
-              }}
-            />
-          </MenuButton>
+            {!seen ? (
+              <GoPrimitiveDot style={{ color: "#0984e3" }} />
+            ) : (
+              <GoPrimitiveDot style={{ color: "transparent" }} />
+            )}
+            <MenuButton
+              list={[
+                {
+                  icon: <AiFillEye />,
+                  label: "View",
+                  activity: () => {
+                    onClick();
+                  },
+                },
+              ]}
+              section={[
+                {
+                  icon: <AiFillDelete />,
+                  label: "Delete",
+                  activity: () => {
+                    handleDelete();
+                  },
+                },
+              ]}
+            >
+              <BsThreeDotsVertical
+                style={{
+                  color: "#2d3436",
+                  fontSize: "12px",
+                  marginLeft: "20px",
+                }}
+              />
+            </MenuButton>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return <></>;
 }

@@ -1,4 +1,10 @@
-import NotificationsDisplayWidget from "../../components/notification/NotificationsDisplayWidget";
+import NotificationListWidget from "../../components/notification/NotificationListWidget";
+import widget from "../../styles/modules/Widget.module.css";
+import { RiNotification3Fill } from "react-icons/ri";
+import NotificationCollection from "../../components/api/notifications/NotificationCollection";
+import { AccountContext } from "../../components/templates/ContextProvider";
+import { useEffect, useState, useContext } from "react";
+import { noDuplicateObjects } from "../../components/utils/array";
 
 export async function getStaticProps(context) {
   return {
@@ -11,10 +17,51 @@ export async function getStaticProps(context) {
 }
 
 export default function Notifications() {
+  const accountServices = useContext(AccountContext);
+  const [notifications, setNotifications] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+
+  let notification_collection = new NotificationCollection(
+    process.env.BACKEND_URL,
+    accountServices.access_token
+  );
+
+  useEffect(() => {
+    notification_collection
+      .fetchManyNotifications({ page_number: pageNumber, page_size: 10 })
+      .then(({ data }) => {
+        setNotifications(notifications.concat(data));
+      })
+      .catch((error) => {
+        // Capture Error
+      });
+  }, [pageNumber]);
+
   return (
-    <div className="row">
-      <div className="col-12" style={{ paddingBottom: "180px" }}>
-        <NotificationsDisplayWidget />
+    <div className="container p-0 m-0" style={{ marginBottom: "200px" }}>
+      <div
+        style={{
+          padding: "0px",
+          margin: "0px",
+          padding: "0px",
+          height: "90vh",
+          overflowY: "auto",
+          overflowX: "hidden",
+        }}
+      >
+        <div className="row">
+          <div className="col-12 text-center">
+            <RiNotification3Fill className="m-3 mb-3 text-muted" />{" "}
+          </div>
+        </div>
+        <div className="row" style={{}}>
+          <div className="col-12 p-0" style={{ paddingBottom: "180px" }}>
+            <NotificationListWidget
+              notifications={notifications}
+              ul="p-0 m-0"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
