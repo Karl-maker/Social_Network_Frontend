@@ -73,7 +73,7 @@ export default function NotificationWidget({ notification }) {
 
   if (notification.data.type === "post_interaction") {
     return (
-      <div className={widget.list_with_link}>
+      <div className={widget.list_with_link} style={{ width: "100%" }}>
         <div
           className="p-3 m-0 row"
           onClick={(e) => {
@@ -87,7 +87,7 @@ export default function NotificationWidget({ notification }) {
           {
             // Main Body
           }
-          <div className="col-10 d-flex align-items-center ">
+          <div className="col-10 d-flex align-items-center px-4 py-2">
             <div className="container p-0 m-0">
               <div className="row">
                 <div className="col-12 p-0 m-0">

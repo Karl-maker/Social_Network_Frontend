@@ -29,7 +29,9 @@ export default function PageLayout({ children }) {
           </div>
           <div className="col-lg-8 col-sm-12 mt-5 mb-5">
             {/*
-             * Here we will force the user to create a username
+
+             Here we will force the user to create a username
+
              */}
             <CreateUsername />
           </div>
@@ -68,23 +70,19 @@ export default function PageLayout({ children }) {
           Main Body
 
           */}
-
           {accountServices.isLoggedIn ? (
             <>
               <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
               <div className="col-lg-2 col-sm-0 p-0 d-none d-lg-block">
                 <SideNav />
               </div>
-              <div className="col-lg-5 col-sm-12">{children}</div>
-              <div className="col-lg-3 col-sm-0 d-none d-lg-block p-0 m-0">
-                <NotificationSideWidget />
-              </div>
-              <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
+              <div className="col-lg-7 col-sm-12 p-0 m-0">{children}</div>
+              <div className="col-lg-2 col-sm-0 d-none d-lg-block"></div>
             </>
           ) : (
             <>
               <div className="col-lg-3 col-sm-0 d-none d-lg-block"></div>
-              <div className="col-lg-6 col-sm-12">{children}</div>
+              <div className="col-lg-6 col-sm-12 p-0 m-0">{children}</div>
               <div className="col-lg-3 col-sm-0 d-none d-lg-block"></div>
             </>
           )}

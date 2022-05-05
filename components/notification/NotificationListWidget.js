@@ -20,7 +20,14 @@ export default function NotificationListWidget({
   ));
 
   return (
-    <ul style={{ maxHeight: height || "auto" }} className={ul || style.list}>
+    <ul
+      style={{
+        maxHeight: height || "auto",
+        overflowY: "auto",
+        overflowX: "hidden",
+      }}
+      className={ul || style.list}
+    >
       {listNotifications}
     </ul>
   );

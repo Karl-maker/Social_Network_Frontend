@@ -159,7 +159,7 @@ export default function ProfilePage() {
   return (
     <div className={widget.list}>
       <div className="container px-0">
-        <div className="row ">
+        <div className="row px-2">
           {
             // Back Button and More info Button
           }

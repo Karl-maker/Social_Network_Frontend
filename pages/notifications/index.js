@@ -38,31 +38,21 @@ export default function Notifications() {
   }, [pageNumber]);
 
   return (
-    <div className="container p-0 m-0" style={{ marginBottom: "200px" }}>
-      <div
-        style={{
-          padding: "0px",
-          margin: "0px",
-          padding: "0px",
-          height: "90vh",
-          overflowY: "auto",
-          overflowX: "hidden",
-        }}
-      >
-        <div className="row">
-          <div className="col-12 text-center">
-            <RiNotification3Fill className="m-3 mb-3 text-muted" />{" "}
-          </div>
-        </div>
-        <div className="row" style={{}}>
-          <div className="col-12 p-0" style={{ paddingBottom: "180px" }}>
-            <NotificationListWidget
-              notifications={notifications}
-              ul="p-0 m-0"
-            />
-          </div>
+    <>
+      <div className="row">
+        <div className="col-12 text-center">
+          <RiNotification3Fill className="m-3 mb-3 text-muted" />{" "}
         </div>
       </div>
-    </div>
+      <div className="row" style={{}}>
+        <div className="col-12 p-0" style={{ paddingBottom: "180px" }}>
+          <NotificationListWidget
+            notifications={notifications}
+            ul="p-0 m-0"
+            height="90vh"
+          />
+        </div>
+      </div>
+    </>
   );
 }
