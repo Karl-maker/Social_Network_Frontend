@@ -55,7 +55,7 @@ export default function NotificationsDisplayWidget() {
           {notifications.length > 0 && (
             <NotificationListWidget
               notifications={notifications}
-              height="65vh"
+              height="60vh"
             />
           )}
         </div>

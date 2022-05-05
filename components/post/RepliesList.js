@@ -30,7 +30,7 @@ export default function RepliesList({ post_id }) {
         page_size: PAGE_SIZE,
       })
       .then(({ data }) => {
-        setReplies(noDuplicateObjects(replies.concat(data), "_id"));
+        setReplies(noDuplicateObjects(data, "_id"));
       })
       .catch((error) => {
         // Capture Error
@@ -39,7 +39,7 @@ export default function RepliesList({ post_id }) {
       });
 
     setLoading(false);
-  }, [pageNumber]);
+  }, [pageNumber, post_id]);
 
   if (loading) {
     return (
