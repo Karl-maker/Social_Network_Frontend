@@ -204,7 +204,7 @@ export default function ProfilePage() {
           {
             // User's Bio
           }
-          <div className="col-12 text-center text-muted">
+          <div className="col-12 text-center text-muted px-4">
             {profile.bio !== null ? (
               profile.bio
             ) : (
@@ -255,7 +255,7 @@ export default function ProfilePage() {
               {
                 // Show loading
               }
-              <div className="container-flush p-4 text-center">
+              <div className="container-flush p-5 text-center">
                 <PostSkeleton />
                 <PostSkeleton />
                 <PostSkeleton />
