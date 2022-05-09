@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import widget from "../../styles/modules/Widget.module.css";
 import { RiEarthFill } from "react-icons/ri";
-import { MdNotificationsNone } from "react-icons/md";
+import { MdNotificationsNone, MdNotifications } from "react-icons/md";
 import { AiFillSetting } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
 import { HiLogout, HiPencil } from "react-icons/hi";
@@ -11,7 +11,6 @@ import { useSnackbar } from "notistack";
 import { Divider } from "@mui/material";
 
 function Item({ title, icon, link, action }) {
-  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   return (
     <div
@@ -45,7 +44,9 @@ function Item({ title, icon, link, action }) {
 }
 
 export default function SideNav() {
+  const { enqueueSnackbar } = useSnackbar();
   const accountService = useContext(AccountContext);
+  const router = useRouter();
   return (
     <ul
       style={{
@@ -53,10 +54,17 @@ export default function SideNav() {
       }}
     >
       <li>
+        <Item title="Post" icon={<HiPencil />} link="/post" />
+      </li>
+      <li>
         <Item title="Look Around" icon={<RiEarthFill />} link={"/"} />
       </li>
       <li>
-        <Item title="Post" icon={<HiPencil />} link="/post" />
+        <Item
+          title="Notification"
+          icon={<MdNotifications />}
+          link={`/notifications`}
+        />
       </li>
       <li>
         <Item
@@ -74,7 +82,7 @@ export default function SideNav() {
           title="Logout"
           icon={<HiLogout />}
           action={() => {
-            accountServices
+            accountService
               .logout()
               .then(() => {
                 router.push("/");

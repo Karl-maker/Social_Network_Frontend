@@ -411,20 +411,23 @@ export default function Home() {
             // Show posts
           }
           {posts.length === 0 && !isLoading && (
-            <div className={widget.secondary}>
-              <div className="container-flush p-4 text-center">
-                <p style={{ cursor: "pointer", fontSize: "15px" }}>
-                  <strong>No Posts Found Here</strong>
-                </p>
-                <p style={{ cursor: "pointer", fontSize: "11px" }}>
-                  {isUsingCurrentPosition ? (
-                    <>{status}</>
-                  ) : (
-                    <>
-                      Someone is yet to populate here with thoughts and messages
-                    </>
-                  )}
-                </p>
+            <div className="m-2">
+              <div className={widget.secondary}>
+                <div className="container-flush p-4 text-center">
+                  <p style={{ cursor: "pointer", fontSize: "15px" }}>
+                    <strong>No Posts Found Here</strong>
+                  </p>
+                  <p style={{ cursor: "pointer", fontSize: "11px" }}>
+                    {isUsingCurrentPosition ? (
+                      <>{status}</>
+                    ) : (
+                      <>
+                        Someone is yet to populate here with thoughts and
+                        messages
+                      </>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
           )}

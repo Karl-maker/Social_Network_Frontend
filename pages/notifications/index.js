@@ -1,6 +1,6 @@
 import NotificationListWidget from "../../components/notification/NotificationListWidget";
 import widget from "../../styles/modules/Widget.module.css";
-import { RiNotification3Fill } from "react-icons/ri";
+import { MdNotifications } from "react-icons/md";
 import NotificationCollection from "../../components/api/notifications/NotificationCollection";
 import { AccountContext } from "../../components/templates/ContextProvider";
 import { useEffect, useState, useContext } from "react";
@@ -38,10 +38,10 @@ export default function Notifications() {
   }, [pageNumber]);
 
   return (
-    <>
+    <div className={widget.primary}>
       <div className="row">
         <div className="col-12 text-center">
-          <RiNotification3Fill className="m-3 mb-3 text-muted" />{" "}
+          <MdNotifications className="m-3 mb-3 text-muted" />
         </div>
       </div>
       <div className="row" style={{}}>
@@ -49,10 +49,11 @@ export default function Notifications() {
           <NotificationListWidget
             notifications={notifications}
             ul="p-0 m-0"
+            li="mx-lg-3"
             height="90vh"
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }

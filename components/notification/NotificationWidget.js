@@ -73,9 +73,9 @@ export default function NotificationWidget({ notification }) {
 
   if (notification.data.type === "post_interaction") {
     return (
-      <div className={widget.list_with_link} style={{ width: "100%" }}>
+      <div className={widget.list_with_link}>
         <div
-          className="p-3 m-0 row"
+          className="p-2 m-0 row"
           onClick={(e) => {
             notification.seen().then((result) => {
               setSeen(true);

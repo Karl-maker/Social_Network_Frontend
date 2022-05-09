@@ -99,7 +99,8 @@
   }
 
   .list_with_link {
-    border-radius: 15px;
+    border-radius: 0px;
+    margin: 0px;
   }
 }
 

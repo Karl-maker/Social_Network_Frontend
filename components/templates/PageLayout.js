@@ -76,8 +76,9 @@ export default function PageLayout({ children }) {
               <div className="col-lg-2 col-sm-0 p-0 d-none d-lg-block">
                 <SideNav />
               </div>
+              <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
               <div className="col-lg-7 col-sm-12 p-0 m-0">{children}</div>
-              <div className="col-lg-2 col-sm-0 d-none d-lg-block"></div>
+              <div className="col-lg-1 col-sm-0 d-none d-lg-block"></div>
             </>
           ) : (
             <>
