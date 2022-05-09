@@ -74,13 +74,12 @@ export default function Header({}) {
             </MenuButton>
           ) : (
             <Button
-              variant="contained"
+              variant="outlined"
               href="/login"
               sx={{
-                borderRadius: "18px",
-                borderColor: "transparent",
-                backgroundColor: "#2980b9",
+                borderRadius: "15px",
                 paddingX: "25px",
+                border: "1px solid",
               }}
               disableElevation
             >
