@@ -57,7 +57,7 @@ export default function Home() {
   const [post] = useState(post_collection);
   const [status, setStatus] = useState(<></>);
   const [posts, setPosts] = useState([]); // List to feed into post list widget
-  const [isUsingCurrentPosition, setIsUsingCurrentPosition] = useState(true);
+  const [isUsingCurrentPosition, setIsUsingCurrentPosition] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Loading state to load page with skeleton
   const [permissionButton, setPermissionButton] = useState(false); // If given permission to use ask for use of geolocation a button would appear on true
 
