@@ -79,7 +79,7 @@ export default class User extends Connection {
       });
 
       try {
-        this._id = results.data[0].user_id || id;
+        this._id = results.data[0].user_id || "";
       } catch (error) {}
 
       try {
