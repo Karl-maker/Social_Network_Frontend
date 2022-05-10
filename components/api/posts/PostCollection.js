@@ -1,7 +1,7 @@
 import Connect from "../Connection";
 import Post from "./Post";
 import axios from "axios";
-import Image from "next/image";
+import Flags from "country-flag-icons/react/3x2";
 
 // Icons
 
@@ -25,53 +25,26 @@ export default class PostCollection extends Connect {
         longitude: null,
       },
       {
-        icon: (
-          <Image
-            height={15}
-            width={15}
-            alt="Trinidad and Tobago"
-            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TT.svg"
-          />
-        ),
+        icon: <Flags.TT title="Trinidad and Tobago" height={15} width={15} />,
         location: "Port of Spain, Trinidad and Tobago",
         latitude: 10.650488900252434,
         longitude: -61.51599120383046,
       },
       {
-        icon: (
-          <Image
-            height={15}
-            width={15}
-            alt="United States"
-            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg"
-          />
-        ),
+        icon: <Flags.US title="United States" height={15} width={15} />,
+
         location: "New York City, United States of America",
         latitude: 40.73061,
         longitude: -73.935242,
       },
       {
-        icon: (
-          <Image
-            height={15}
-            width={15}
-            alt="Trinidad and Tobago"
-            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
-          />
-        ),
+        icon: <Flags.GB title="Great Britain" height={15} width={15} />,
         location: "Great Britain, United Kingdom",
         latitude: 53.826,
         longitude: -2.422,
       },
       {
-        icon: (
-          <Image
-            height={15}
-            width={15}
-            alt="Saint Kitts and Nevis"
-            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KN.svg"
-          />
-        ),
+        icon: <Flags.KN title="Saint Kitts and Nevis" height={15} width={15} />,
         location: "Basseterre, Saint Kitts and Nevis",
         latitude: 17.3026,
         longitude: -62.7177,
