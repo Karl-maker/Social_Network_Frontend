@@ -1,4 +1,5 @@
 import { CircularProgress, Backdrop } from "@mui/material";
+import Image from "next/image";
 
 /*
 
@@ -13,7 +14,11 @@ export default function Loading({ children, loading }) {
         sx={{ color: "#ffff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={true}
       >
-        <CircularProgress color="info" />
+        <Image
+          src="/dripplie-banner-center(blue).svg"
+          height={100}
+          width={100}
+        />
       </Backdrop>
     );
   }
