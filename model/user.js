@@ -27,7 +27,6 @@ const UserSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      unique: true,
       minlength: [
         MIN_USERNAME,
         `Username must be longer than ${MIN_USERNAME} characters`,
