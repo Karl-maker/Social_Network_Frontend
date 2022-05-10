@@ -72,6 +72,63 @@ export default class User extends Connection {
     this._is_verified = is_verified;
   }
 
+  async fetchUserData() {
+    try {
+      const results = await axios.get(`${this.base_url}/api/profile/`, {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      });
+
+      try {
+        this._id = results.data[0].user_id || id;
+      } catch (error) {}
+
+      try {
+        this._username = results.data[0].user[0].username || "";
+      } catch (error) {}
+
+      try {
+        this._email = results.data[0].user[0].email || "";
+      } catch (error) {}
+
+      try {
+        this._is_verified = results.data[0].is_verified || false;
+      } catch (error) {}
+
+      try {
+        this._bio = results.data[0].bio || "";
+      } catch (error) {
+        this._bio = "";
+      }
+
+      try {
+        this._image = results.data[0].image;
+      } catch (error) {}
+
+      return results.data[0];
+    } catch (err) {
+      return;
+    }
+  }
+
+  async fetchCurrentUser() {
+    try {
+      const result = await axios.get(`${this.base_url}/api/user`, {
+        headers: { Authorization: `Bearer ${this.access_token}` },
+      });
+
+      if (result.status === 200) {
+        this._id = result.data._id;
+        this._email = result.data.email;
+        this._username = result.data.username || null;
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      return false;
+    }
+  }
+
   async fetchUserInformation(id) {
     try {
       const results = await axios.get(
@@ -84,6 +141,10 @@ export default class User extends Connection {
 
       try {
         this._username = results.data[0].user[0].username || "";
+      } catch (error) {}
+
+      try {
+        this._email = results.data[0].user[0].email || "";
       } catch (error) {}
 
       try {
@@ -149,8 +210,7 @@ export default class User extends Connection {
         if (response.access_token) {
           this._access_token = response.access_token;
 
-          await this.fetchCurrentUser();
-          await this.fetchUserInformation(this._id);
+          await this.fetchUserData();
 
           this._isLoggedIn = true;
         }
@@ -184,8 +244,7 @@ export default class User extends Connection {
         // get access_token and place in code
 
         this.access_token = response.access_token;
-        await this.fetchCurrentUser();
-        await this.fetchUserInformation(this._id);
+        await this.fetchUserData();
 
         this._isLoggedIn = true;
         return true;
