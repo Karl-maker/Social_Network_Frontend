@@ -12,13 +12,6 @@ export default class PostCollection extends Connect {
   constructor(base_url, access_token, { coordinates, max_distance }) {
     super(base_url, access_token);
 
-    this.coordinates = coordinates || { latitude: null, longitude: null };
-    this.max_distance = max_distance || 50000;
-    this.page_number = 0;
-    this.page_size = 10;
-    this.location = "";
-    this.total = 0;
-
     this.LOCATIONS = [
       {
         location: "Port of Spain, Trinidad and Tobago",
@@ -36,6 +29,16 @@ export default class PostCollection extends Connect {
       //   longitude: -2.422,
       // },
     ];
+
+    this.coordinates = coordinates || {
+      latitude: this.LOCATIONS[0].latitude,
+      longitude: this.LOCATIONS[0].longitude,
+    };
+    this.max_distance = max_distance || 50000;
+    this.page_number = 0;
+    this.page_size = 10;
+    this.location = this.LOCATIONS[0].location;
+    this.total = 0;
   }
 
   // Getters and Setters
