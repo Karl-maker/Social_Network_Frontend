@@ -13,7 +13,7 @@ export default class PostCollection extends Connect {
     super(base_url, access_token);
 
     this.coordinates = coordinates || { latitude: null, longitude: null };
-    this.max_distance = max_distance || 5000;
+    this.max_distance = max_distance || 10000;
     this.page_number = 0;
     this.page_size = 10;
     this.location = "";
