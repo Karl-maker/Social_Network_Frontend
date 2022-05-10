@@ -135,11 +135,9 @@ export default function Home() {
             if (result.state == "granted") {
               setStatus(
                 <>
-                  Be the first to place a thought here! Or click <RiEarthFill />{" "}
-                  to pick area to look around
-                  <Link href="/post">
-                    <strong>Create a Post</strong>
-                  </Link>
+                  Be the first to place a thought here, or press{" "}
+                  <RiEarthFill size={15} className="mb-1" /> to pick area to
+                  look around
                 </>
               );
               setPermissionButton(false);
