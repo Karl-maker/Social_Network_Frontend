@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ["purecatamphetamine.github.io"],
+  },
   reactStrictMode: true,
   env: {
     BACKEND_URL: process.env.BACKEND_URL,

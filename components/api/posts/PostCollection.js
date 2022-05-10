@@ -1,6 +1,11 @@
 import Connect from "../Connection";
 import Post from "./Post";
 import axios from "axios";
+import Image from "next/image";
+
+// Icons
+
+import { MdLocationOn } from "react-icons/md";
 
 /*
 
@@ -14,30 +19,73 @@ export default class PostCollection extends Connect {
 
     this.LOCATIONS = [
       {
+        icon: <MdLocationOn color="blue" />,
+        location: "Current Location",
+        latitude: null,
+        longitude: null,
+      },
+      {
+        icon: (
+          <Image
+            height={15}
+            width={15}
+            alt="Trinidad and Tobago"
+            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TT.svg"
+          />
+        ),
         location: "Port of Spain, Trinidad and Tobago",
         latitude: 10.650488900252434,
         longitude: -61.51599120383046,
       },
-      // {
-      //   location: "New York City, United States of America",
-      //   latitude: 40.73061,
-      //   longitude: -73.935242,
-      // },
-      // {
-      //   location: "Great Britain, United Kingdom",
-      //   latitude: 53.826,
-      //   longitude: -2.422,
-      // },
+      {
+        icon: (
+          <Image
+            height={15}
+            width={15}
+            alt="United States"
+            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg"
+          />
+        ),
+        location: "New York City, United States of America",
+        latitude: 40.73061,
+        longitude: -73.935242,
+      },
+      {
+        icon: (
+          <Image
+            height={15}
+            width={15}
+            alt="Trinidad and Tobago"
+            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
+          />
+        ),
+        location: "Great Britain, United Kingdom",
+        latitude: 53.826,
+        longitude: -2.422,
+      },
+      {
+        icon: (
+          <Image
+            height={15}
+            width={15}
+            alt="Saint Kitts and Nevis"
+            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KN.svg"
+          />
+        ),
+        location: "Basseterre, Saint Kitts and Nevis",
+        latitude: 17.3026,
+        longitude: -62.7177,
+      },
     ];
 
     this.coordinates = coordinates || {
-      latitude: this.LOCATIONS[0].latitude,
-      longitude: this.LOCATIONS[0].longitude,
+      latitude: null,
+      longitude: null,
     };
-    this.max_distance = max_distance || 50000;
+    this.max_distance = max_distance || 10000;
     this.page_number = 0;
     this.page_size = 10;
-    this.location = this.LOCATIONS[0].location;
+    this.location = null;
     this.total = 0;
   }
 
@@ -96,6 +144,17 @@ export default class PostCollection extends Connect {
   locationRandomizer() {
     const { location, latitude, longitude } =
       this.LOCATIONS[Math.floor(Math.random() * this.LOCATIONS.length)];
+
+    this._coordinates = {
+      latitude: latitude,
+      longitude: longitude,
+    };
+
+    this._location = location;
+  }
+
+  setCurrentLocation(index) {
+    const { location, latitude, longitude } = this.LOCATIONS[index];
 
     this._coordinates = {
       latitude: latitude,

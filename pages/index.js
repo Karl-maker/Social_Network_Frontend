@@ -21,6 +21,7 @@ import DistanceSlider from "../components/post/DistanceSlider";
 import widget from "../styles/modules/Widget.module.css";
 import { MetersAndKilometers } from "../components/utils/distance";
 import VisibilitySensor from "react-visibility-sensor";
+import MenuButton from "../components/templates/MenuButton";
 
 /*
  * Page Title and Guard Status
@@ -55,9 +56,10 @@ export default function Home() {
   // useState hooks
   const [buttonLoad, setButtonLoad] = useState(false);
   const [post] = useState(post_collection);
+  const [triggerRefresh, setTriggerRefresh] = useState(false);
   const [status, setStatus] = useState(<></>);
   const [posts, setPosts] = useState([]); // List to feed into post list widget
-  const [isUsingCurrentPosition, setIsUsingCurrentPosition] = useState(false);
+  const [isUsingCurrentPosition, setIsUsingCurrentPosition] = useState(true);
   const [isLoading, setIsLoading] = useState(true); // Loading state to load page with skeleton
   const [permissionButton, setPermissionButton] = useState(false); // If given permission to use ask for use of geolocation a button would appear on true
 
@@ -133,7 +135,8 @@ export default function Home() {
             if (result.state == "granted") {
               setStatus(
                 <>
-                  Be the first to place a thought here!{" "}
+                  Be the first to place a thought here! Or click <RiEarthFill />{" "}
+                  to pick area to look around
                   <Link href="/post">
                     <strong>Create a Post</strong>
                   </Link>
@@ -319,7 +322,7 @@ export default function Home() {
         }
       );
     }
-  }, [isUsingCurrentPosition, post.page_number]);
+  }, [triggerRefresh, post.page_number]);
 
   return (
     <div className={widget.list}>
@@ -342,27 +345,38 @@ export default function Home() {
             <Tooltip
               title={isUsingCurrentPosition ? "Randomize" : "Current Position"}
             >
-              <IconButton
-                aria-label="globe"
-                sx={{ color: isUsingCurrentPosition ? "grey" : "#2980b9" }}
-                onClick={() => {
-                  /*
+              <MenuButton
+                list={post_collection.LOCATIONS.map((location, index) => {
+                  return {
+                    label: location.location,
+                    icon: location.icon || "",
+                    activity: () => {
+                      setIsLoading(true);
+                      setPosts([]);
 
-                  Clear viewing area and set if viewer should use current position or not
+                      if (
+                        location.latitude === null ||
+                        location.longitude === null
+                      ) {
+                        setIsUsingCurrentPosition(true);
+                      } else {
+                        setIsUsingCurrentPosition(false);
+                      }
 
-                  */
-                  setIsLoading(true);
-                  setPosts([]);
-
-                  if (isUsingCurrentPosition) {
-                    post.locationRandomizer();
-                  }
-                  post.page_number = 0;
-                  setIsUsingCurrentPosition(!isUsingCurrentPosition);
-                }}
+                      post.setCurrentLocation(index);
+                      post.page_number = 0;
+                      setTriggerRefresh(!triggerRefresh);
+                    },
+                  };
+                })}
               >
-                <RiEarthFill />
-              </IconButton>
+                <IconButton
+                  aria-label="globe"
+                  sx={{ color: isUsingCurrentPosition ? "grey" : "#2980b9" }}
+                >
+                  <RiEarthFill />
+                </IconButton>{" "}
+              </MenuButton>
             </Tooltip>
           }
         />
