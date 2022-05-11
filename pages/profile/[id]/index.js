@@ -3,11 +3,13 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import User from "../../../components/api/users/User";
 import PostCollection from "../../../components/api/posts/PostCollection";
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
   CircularProgress,
   IconButton,
   Skeleton,
+  TextField,
   TextareaAutosize,
 } from "@mui/material";
 import { MdKeyboardBackspace } from "react-icons/md";
@@ -19,7 +21,8 @@ import PostListWidget from "../../../components/post/PostListWidget";
 import PostSkeleton from "../../../components/post/PostSkeleton";
 import VisibilitySensor from "react-visibility-sensor";
 import { noDuplicateObjects } from "../../../components/utils/array";
-import { useSnackbar } from "notistack";
+import DialogButton from "../../../components/templates/DialogButton";
+import EditProfile from "../../../components/profile/EditProfile";
 
 export async function getStaticProps(context) {
   return {
@@ -42,12 +45,12 @@ export async function getStaticPaths() {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
   const accountServices = useContext(AccountContext);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [buttonLoad, setButtonLoad] = useState(false);
   const [prompt, setPrompt] = useState("");
+  const [editProfile, setEditProfile] = useState(false);
   const [postCollection] = useState(
     new PostCollection(
       process.env.BACKEND_URL || "",
@@ -221,21 +224,23 @@ export default function ProfilePage() {
               // If current profile belong to user show edit profile button
             }
             <div className="col-12 text-center text-muted ">
-              <Button
-                variant="outlined"
-                sx={{
-                  borderRadius: "25px",
-                }}
-                onClick={() => {
-                  // Edit action
-                  enqueueSnackbar("Cannot Edit Profile Yet", {
-                    variant: "info",
-                    anchorOrigin: { horizontal: "left", vertical: "top" },
-                  });
-                }}
+              <EditProfile
+                open={editProfile}
+                setOpen={setEditProfile}
+                profile={profile}
               >
-                Edit Profile
-              </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "25px",
+                  }}
+                  onClick={() => {
+                    setEditProfile(true);
+                  }}
+                >
+                  Edit Profile
+                </Button>
+              </EditProfile>
             </div>
           </div>
         )}

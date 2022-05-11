@@ -72,6 +72,34 @@ export default class User extends Connection {
     this._is_verified = is_verified;
   }
 
+  async updateProfile({ bio }, { access_token }) {
+    return fetch(`${this.base_url}/api/profile`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: `Bearer ${access_token || this.access_token}`,
+      },
+      body: JSON.stringify({ bio: bio }),
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw await response.json();
+        }
+        return response;
+      })
+      .then((response) => response.json())
+      .then((response) => {
+        this._bio = response.bio;
+
+        return response;
+      })
+      .catch((error) => {
+        console.log(response);
+        throw error;
+      });
+  }
+
   async fetchUserData() {
     try {
       const results = await axios.get(`${this.base_url}/api/profile/`, {

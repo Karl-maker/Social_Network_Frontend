@@ -20,6 +20,7 @@ export default function DialogButton({
   actions,
   setOpen,
   open,
+  element,
 }) {
   const handleClickOpen = () => {
     setOpen(true);
@@ -40,7 +41,7 @@ export default function DialogButton({
       >
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{content}</DialogContentText>
+          {element ? element : <DialogContentText>{content}</DialogContentText>}
         </DialogContent>
         <DialogActions>{actions}</DialogActions>
       </Dialog>
