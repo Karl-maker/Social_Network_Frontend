@@ -137,7 +137,7 @@ export default class PostCollection extends Connect {
     this._location = location;
   }
 
-  async fetchUserPosts(user_id, { access_token }) {
+  async fetchUserPosts(user_id, {}) {
     return fetch(
       `${this.base_url}/api/posts/${user_id}?page_size=${this.page_size}&page_number=${this.page_number}`,
       {
@@ -146,7 +146,7 @@ export default class PostCollection extends Connect {
           Accept: "*/*",
           "Access-Control-Allow-Origin": "*",
           "Content-type": "application/json",
-          Authorization: `Bearer ${access_token || this.access_token}`,
+          Authorization: `Bearer ${this._access_token}`,
         },
       }
     )

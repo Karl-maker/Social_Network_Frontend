@@ -121,9 +121,7 @@ export default function ProfilePage() {
 
     if (accountServices.isLoggedIn) {
       postCollection
-        .fetchUserPosts(router.query.id, {
-          access_token: accountServices.access_token,
-        })
+        .fetchUserPosts(router.query.id, {})
         .then(async ({ data, meta_data }) => {
           setPosts(data);
           setLoading(false);
@@ -142,6 +140,9 @@ export default function ProfilePage() {
       setPrompt(
         <Button
           variant="outlined"
+          sx={{
+            borderRadius: "25px",
+          }}
           onClick={() => {
             router.push({
               pathname: "/login",
@@ -210,8 +211,6 @@ export default function ProfilePage() {
             ) : (
               <>
                 <Skeleton animation="wave" />
-                <Skeleton animation="wave" />
-                <Skeleton animation="wave" />
               </>
             )}
           </div>
@@ -223,6 +222,10 @@ export default function ProfilePage() {
             }
             <div className="col-12 text-center text-muted ">
               <Button
+                variant="outlined"
+                sx={{
+                  borderRadius: "25px",
+                }}
                 onClick={() => {
                   // Edit action
                   enqueueSnackbar("Cannot Edit Profile Yet", {
