@@ -1,5 +1,5 @@
 import { AccountContext } from "../components/templates/ContextProvider";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
@@ -58,6 +58,7 @@ export default function Login() {
             src="/dripplie-banner-center(blue).svg"
             height={110}
             width={110}
+            alt="Dripplie-Banner"
           />
         </div>
         <div className="mt-3">

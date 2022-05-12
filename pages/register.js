@@ -100,6 +100,7 @@ export default function Registration() {
             src="/dripplie-banner-center(blue).svg"
             height={110}
             width={110}
+            alt="Dripplie-Banner"
           />
         </div>
         <div className="mt-3">

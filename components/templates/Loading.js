@@ -14,7 +14,12 @@ export default function Loading({ children, loading }) {
         sx={{ color: "#ffff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={true}
       >
-        <Image src="/logo(blue).svg" height={100} width={100} />
+        <Image
+          src="/logo(blue).svg"
+          height={100}
+          width={100}
+          alt="Dripplie-Logo"
+        />
       </Backdrop>
     );
   }

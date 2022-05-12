@@ -3,7 +3,7 @@ import widget from "../../styles/modules/Widget.module.css";
 import { MdNotifications } from "react-icons/md";
 import NotificationCollection from "../../components/api/notifications/NotificationCollection";
 import { AccountContext } from "../../components/templates/ContextProvider";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import { noDuplicateObjects } from "../../components/utils/array";
 
 export async function getStaticProps(context) {
@@ -21,21 +21,25 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
 
-  let notification_collection = new NotificationCollection(
-    process.env.BACKEND_URL,
-    accountServices.access_token
+  const notification_collection = useMemo(
+    () =>
+      new NotificationCollection(
+        process.env.BACKEND_URL,
+        accountServices.access_token
+      ),
+    [accountServices.access_token]
   );
 
   useEffect(() => {
     notification_collection
       .fetchManyNotifications({ page_number: pageNumber, page_size: 10 })
       .then(({ data }) => {
-        setNotifications(notifications.concat(data));
+        setNotifications((notifications) => notifications.concat(data));
       })
       .catch((error) => {
         // Capture Error
       });
-  }, [pageNumber]);
+  }, [pageNumber, notification_collection]);
 
   return (
     <div className={widget.primary}>

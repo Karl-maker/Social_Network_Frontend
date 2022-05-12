@@ -66,7 +66,7 @@ export default function ReplyWidget({ post }) {
         {post.data.user_id === accountServices.id && (
           <MenuItem onClick={handleDelete}>Delete</MenuItem>
         )}
-        <Link href={`/post/${post.data._id}`}>
+        <Link href={`/post/${post.data._id}`} passHref>
           <MenuItem>View</MenuItem>
         </Link>
       </Menu>

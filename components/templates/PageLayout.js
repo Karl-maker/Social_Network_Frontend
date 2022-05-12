@@ -1,7 +1,6 @@
 import Header from "./Header";
 import { AccountContext } from "../../components/templates/ContextProvider";
 import { useEffect, useState, useContext } from "react";
-import NotificationSideWidget from "../notification/NotificationsDisplayWidget";
 import ProfileChipWidget from "../profile/ProfileChipWidget";
 import SideNav from "../navigation/SideNav";
 import BottomNav from "../navigation/BottomNav";
@@ -20,6 +19,7 @@ export default function PageLayout({ children }) {
               src="/dripplie-banner-center(blue).svg"
               height={90}
               width={90}
+              alt="Dripplie-Banner"
             />
           </div>
         </div>

@@ -76,7 +76,7 @@ export default function CreatePostPage() {
     } catch (err) {
       setShowPostButton(true);
     }
-  }, []);
+  }, [enqueueSnackbar, router.query.share, router.query.reply]);
 
   const handleSubmit = (e) => {
     let coordinates = { latitude: null, longitude: null };

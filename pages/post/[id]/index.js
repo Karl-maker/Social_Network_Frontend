@@ -58,7 +58,7 @@ export default function PostPage() {
           setPrompt("Unexpected Error");
         });
     }
-  }, [router.query.id]);
+  }, [router.query.id, router, accountServices.access_token]);
 
   return prompt ? (
     <div className={widget.secondary}>

@@ -1,4 +1,8 @@
-import { useEffect, useState, useContext, useRef } from "react";
+// Packages
+
+import { useEffect, useState, useContext } from "react";
+import { useSnackbar } from "notistack";
+import Link from "next/link";
 import {
   Fab,
   Button,
@@ -6,16 +10,20 @@ import {
   Tooltip,
   CircularProgress,
 } from "@mui/material";
+
+// Icons
+
 import { HiPencil } from "react-icons/hi";
 import { RiEarthFill } from "react-icons/ri";
 import { BsChevronCompactDown } from "react-icons/bs";
-import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
+
+// User Defined
+
 import PostSkeleton from "../components/post/PostSkeleton";
 import PostListWidget from "../components/post/PostListWidget";
 import PostCollection from "../components/api/posts/PostCollection";
 import { noDuplicateObjects } from "../components/utils/array";
-import { useSnackbar } from "notistack";
 import { AccountContext } from "../components/templates/ContextProvider";
 import DistanceSlider from "../components/post/DistanceSlider";
 import widget from "../styles/modules/Widget.module.css";
@@ -217,15 +225,7 @@ export default function Home() {
           });
       } catch (err) {}
     })();
-  }, []);
-
-  // Issue:
-
-  /*
-
-  When using global randomizer it doesn't give the user's post class back current location
-
-  */
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (isUsingCurrentPosition) {
@@ -320,7 +320,7 @@ export default function Home() {
         }
       );
     }
-  }, [triggerRefresh, post.page_number]);
+  }, [triggerRefresh, post.page_number]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={widget.list}>
@@ -341,7 +341,11 @@ export default function Home() {
           }}
           sideElement={
             <Tooltip
-              title={isUsingCurrentPosition ? "Randomize" : "Current Position"}
+              title={
+                isUsingCurrentPosition
+                  ? "Select A Location"
+                  : "Current Position"
+              }
             >
               <MenuButton
                 list={post_collection.LOCATIONS.map((location, index) => {

@@ -24,7 +24,7 @@ export default function RouteGuard({ children, pageProps }) {
     }
 
     setAuthenticated(accountServices.isLoggedIn);
-  }, [accountServices.isLoggedIn]);
+  }, [accountServices.isLoggedIn, authenticated, pageProps.protected, router]);
 
   return <>{children}</>;
 }

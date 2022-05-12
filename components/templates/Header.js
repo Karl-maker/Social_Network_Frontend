@@ -33,7 +33,12 @@ export default function Header({}) {
       <div className="row">
         <div className="col-4 px-4 m-0">
           <Link href="/" passHref>
-            <Image src="/dripplie-banner(blue).svg" height={70} width={100} />
+            <Image
+              src="/dripplie-banner(blue).svg"
+              height={70}
+              width={100}
+              alt="Dripplie-Banner"
+            />
           </Link>
         </div>
         <div className="col-8 d-flex justify-content-end align-items-center px-4 ">

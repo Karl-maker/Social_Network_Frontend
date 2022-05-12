@@ -13,7 +13,6 @@ export default function ChildWidget({ post_id }) {
   const connect = new Connection(process.env.BACKEND_URL, null);
   const user = new User(process.env.BACKEND_URL, null, {});
   const current_date = new Date();
-  let how_long_ago;
 
   const [userInfo, setUserInfo] = useState();
   const [postInfo, setPostInfo] = useState();
@@ -28,10 +27,7 @@ export default function ChildWidget({ post_id }) {
           setErrorInfo({ status: 404, message: "Post Not Found" });
         } else {
           setPostInfo(result.data[0]);
-          how_long_ago = checkHowManyDaysAgo(
-            new Date(result.data[0].createdAt),
-            current_date
-          );
+
           user.fetchUserInformation(result.data[0].user_id).then((result) => {
             setUserInfo(
               new User(process.env.BACKEND_URL, null, {

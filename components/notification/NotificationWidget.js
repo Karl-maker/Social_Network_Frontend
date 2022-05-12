@@ -3,13 +3,12 @@ import { checkHowManyDaysAgo } from "../utils/date";
 import { GoPrimitiveDot } from "react-icons/go";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useContext } from "react";
 import { useSnackbar } from "notistack";
 import { AiFillEye, AiFillDelete } from "react-icons/ai";
 import MenuButton from "../templates/MenuButton";
-import { useEffect } from "react";
 import User from "../api/users/User";
 
 export default function NotificationWidget({ notification }) {
@@ -60,12 +59,12 @@ export default function NotificationWidget({ notification }) {
       user
         .fetchUserInformation(notification.data.done_by)
         .then((result) => {
-          setUser(user);
+          setUser((user) => user);
           setHasUserInfo(true);
         })
         .catch((error) => {});
     }
-  }, []);
+  }, [notification.data.done_by]);
 
   if (!show) {
     return <></>;

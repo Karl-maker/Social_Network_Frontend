@@ -428,6 +428,11 @@ export default class User extends Connection {
         }
 
         this._isLoggedIn = false;
+        this._id = "";
+        this._access_token = "";
+        this._username = "";
+        this._email = "";
+
         return response;
       })
       .catch((error) => {
