@@ -158,7 +158,7 @@ export default function ProfilePage() {
       );
       setLoading(false);
     }
-  }, [router.query.id, accountServices.isLoggedIn]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [router.query.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={widget.list}>
