@@ -1,4 +1,3 @@
-import { cookies } from "../../../middlewares/cookie";
 import User from "../../../model/user";
 import token from "../../../token/jwt";
 import dbConnect from "../../../helper/db";
@@ -10,16 +9,7 @@ import {
   handleValidationError,
 } from "../../../util/error-formatter";
 
-const cors = middleware(
-  // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
-  Cors({
-    // Only allow requests with GET, POST and OPTIONS
-    credentials: true,
-  })
-);
-
-async function register(req, res) {
-  await cors(req, res);
+async function registration(req, res) {
   // Login User and Send Cookies
   if (req.method === "POST") {
     // Process a POST request
@@ -33,7 +23,7 @@ async function register(req, res) {
         password,
       });
 
-      await UserService.sendConfirmationEmail(user.email);
+      res.status(200).json({ user: user, message: "Registration Successful" });
     } catch (err) {
       // Error handle
 
@@ -54,4 +44,4 @@ async function register(req, res) {
     }
   }
 }
-export default register;
+export default registration;

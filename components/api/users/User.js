@@ -289,7 +289,7 @@ export default class User extends Connection {
         fields: ["email"],
       };
     }
-    return fetch(`/api/register`, {
+    return fetch(`/api/auth/registration`, {
       method: "POST",
       headers: {
         Accept: "application/json",
