@@ -102,7 +102,7 @@ export default class User extends Connection {
 
   async fetchUserData() {
     try {
-      const results = await axios.get(`${this.base_url}/api/profile/`, {
+      const results = await axios.get(`/api/auth/profile/`, {
         headers: { Authorization: `Bearer ${this.access_token}` },
       });
 

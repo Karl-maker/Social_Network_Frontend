@@ -21,4 +21,42 @@ async function create(user_id, { details }) {
   return profile;
 }
 
-export default { create };
+async function getOneById(user_id) {
+  let profile;
+
+  try {
+    profile = await Profile.aggregate([
+      {
+        $match: { user_id },
+      },
+      {
+        $addFields: {
+          user_id: { $toObjectId: "$user_id" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+          pipeline: [
+            {
+              $project: {
+                username: 1,
+                createdAt: 1,
+                email: 1,
+              },
+            },
+          ],
+        },
+      },
+    ]);
+  } catch (err) {
+    throw new Error(err);
+  }
+
+  return profile;
+}
+
+export default { create, getOneById };
