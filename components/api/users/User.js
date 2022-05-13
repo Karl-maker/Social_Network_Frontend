@@ -100,42 +100,55 @@ export default class User extends Connection {
       });
   }
 
-  async fetchUserData() {
-    try {
-      const results = await axios.get(`/api/auth/profile/`, {
-        headers: { Authorization: `Bearer ${this.access_token}` },
+  fetchUserData() {
+    return fetch(`/api/auth/profile`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: `Bearer ${this.access_token}`,
+      },
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw await response.json();
+        }
+
+        return response;
+      })
+      .then((response) => response.json())
+      .then((results) => {
+        try {
+          this._id = results[0].user_id || "";
+        } catch (error) {}
+
+        try {
+          this._username = results[0].user[0].username || "";
+        } catch (error) {}
+
+        try {
+          this._email = results[0].user[0].email || "";
+        } catch (error) {}
+
+        try {
+          this._is_verified = results[0].is_verified || false;
+        } catch (error) {}
+
+        try {
+          this._bio = results[0].bio || "";
+        } catch (error) {
+          this._bio = "";
+        }
+
+        try {
+          this._image = results[0].image;
+        } catch (error) {}
+
+        return results[0];
+      })
+      .catch((error) => {
+        throw error;
       });
-
-      try {
-        this._id = results.data[0].user_id || "";
-      } catch (error) {}
-
-      try {
-        this._username = results.data[0].user[0].username || "";
-      } catch (error) {}
-
-      try {
-        this._email = results.data[0].user[0].email || "";
-      } catch (error) {}
-
-      try {
-        this._is_verified = results.data[0].is_verified || false;
-      } catch (error) {}
-
-      try {
-        this._bio = results.data[0].bio || "";
-      } catch (error) {
-        this._bio = "";
-      }
-
-      try {
-        this._image = results.data[0].image;
-      } catch (error) {}
-
-      return results.data[0];
-    } catch (err) {
-      return;
-    }
   }
 
   async fetchCurrentUser() {
