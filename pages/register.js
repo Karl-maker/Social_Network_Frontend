@@ -72,6 +72,20 @@ export default function Registration() {
                   "Unexpected Error, Try again later.",
               fields: err.fields || [],
             });
+
+            let message = Array.isArray(err.messages)
+              ? err.messages[0]
+              : err.messages || err.message || "";
+
+            if (message === "failed to fetch") {
+              setEmail("");
+              setPassword("");
+
+              enqueueSnackbar("Sorry we had an issue, try again...", {
+                variant: "error",
+                anchorOrigin: { horizontal: "left", vertical: "top" },
+              });
+            }
           });
       } catch (err) {
         setError({
@@ -80,6 +94,20 @@ export default function Registration() {
             : err.messages || "Unexpected Error",
           fields: err.fields || [],
         });
+
+        let message = Array.isArray(err.messages)
+          ? err.messages[0]
+          : err.messages || err.message || "";
+
+        if (message === "failed to fetch") {
+          setEmail("");
+          setPassword("");
+
+          enqueueSnackbar("Sorry we had an issue, try again...", {
+            variant: "error",
+            anchorOrigin: { horizontal: "left", vertical: "top" },
+          });
+        }
       }
     } else {
       setError({
