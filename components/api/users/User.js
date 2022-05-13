@@ -331,7 +331,7 @@ export default class User extends Connection {
   }
 
   createUsername(username) {
-    return fetch(`${this.base_url}/api/username`, {
+    return fetch(`/api/auth/username`, {
       method: "POST",
       headers: {
         Accept: "application/json",

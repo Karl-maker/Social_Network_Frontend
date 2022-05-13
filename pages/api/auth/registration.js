@@ -4,10 +4,7 @@ import dbConnect from "../../../helper/db";
 import loginModel from "../../../model/logins";
 import Cors from "cors";
 import middleware from "../../../middlewares";
-import {
-  handleDuplicateKeyError,
-  handleValidationError,
-} from "../../../util/error-formatter";
+import ErrorHandler from "../../../middlewares/error-handling";
 
 async function registration(req, res) {
   // Login User and Send Cookies
@@ -27,20 +24,7 @@ async function registration(req, res) {
     } catch (err) {
       // Error handle
 
-      try {
-        switch (true) {
-          case err.name === "ValidationError":
-            //400 Errors
-            return handleValidationError(err, res);
-
-          case err.code && err.code == 11000:
-            return handleDuplicateKeyError(err, res);
-          default:
-            return res.status(500).json({ message: "Unexpected Error" });
-        }
-      } catch (e) {
-        return res.status(500).json({ message: "Unexpected Error" });
-      }
+      ErrorHandler(err, res);
     }
   }
 }
