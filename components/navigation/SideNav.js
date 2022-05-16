@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import widget from "../../styles/modules/Widget.module.css";
 import { RiEarthFill } from "react-icons/ri";
 import { MdNotificationsNone, MdNotifications } from "react-icons/md";
-import { AiFillSetting } from "react-icons/ai";
+import { AiFillInfoCircle } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
 import { HiLogout, HiPencil } from "react-icons/hi";
 import { AccountContext } from "../templates/ContextProvider";
@@ -74,7 +74,7 @@ export default function SideNav() {
         />
       </li>
       <li>
-        <Item title="Settings" icon={<AiFillSetting />} link={"/"} />
+        <Item title="About" icon={<AiFillInfoCircle />} link={"/about"} />
       </li>
       <Divider />
       <li>

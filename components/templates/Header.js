@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { AccountContext } from "./ContextProvider";
 import { FaUserCircle } from "react-icons/fa";
 import { HiLogout } from "react-icons/hi";
+import { AiFillInfoCircle } from "react-icons/ai";
 import { IoWater } from "react-icons/io";
 import DrawerButton from "./DrawerButton";
 import {
@@ -11,6 +12,7 @@ import {
   ListItemText,
   Divider,
   Button,
+  IconButton,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -78,18 +80,23 @@ export default function Header({}) {
               {accountServices.displayProfileChip({ borderWidth: "0px" })}
             </MenuButton>
           ) : (
-            <Button
-              variant="outlined"
-              href="/login"
-              sx={{
-                borderRadius: "15px",
-                paddingX: "25px",
-                border: "1px solid",
-              }}
-              disableElevation
-            >
-              Login
-            </Button>
+            <div>
+              <Button
+                variant="outlined"
+                href="/login"
+                sx={{
+                  borderRadius: "15px",
+                  paddingX: "25px",
+                  border: "1px solid",
+                }}
+                disableElevation
+              >
+                Login
+              </Button>
+              <IconButton variant="outlined" href="/about" className="mx-2">
+                <AiFillInfoCircle />
+              </IconButton>
+            </div>
           )}
         </div>
       </div>

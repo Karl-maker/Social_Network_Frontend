@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { RiEarthFill } from "react-icons/ri";
 import { MdNotifications } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
-import { AiFillSetting } from "react-icons/ai";
+import { AiFillInfoCircle } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { AccountContext } from "../templates/ContextProvider";
 
@@ -20,7 +20,7 @@ export default function BottomNav() {
       setValue(0);
     } else if (router.pathname.includes("notifications")) {
       setValue(2);
-    } else if (router.pathname.includes("settings")) {
+    } else if (router.pathname.includes("about")) {
       setValue(3);
     } else {
       setValue(null);
@@ -63,9 +63,9 @@ export default function BottomNav() {
         )}
         {accountService.isLoggedIn && (
           <BottomNavigationAction
-            icon={<AiFillSetting fontSize={25} />}
+            icon={<AiFillInfoCircle fontSize={25} />}
             onClick={() => {
-              router.push("/settings");
+              router.push("/about");
             }}
           />
         )}
