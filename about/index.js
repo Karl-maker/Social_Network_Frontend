@@ -35,7 +35,7 @@ export default function AboutMe() {
           allows users to view posts within their location using GeoLocation or
           IP addresses. Using MongoDB, Node.js, Express.js, React.js and
           Next.js, users are able to register, login, logout, post and interact
-          with posts.
+          with posts. Sibling also to <a href="https://www.syncpoly.com">Syncpoly</a>
         </Typography>
       </Grid>
     </Grid>
